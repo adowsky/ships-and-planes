@@ -66,6 +66,7 @@ public class Harbour extends SeaPort implements CivilianPort {
         passengersSet.removeAll(newPassengersList);
         vehicle.addPassengers(newPassengersList);
         vehicle.setReadyToTravel();
+        shipsList.remove(vehicle);
     }
 
     @Override

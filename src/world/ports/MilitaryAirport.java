@@ -34,6 +34,7 @@ public class MilitaryAirport extends AirPort {
     }
     private void vehicleDeparture(MilitaryAircraft vehicle){
         vehicle.setReadyToTravel();
+        planesList.remove(vehicle);
     }
 
     @Override

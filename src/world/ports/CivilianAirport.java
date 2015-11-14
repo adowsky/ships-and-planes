@@ -84,6 +84,7 @@ public class CivilianAirport extends AirPort implements CivilianPort{
         vehicle.addPassengers(passengers);
         passengersSet.removeAll(passengers);
         vehicle.setReadyToTravel();
+        planesList.remove(vehicle);
     }
     private Collection<Passenger> generatePassengersCollectionForVehicle(CivilianVehicle vehicle){
         Iterator<Passenger> iter = passengersSet.iterator();
