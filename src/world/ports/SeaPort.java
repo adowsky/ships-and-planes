@@ -10,8 +10,8 @@ import java.util.Map;
  * Represent seaport.
  */
 public abstract class SeaPort extends Port {
-    public SeaPort(int capacity, Point2D location, Map<Port,List<Cross>> ways){
-        super(capacity,location, ways);
+    public SeaPort(int capacity, Point2D location){
+        super(capacity,location);
     }
     @Override
     public boolean isAir(){

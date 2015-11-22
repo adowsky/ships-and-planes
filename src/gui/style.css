@@ -1,0 +1,34 @@
+#control-panel-container {
+    -fx-background-color: burlywood;
+}
+#panel-name{
+    -fx-font-size: 30px;
+    -fx-font-family: "Ubuntu", "FreeSans", "Liberation Sans";
+    -fx-fill: #252320;
+}
+.airport-button{
+    -fx-min-width: 8px;
+    -fx-max-width: 8px;
+    -fx-min-height: 8px;
+    -fx-max-height: 8px;
+    -fx-background-radius: 10em;
+    -fx-background-color: blue;
+
+    -fx-background-insets: 0px;
+    -fx-padding: 0px;
+}
+.airport-button:hover{
+    -fx-background-color: aqua;
+}
+.seaport-button{
+    -fx-min-width: 8px;
+    -fx-max-width: 8px;
+    -fx-min-height: 8px;
+    -fx-max-height: 8px;
+    -fx-background-color: red;
+    -fx-background-insets: 0px;
+    -fx-padding: 0px;
+}
+.seaport-button:hover{
+    -fx-background-color: brown;
+}

@@ -15,8 +15,8 @@ public class Harbour extends SeaPort implements CivilianPort {
     private List<CivilianVehicle> shipsList;
     private Set<Passenger> passengersSet;
     private int timeToNextDeparture;
-    public Harbour(int timeToNextDeparture, int capacity, Point2D location, Map<Port,List<Cross>> ways){
-        super(capacity, location, ways);
+    public Harbour(int timeToNextDeparture, int capacity, Point2D location){
+        super(capacity, location);
         shipsList = new ArrayList<>();
         passengersSet= new HashSet<>();
         this.timeToNextDeparture=timeToNextDeparture;

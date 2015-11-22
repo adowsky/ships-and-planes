@@ -31,16 +31,18 @@ public abstract class Port implements Drawable, Cross {
         this.maxCapacity = maxCapacity;
     }
 
-    public Port(int maxCapacity, Point2D location,Map<Port,List<Cross>> ways) {
+    public Port(int maxCapacity, Point2D location) {
         this.maxCapacity = maxCapacity;
         landConnectionPorts = new HashSet<>();
         circle = new Circle(location.getX(), location.getY(), WorldConstants.PORT_RADIUS);
         engine = new PortMovingEngine(this);
-        this.ways = ways;
 
     }
     public List<Cross> getRouteToPort(Port port){
         return ways.get(port);
+    }
+    public void setWays(Map<Port,List<Cross>> ways){
+        this.ways = ways;
     }
     public Set<Port> getLandConnectionPorts() {
         return landConnectionPorts;
