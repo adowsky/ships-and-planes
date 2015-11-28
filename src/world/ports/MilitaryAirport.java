@@ -14,8 +14,8 @@ import java.util.Map;
 public class MilitaryAirport extends AirPort {
     private List<MilitaryAircraft> planesList;
     private int timeToNextDeparture;
-    public MilitaryAirport(int timeToNextDeparture, int capacity, Point2D location, Map<Port,List<Cross>> ways){
-        super(capacity,location,ways);
+    public MilitaryAirport(int timeToNextDeparture, int capacity, Point2D location){
+        super(capacity,location);
         this.timeToNextDeparture=timeToNextDeparture;
         planesList=new ArrayList<>();
     }

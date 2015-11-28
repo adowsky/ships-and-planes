@@ -10,9 +10,12 @@ import java.util.List;
 public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
     private Vehicle vehicle;
     private boolean canMove;
-
+    private  volatile List<Cross> route;
+    private Object routKeeper;
     public VehicleMovingEngine(Vehicle vehicle){
         this.vehicle = vehicle;
+        SynchronizedUpdateNotifier.getInstance().addToList(this);
+        routKeeper = new Object();
         Thread t = new Thread(this);
         t.setDaemon(true);
         t.start();
@@ -21,26 +24,39 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
 
     @Override
     public void hitTheRoad(List<Cross> route) {
-        for (Cross o : route) {
-            while (!o.intersect(vehicle.getBounds())) {
-                if (canMove()) {
-                    synchronized (this) {
-                        vehicle.setLocation(vehicle.getLocation().getX() + vehicle.getSpeedX(),
-                                vehicle.getLocation().getY() + vehicle.getSpeedY());
-                        canMove = false;
+        synchronized (routKeeper) {
+            this.route = route;
+        }
+        setCanMove();
+    }
+    @Override
+    public void runInThread(){
+        while(true) {
+            if(!vehicle.getReadyToTravel()){
+                trySleep();
+            }
+            else {
+                for (Cross o : route) {
+                    while (!o.intersect(vehicle.getBounds())) {
+                        if (canMove()) {
+                            synchronized (this) {
+                                vehicle.setLocation(vehicle.getLocation().getX() + vehicle.getSpeedX(),
+                                        vehicle.getLocation().getY() + vehicle.getSpeedY());
+                                canMove = false;
+                            }
+                        } else {
+                            try {
+                                Thread.sleep(1);
+                            } catch (InterruptedException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
                     }
-                } else {
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
+                    o.goThrough(vehicle);
                 }
             }
-            o.goThrough(vehicle);
         }
     }
-
     @Override
     public synchronized void setCanMove() {
         canMove = true;

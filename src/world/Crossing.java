@@ -4,6 +4,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.shape.Circle;
 import world.vehicles.CrossingMovingEngine;
 import world.vehicles.MovingEngine;
+import world.vehicles.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
 
 /**
@@ -28,6 +29,7 @@ public class Crossing implements Cross{
         engine = new CrossingMovingEngine(this);
         velX = 5;
         velY = 5;
+        SynchronizedUpdateNotifier.getInstance().addToList(engine);
     }
     public boolean intersect(Bounds bounds){
         return circle.intersects(bounds);

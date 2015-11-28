@@ -44,6 +44,7 @@ public class Harbour extends SeaPort implements CivilianPort {
 
     public synchronized  <T extends Ship & CivilianVehicle> void vehicleArrive(T vehicle) {
         canLand();
+        System.out.println("przybyłżem");
         vehicle.arrivedToPort();
         Set<Passenger> pList = vehicle.getVehiclePassengers();
         passengersService(pList,passengersSet,getLandConnectionPorts());

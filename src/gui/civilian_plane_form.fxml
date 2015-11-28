@@ -24,8 +24,8 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Label text="Staff Amount:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-      <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <!--<Label text="Staff Amount:" GridPane.columnIndex="0" GridPane.rowIndex="1" />-->
+      <!--<TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />-->
       <Label text="Maximum Fuel:" GridPane.rowIndex="2" />
       <Label text="Maximum Capacity:" GridPane.rowIndex="3" />
       <Label text="Speed:" GridPane.rowIndex="4" />

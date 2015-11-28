@@ -25,7 +25,7 @@ public class Airliner extends Airplane implements CivilianVehicle {
      * @param maxFuel maximum value of fuel
      * @param maxPassengersAmount maximum value of passengers
      */
-    public Airliner(Point2D location,List<CivilianAirport> route,int staffAmount,int maxFuel,int maxPassengersAmount, int speed){
+    public Airliner(Point2D location,double speed,List<CivilianAirport> route,int staffAmount,int maxFuel,int maxPassengersAmount){
         super(location,speed,staffAmount,maxFuel);
         this.maxPassengersAmount=maxPassengersAmount;
         passengersList= new HashSet<>();

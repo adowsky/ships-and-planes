@@ -11,6 +11,7 @@ import world.ports.Port;
 public class PortButton<T extends Port> extends Button {
     protected T model;
     private Point2D location;
+    private String name;
     private int time;
 
     public PortButton(){
@@ -29,7 +30,12 @@ public class PortButton<T extends Port> extends Button {
         return location;
 
     }
-
+    public void setName(String name){
+        this.name = name;
+    }
+    public String getName(){
+        return name;
+    }
     public void setModel(T model){
         this.model = model;
     }

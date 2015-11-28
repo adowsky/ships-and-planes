@@ -22,7 +22,7 @@ public class MilitaryAircraft extends Airplane {
      * @param maxFuel maximum value of fuel
      * @param armamentType armament type
      */
-    public MilitaryAircraft(Point2D location,int speed, List<MilitaryAirport>route, int staffAmount, int maxFuel, ArmamentType armamentType){
+    public MilitaryAircraft(Point2D location,double speed, List<MilitaryAirport>route, int staffAmount, int maxFuel, ArmamentType armamentType){
         super(location,speed,staffAmount,maxFuel);
         this.armamentType=armamentType;
         this.route = route;

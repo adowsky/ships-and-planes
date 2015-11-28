@@ -6,6 +6,7 @@ import javafx.geometry.Point2D;
 import world.*;
 import world.ports.Port;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,18 +22,19 @@ public abstract class Vehicle implements Drawable {
     private MovingEngine<List<Cross>> engine;
     private volatile Bounds bounds;
     boolean locationChanged;
-    private int speed;
+    private double speed;
     private double speedX;
     private  double speedY;
     private List<Cross> route;
     private int nextCrossing;
+    private List<LocationChangedListener> listeners;
 
     /**
      * Creates Vehicle with specific location and route
      * @param location location on map
 
      */
-    public Vehicle(Point2D location, int speed){
+    public Vehicle(Point2D location, double speed){
         id=nextId++;
         this.location=location;
         readyToTravel = false;
@@ -44,6 +46,7 @@ public abstract class Vehicle implements Drawable {
         nextCrossing = 0;
         speedX = 0;
         speedY = 0;
+        listeners = new LinkedList<>();
 
     }
 
@@ -55,7 +58,7 @@ public abstract class Vehicle implements Drawable {
         return bounds;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
@@ -80,6 +83,11 @@ public abstract class Vehicle implements Drawable {
     public synchronized void setLocation(double x, double y){
         location = new Point2D(x,y);
         locationChanged = true;
+        for(LocationChangedListener l : listeners)
+            l.fire(location);
+    }
+    public void addLocationChangedListener(LocationChangedListener l){
+        listeners.add(l);
     }
 
     /**
@@ -178,6 +186,10 @@ public abstract class Vehicle implements Drawable {
 
     public void setRoute(List<Cross> l){
         route = l;
+        Point2D p = countSpeed();
+        speedX = p.getX();
+        speedY = p.getY();
+        System.out.println("X:"+speedX+"Y:"+speedY);
     }
 
     public double getSpeedY() {
@@ -206,6 +218,10 @@ public abstract class Vehicle implements Drawable {
         double cos = lengthX/length;
         double speedX = getSpeed()*cos;
         double speedY = getSpeed()*sin;
+        if(destX<location.getX())
+            speedX = -speedX;
+        if(destY < location.getY())
+            speedY = -speedY;
         return new Point2D(speedX,speedY);
     }
     public abstract Port getDestination();

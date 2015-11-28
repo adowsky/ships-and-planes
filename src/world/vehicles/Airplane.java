@@ -17,7 +17,7 @@ public abstract class Airplane extends Vehicle {
      * @param staffAmount staff number
      * @param maxFuel maximum value of fuel
      */
-    public Airplane(Point2D location,  int speed, int staffAmount, int maxFuel){
+    public Airplane(Point2D location,  double speed, int staffAmount, int maxFuel){
         super(location, speed);
         this.staffAmount=staffAmount;
         this.maxFuel=maxFuel;

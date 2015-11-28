@@ -12,7 +12,7 @@ import java.util.List;
 public class AircraftCarrier extends Ship {
     private ArmamentType armament;
     private List<MilitaryAircraft> producedPlanes;
-    public AircraftCarrier(Point2D location, int maxVelocity, ArmamentType armament){
+    public AircraftCarrier(Point2D location, double maxVelocity, ArmamentType armament){
         super(location,maxVelocity);
         this.armament=armament;
         producedPlanes = new ArrayList<>();

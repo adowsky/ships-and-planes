@@ -32,3 +32,11 @@
 .seaport-button:hover{
     -fx-background-color: brown;
 }
+.civilian-ship{
+    -fx-min-width: 8px;
+    -fx-max-width: 8px;
+    -fx-min-height: 8px;
+    -fx-max-height: 8px;
+    -fx-background-color: blueviolet;
+
+}

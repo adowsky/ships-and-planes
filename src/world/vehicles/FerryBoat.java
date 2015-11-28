@@ -30,7 +30,7 @@ public class FerryBoat extends Ship implements CivilianVehicle {
      * @param maxPassengersAmount maximum value of passengers
      * @param company company's name
      */
-    public FerryBoat(Point2D location, List<Harbour> route, int maxVelocity, int maxPassengersAmount, String company){
+    public FerryBoat(Point2D location, double maxVelocity, List<Harbour> route,int maxPassengersAmount, String company){
         super(location,maxVelocity);
         this.maxPassengersAmount=maxPassengersAmount;
         this.company=company;

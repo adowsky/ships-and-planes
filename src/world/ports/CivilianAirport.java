@@ -19,8 +19,8 @@ public class CivilianAirport extends AirPort implements CivilianPort{
     /**
      * Creates civilian airport
      */
-    public CivilianAirport(int timeToNextDeparture, int capacity, Point2D location,Map<Port,List<Cross>> airWays){
-        super(capacity,location,airWays);
+    public CivilianAirport(int timeToNextDeparture, int capacity, Point2D location){
+        super(capacity,location);
         planesList = new ArrayList<>();
         passengersSet = new HashSet<>();
         this.timeToNextDeparture = timeToNextDeparture;

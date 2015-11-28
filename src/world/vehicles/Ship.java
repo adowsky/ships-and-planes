@@ -12,7 +12,7 @@ public abstract class Ship extends Vehicle {
      * @param location Location on map
      * @param maxVelocity maximum velocity
      */
-    public Ship(Point2D location, int maxVelocity){
+    public Ship(Point2D location, double maxVelocity){
         super(location, maxVelocity);
     }
 

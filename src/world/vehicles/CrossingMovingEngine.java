@@ -4,21 +4,36 @@ import javafx.geometry.Point2D;
 import world.Crossing;
 
 /**
- * Move engine to move vehicle through crossing.
+ * Moving engine to move vehicle through crossing.
  */
 public class CrossingMovingEngine implements MovingEngine<Vehicle> {
     private Crossing cross;
-    private boolean canMove;
+    private volatile boolean canMove;
+    private Vehicle c;
+    private Object monitor;
 
     public CrossingMovingEngine(Crossing cross){
         this.cross = cross;
         canMove = false;
-        Thread t = new Thread(this);
-        t.setDaemon(true);
-        t.start();
+        monitor = new Object();
     }
     @Override
     public synchronized void hitTheRoad(Vehicle c) {
+        this.c = c;
+        runInThread();
+    }
+
+    @Override
+    public  void setCanMove() {
+        synchronized (monitor) {
+            canMove = true;
+        }
+    }
+
+    @Override
+    public synchronized void runInThread() {
+        if(c == null)
+            return;
         toTheCenter(c);
         c.nextCrossing();
         while(cross.intersect(c.getBounds())){
@@ -26,12 +41,10 @@ public class CrossingMovingEngine implements MovingEngine<Vehicle> {
         }
     }
 
-    @Override
-    public synchronized void setCanMove() {
-        canMove = true;
-    }
-    private synchronized boolean canMove(){
-        return canMove;
+    private boolean canMove(){
+        synchronized (monitor) {
+            return canMove;
+        }
     }
     private synchronized void move(Vehicle c) {
         if (canMove()) {
@@ -48,10 +61,21 @@ public class CrossingMovingEngine implements MovingEngine<Vehicle> {
         }
     }
     private void toTheCenter(Vehicle c){
-        Point2D p = new Point2D(cross.getX(),cross.getY());
+        double x;
+        double y;
+        if(c.getSpeedX()<0)
+            x = cross.getX()+1;
+        else
+            x = cross.getX() - 1;
+        if(c.getSpeedY()<0)
+            y = cross.getY() + 1;
+        else
+            y = cross.getY() - 1;
+        Point2D p = new Point2D(x, y);
         while(!c.getBounds().contains(p)){
             move(c);
         }
+
     }
 
     }
