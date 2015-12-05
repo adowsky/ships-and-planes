@@ -1,7 +1,7 @@
 package world.vehicles;
 
 /**
- * Responsible for moving T parameter.
+ * Responsible for moving something.
  * @param <T> Objects that needs moving service.
  */
 public interface MovingEngine<T> extends Runnable {
@@ -10,6 +10,8 @@ public interface MovingEngine<T> extends Runnable {
     void setCanMove();
 
     void runInThread();
+    boolean canMove();
+    void clearCanMove();
 
     @Override
     default void run() {
@@ -22,6 +24,16 @@ public interface MovingEngine<T> extends Runnable {
             Thread.sleep(1);
         } catch (InterruptedException ex) {
             ex.printStackTrace();
+        }
+    }
+    default void move(Vehicle c) {
+        if (canMove()) {
+            c.move();
+            synchronized (this) {
+                clearCanMove();
+            }
+        } else {
+            trySleep();
         }
     }
 }

@@ -13,8 +13,5 @@ public abstract class AirPort extends Port {
     public AirPort(int capacity, Point2D location){
         super(capacity,location);
     }
-    @Override
-    public boolean isAir(){
-        return  true;
-    }
+
 }

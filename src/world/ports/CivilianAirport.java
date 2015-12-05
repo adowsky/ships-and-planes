@@ -31,11 +31,6 @@ public class CivilianAirport extends AirPort implements CivilianPort{
     }
 
     @Override
-    public boolean isMilitary() {
-        return false;
-    }
-
-    @Override
     public void Draw() {
 
     }

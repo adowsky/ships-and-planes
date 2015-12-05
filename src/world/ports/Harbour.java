@@ -1,7 +1,6 @@
 package world.ports;
 
 import javafx.geometry.Point2D;
-import world.Cross;
 import world.vehicles.CivilianVehicle;
 import world.Passenger;
 import world.vehicles.Ship;
@@ -23,19 +22,10 @@ public class Harbour extends SeaPort implements CivilianPort {
     }
 
     @Override
-    public boolean isMilitary() {
-        return false;
-    }
-
-    @Override
     public boolean isFull() {
         return false;
     }
 
-    @Override
-    public boolean isAir() {
-        return false;
-    }
 
     @Override
     public void Draw() {

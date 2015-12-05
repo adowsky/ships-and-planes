@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<map>
+    <!--Map model-->
+    <map-model>
+        <url>map.png</url>
+    </map-model>
+    <!--Harbours-->
+    <harbour name="Luanda" x="379" y="268" sleep-time="500" capacity="10" >
+        <connection name="Miami">seaBot seaTop</connection>
+        <connection name="Lisbon">seaBot seaTop</connection>
+        <connection name="Reykjavik">seaBot seaTop</connection>
+        <connection name="Salvador">seaBot</connection>
+    </harbour>
+    <harbour name="Salvador" x="286" y="288" >
+        <connection name="Miami">seaBot</connection>
+        <connection name="Lisbon">seaBot seaTop</connection>
+        <connection name="Reykjavik">seaBot seaTop</connection>
+        <connection name="Luanda">seaBot</connection>
+    </harbour>
+    <harbour name="Miami" x="203" y="198" >
+        <connection name="Lisbon">seaTop</connection>
+        <connection name="Reykjavik">seaTop</connection>
+        <connection name="Luanda">seaBot</connection>
+        <connection name="Salvador">seaBot</connection>
+    </harbour>
+    <harbour name="Lisbon" x="342" y="167" >
+        <connection name="Miami">seaTop</connection>
+        <connection name="Reykjavik">seaTop</connection>
+        <connection name="Luanda">seaTop seaBot</connection>
+        <connection name="Salvador">seaTop seaBot</connection>
+    </harbour>
+    <harbour name="Reykjavik" x="317" y="90" >
+        <connection name="Salvador">seaTop seaBot</connection>
+        <connection name="Luanda">seaTop seaBot</connection>
+        <connection name="Salvador">seaTop seaBot</connection>
+        <connection name="Miami">seaTop</connection>
+    </harbour>
+    <!--Civilian Airports-->
+    <!--Military Airports-->
+
+    <!--Sea Crossings-->
+    <sea-crossing name="seaTop" x="274" y="158" radius="5"/>
+    <sea-crossing name="seaBot" x="330" y="270" radius="5"/>
+    <!--Air Crossings-->
+
+
+</map>
+

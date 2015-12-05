@@ -19,6 +19,7 @@ import java.util.Set;
 public abstract class Port implements Drawable, Cross {
     private int maxCapacity;
     private Circle circle;
+    private Point2D location;
     private Set<Port> landConnectionPorts;
     private MovingEngine<Vehicle> engine;
     private Map<Port,List<Cross>> ways;
@@ -27,13 +28,11 @@ public abstract class Port implements Drawable, Cross {
         return maxCapacity;
     }
 
-    public void setMaxCapacity(int maxCapacity) {
-        this.maxCapacity = maxCapacity;
-    }
 
     public Port(int maxCapacity, Point2D location) {
         this.maxCapacity = maxCapacity;
         landConnectionPorts = new HashSet<>();
+        this.location = location;
         circle = new Circle(location.getX(), location.getY(), WorldConstants.PORT_RADIUS);
         engine = new PortMovingEngine(this);
 
@@ -57,6 +56,9 @@ public abstract class Port implements Drawable, Cross {
     public double getY() {
         return circle.getCenterY();
     }
+    public Point2D getLocation(){
+        return  location;
+    }
 
     @Override
     public boolean intersect(Bounds bounds) {
@@ -68,12 +70,6 @@ public abstract class Port implements Drawable, Cross {
         engine.hitTheRoad(c);
     }
 
-    /**
-     * Returns if port is military
-     *
-     * @return true if port is military, false if not
-     */
-    public abstract boolean isMilitary();
 
     /**
      * Returns if Port have maximum value of vehicles.
@@ -82,11 +78,5 @@ public abstract class Port implements Drawable, Cross {
      */
     public abstract boolean isFull();
 
-    /**
-     * Returns if it is airPort
-     *
-     * @return true - it is airport, false -it is not
-     */
-    public abstract boolean isAir();
 
 }

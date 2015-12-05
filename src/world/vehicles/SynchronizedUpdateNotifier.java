@@ -10,10 +10,11 @@ import java.util.List;
  */
 public class SynchronizedUpdateNotifier implements Runnable{
     private volatile List<MovingEngine> notificationList;
-    private final double UPDATES_PER_MILLIS = WorldConstants.UPDATES_PER_SEC / 1000.0;
+    private final double UPDATES_PER_MILLIS;
     private static SynchronizedUpdateNotifier instance;
     private SynchronizedUpdateNotifier(){
         notificationList = new LinkedList<>();
+        UPDATES_PER_MILLIS = WorldConstants.UPDATES_PER_SEC / 1000.0;
         Thread t= new Thread(this);
         t.setDaemon(true);
         t.start();
@@ -21,6 +22,7 @@ public class SynchronizedUpdateNotifier implements Runnable{
     public static synchronized  SynchronizedUpdateNotifier getInstance(){
         if(instance == null)
             instance = new SynchronizedUpdateNotifier();
+
         return instance;
     }
     public synchronized void addToList(MovingEngine e){
@@ -47,7 +49,7 @@ public class SynchronizedUpdateNotifier implements Runnable{
             ex.printStackTrace();
         }
     }
-    private void notifyAboutUpdate(){
+    private synchronized void notifyAboutUpdate(){
         for(MovingEngine e : notificationList){
             e.setCanMove();
         }

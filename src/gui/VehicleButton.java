@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import world.vehicles.LocationChangedListener;
-import world.vehicles.Ship;
 import world.vehicles.Vehicle;
 
 /**
@@ -23,7 +22,6 @@ public class VehicleButton extends Button implements LocationChangedListener {
 
     @Override
     public void fire(Point2D location){
-        System.out.println(location.getX()+"x"+location.getY());
         Platform.runLater(()-> relocate(location.getX(),location.getY()));
 
     }

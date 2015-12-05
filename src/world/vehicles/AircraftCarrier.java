@@ -4,7 +4,9 @@ import javafx.geometry.Point2D;
 import world.ports.Port;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class represents aircraft carrier.  It have ship's properties and it is a vehicle factory.
@@ -47,5 +49,11 @@ public class AircraftCarrier extends Ship {
     @Override
     public Port getDestination() {
         return null;
+    }
+
+    @Override
+    public Map<String, String> getProperties() {
+        Map<String,String> map = new HashMap<>();
+        return map;
     }
 }

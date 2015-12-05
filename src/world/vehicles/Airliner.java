@@ -89,4 +89,10 @@ public class Airliner extends Airplane implements CivilianVehicle {
     public Port getDestination() {
         return getNextPort();
     }
+
+    @Override
+    public Map<String, String> getProperties() {
+        Map<String , String > map = new HashMap<>();
+        return map;
+    }
 }

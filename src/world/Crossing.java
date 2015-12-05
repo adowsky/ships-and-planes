@@ -13,22 +13,10 @@ import world.vehicles.Vehicle;
 public class Crossing implements Cross{
     private Circle circle;
     private volatile MovingEngine<Vehicle> engine;
-    private  int velX;
-    private int velY;
 
-    public int getVelY() {
-        return velY;
-    }
-
-    public int getVelX() {
-        return velX;
-    }
-
-    public Crossing(int x, int y, int radius){
+    public Crossing(double x, double y, int radius){
         circle = new Circle(x,y,radius);
         engine = new CrossingMovingEngine(this);
-        velX = 5;
-        velY = 5;
         SynchronizedUpdateNotifier.getInstance().addToList(engine);
     }
     public boolean intersect(Bounds bounds){

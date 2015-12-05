@@ -13,8 +13,5 @@ public abstract class SeaPort extends Port {
     public SeaPort(int capacity, Point2D location){
         super(capacity,location);
     }
-    @Override
-    public boolean isAir(){
-        return false;
-    }
+
 }

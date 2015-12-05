@@ -8,6 +8,8 @@ import world.ports.Port;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents vehicle
@@ -175,7 +177,7 @@ public abstract class Vehicle implements Drawable {
     }
     public synchronized void nextCrossing(){
         //TODO instancyjne klasy muszą nadpisać o uruchomienie lądowania
-        if(nextCrossing+1 >= route.size()){
+        if(nextCrossing == route.size()){
             return;
         }
         nextCrossing++;
@@ -186,10 +188,11 @@ public abstract class Vehicle implements Drawable {
 
     public void setRoute(List<Cross> l){
         route = l;
+        nextCrossing = 0;
         Point2D p = countSpeed();
         speedX = p.getX();
         speedY = p.getY();
-        System.out.println("X:"+speedX+"Y:"+speedY);
+        System.out.println(this.getClass().getName()+"-"+this.getId()+": new Route loaded: "+route.size()+" entries.");
     }
 
     public double getSpeedY() {
@@ -228,5 +231,6 @@ public abstract class Vehicle implements Drawable {
     public boolean getReadyToTravel(){
         return readyToTravel;
     }
+    public abstract Map<String, String> getProperties();
 
 }

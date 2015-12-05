@@ -5,10 +5,7 @@ import world.ports.Harbour;
 import world.Passenger;
 import world.ports.Port;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents civilian ship.
@@ -87,6 +84,10 @@ public class FerryBoat extends Ship implements CivilianVehicle {
 
     @Override
     public Harbour getNextPort(){
+        if(lastVisitedPortIndex == route.size()-1){
+            Collections.reverse(route);
+            lastVisitedPortIndex = 0;
+        }
         return ((lastVisitedPortIndex+1) < route.size()) ? route.get(lastVisitedPortIndex + 1) : route.get(lastVisitedPortIndex);
     }
 
@@ -107,6 +108,24 @@ public class FerryBoat extends Ship implements CivilianVehicle {
         else{
             super.nextCrossing();
         }
+    }
+    @Override
+    public void arrivedToPort(){
+        super.arrivedToPort();
+        lastVisitedPortIndex++;
+
+    }
+
+    @Override
+    public Map<String,String> getProperties(){
+        Map<String,String> props = new HashMap<>();
+        props.put("Max Capacity: ",Integer.toString(maxPassengersAmount));
+        props.put("Passengers Amount: ", Integer.toString(passengersList.size()));
+        props.put("Company: ",company);
+        props.put("Location: ",
+                Double.toString(getLocation().getX()).substring(0,5)+"x"+Double.toString(getLocation().getY()).substring(0,5));
+        props.put("ID: ",Integer.toString(getId()));
+        return props;
     }
 
 

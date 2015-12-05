@@ -11,31 +11,8 @@
 <?import gui.PortButton?>
 <BorderPane id="main-container" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/" fx:controller="gui.FXMLWindowController">
    <left>
-       <Pane fx:id="mapPane">
+       <Pane fx:id="mapPane" id="map-pane">
            <Canvas fx:id="canvas" mouseTransparent="true" height="400.0" width="788.0" BorderPane.alignment="CENTER" />
-           <!--Civilian Airports-->
-           <PortButton styleClass="airport-button" layoutX="213" layoutY="100"  onAction="#airPortClicked"/>
-           <PortButton styleClass="airport-button" layoutX="266" layoutY="237" onAction="#airPortClicked"/>
-           <PortButton styleClass="airport-button" layoutX="406" layoutY="51" onAction="#airPortClicked"/>
-           <PortButton styleClass="airport-button" layoutX="412" layoutY="68" onAction="#airPortClicked"/>
-           <PortButton styleClass="airport-button" layoutX="472" layoutY="244" onAction="#airPortClicked" />
-           <PortButton styleClass="airport-button" layoutX="525" layoutY="61" onAction="#airPortClicked"/>
-           <PortButton styleClass="airport-button" layoutX="533" layoutY="126" onAction="#airPortClicked"/>
-           <PortButton styleClass="airport-button" layoutX="592" layoutY="189" onAction="#airPortClicked"/>
-           <PortButton styleClass="airport-button" layoutX="683" layoutY="282" onAction="#airPortClicked"/>
-           <PortButton styleClass="airport-button" layoutX="657" layoutY="110" onAction="#airPortClicked"/>
-           <!--Civilian Seaports-->
-           <PortButton fx:id="reykjavik" name="Reykjavik" styleClass="seaport-button" layoutX="338" layoutY="42" onAction="#seaPortClick"/>
-           <PortButton styleClass="seaport-button" layoutX="352" layoutY="101" onAction="#seaPortClick"/>
-           <PortButton fx:id="miami" name="Miami" styleClass="seaport-button" layoutX="199" layoutY="132" onAction="#seaPortClick"/>
-           <PortButton styleClass="seaport-button" layoutX="286" layoutY="229" onAction="#seaPortClick"/>
-           <PortButton styleClass="seaport-button" layoutX="397" layoutY="219" onAction="#seaPortClick"/>
-           <fx:define>
-               <ArrayList fx:id="portList">
-                   <fx:reference source="miami"/>
-                   <fx:reference source="reykjavik" />
-               </ArrayList>
-           </fx:define>
        </Pane>
    </left>
    <right>

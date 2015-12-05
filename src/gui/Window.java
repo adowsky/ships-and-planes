@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Window extends Application{
@@ -13,8 +14,9 @@ public class Window extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("coffee02.jpg")));
         Parent root = FXMLLoader.load(getClass().getResource("layout.fxml"));
-        Scene scene = new Scene(root,988,400);
+        Scene scene = new Scene(root,1137,500);
         primaryStage.setTitle("Statki i Samoloty");
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);

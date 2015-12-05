@@ -41,10 +41,7 @@ public class MilitaryAirport extends AirPort {
     public boolean isFull() {
        return (planesList.size()>=getMaxCapacity());
     }
-    @Override
-    public boolean isMilitary() {
-        return true;
-    }
+
 
 
     @Override

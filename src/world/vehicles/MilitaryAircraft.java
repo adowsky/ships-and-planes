@@ -4,7 +4,9 @@ import javafx.geometry.Point2D;
 import world.ports.MilitaryAirport;
 import world.ports.Port;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents military aircraft.
@@ -70,5 +72,10 @@ public class MilitaryAircraft extends Airplane {
     @Override
     public Port getDestination() {
         return ((lastVisitedPortIndex+1) < route.size()) ? route.get(lastVisitedPortIndex + 1) : route.get(lastVisitedPortIndex);
+    }
+    @Override
+    public Map<String, String > getProperties(){
+        Map<String , String > map = new HashMap<>();
+        return map;
     }
 }
