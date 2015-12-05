@@ -6,7 +6,7 @@
     </map-model>
     <!--Harbours-->
     <harbour name="Luanda" x="379" y="268" sleep-time="500" capacity="10" >
-        <connection name="Miami">seaBot seaTop</connection>
+        <connection name="Miami">seaBot</connection>
         <connection name="Lisbon">seaBot seaTop</connection>
         <connection name="Reykjavik">seaBot seaTop</connection>
         <connection name="Salvador">seaBot</connection>
@@ -32,15 +32,15 @@
     <harbour name="Reykjavik" x="317" y="90" >
         <connection name="Salvador">seaTop seaBot</connection>
         <connection name="Luanda">seaTop seaBot</connection>
-        <connection name="Salvador">seaTop seaBot</connection>
+        <connection name="Lisbon">seaTop</connection>
         <connection name="Miami">seaTop</connection>
     </harbour>
     <!--Civilian Airports-->
     <!--Military Airports-->
 
     <!--Sea Crossings-->
-    <sea-crossing name="seaTop" x="274" y="158" radius="5"/>
-    <sea-crossing name="seaBot" x="330" y="270" radius="5"/>
+    <sea-crossing name="seaTop" x="274" y="158" radius="10"/>
+    <sea-crossing name="seaBot" x="330" y="270" radius="10"/>
     <!--Air Crossings-->
 
 

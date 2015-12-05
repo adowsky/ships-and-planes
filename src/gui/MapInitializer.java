@@ -110,6 +110,7 @@ public class MapInitializer {
         else
             capacity = Integer.valueOf(att);
         Harbour h = new Harbour(sleepTime, capacity, location);
+        h.setName(el.getAttribute("name"));
         seaPorts.put(el.getAttribute("name"),h);
         return h;
     }

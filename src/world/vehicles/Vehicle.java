@@ -27,6 +27,7 @@ public abstract class Vehicle implements Drawable {
     private double speed;
     private double speedX;
     private  double speedY;
+    private double rotation;
     private List<Cross> route;
     private int nextCrossing;
     private List<LocationChangedListener> listeners;
@@ -49,6 +50,7 @@ public abstract class Vehicle implements Drawable {
         speedX = 0;
         speedY = 0;
         listeners = new LinkedList<>();
+        rotation = 0;
 
     }
 
@@ -86,7 +88,7 @@ public abstract class Vehicle implements Drawable {
         location = new Point2D(x,y);
         locationChanged = true;
         for(LocationChangedListener l : listeners)
-            l.fire(location);
+            l.fire(location, rotation);
     }
     public void addLocationChangedListener(LocationChangedListener l){
         listeners.add(l);
@@ -184,6 +186,7 @@ public abstract class Vehicle implements Drawable {
         Point2D p = countSpeed();
         speedX = p.getX();
         speedY = p.getY();
+        rotation = countRotation();
     }
 
     public void setRoute(List<Cross> l){
@@ -192,9 +195,12 @@ public abstract class Vehicle implements Drawable {
         Point2D p = countSpeed();
         speedX = p.getX();
         speedY = p.getY();
+        rotation = countRotation();
         System.out.println(this.getClass().getName()+"-"+this.getId()+": new Route loaded: "+route.size()+" entries.");
     }
-
+    public double getRotation(){
+        return  rotation;
+    }
     public double getSpeedY() {
         return speedY;
     }
@@ -226,6 +232,24 @@ public abstract class Vehicle implements Drawable {
         if(destY < location.getY())
             speedY = -speedY;
         return new Point2D(speedX,speedY);
+    }
+    private double countRotation(){
+        double result;
+        if(speedX>0 && speedY>0) {
+            result = Math.toDegrees(Math.atan(Math.abs(speedY/(speedX*1.0))));
+            result += 90.0;
+        }
+        else if (speedX<0 && speedY >0) {
+            result = Math.toDegrees(Math.atan(Math.abs((speedX*1.0)/speedY)));
+            result += 180.0;
+        }
+        else if(speedX<0 && speedY<0) {
+            result = Math.toDegrees(Math.atan(Math.abs((speedY*1.0)/speedX)));
+            result += 270.0;
+        }
+        else
+            result = Math.toDegrees(Math.atan(Math.abs((speedX*1.0)/speedY)));
+        return result;
     }
     public abstract Port getDestination();
     public boolean getReadyToTravel(){

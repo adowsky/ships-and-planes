@@ -11,7 +11,10 @@ import world.vehicles.Vehicle;
  */
 public class VehicleButton extends Button implements LocationChangedListener {
     private Vehicle model;
+    private double rotation;
     public void setModel(Vehicle vehicle){
+        rotation = 0;
+        setRotate(0);
         this.model = vehicle;
         model.addLocationChangedListener(this);
     }
@@ -21,8 +24,17 @@ public class VehicleButton extends Button implements LocationChangedListener {
     }
 
     @Override
-    public void fire(Point2D location){
-        Platform.runLater(()-> relocate(location.getX(),location.getY()));
+    public void fire(Point2D location, double rotation){
+        if(rotation != this.rotation) {
+            Platform.runLater(() -> {
+                relocate(location.getX(), location.getY());
+                setRotate(rotation);
+            });
+            this.rotation = rotation;
+            System.out.println("new rotation"+ rotation);
+        }
+        else
+            Platform.runLater(()->relocate(location.getX(), location.getY()));
 
     }
 }

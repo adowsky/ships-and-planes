@@ -14,14 +14,18 @@
     -fx-fill: #252320;
     -fx-font-smoothing-type: gray;
 }
+#port-name{
+    -fx-font-size: 20px;
+    -fx-font-family: "Ubuntu", "FreeSans", "Liberation Sans";
+    -fx-fill: #252320;
+    -fx-font-smoothing-type: gray;
+}
 .airport-button{
-    -fx-min-width: 8px;
-    -fx-max-width: 8px;
-    -fx-min-height: 8px;
-    -fx-max-height: 8px;
-    -fx-background-radius: 10em;
+    -fx-min-width: 20px;
+    -fx-max-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-height: 20px;
     -fx-background-color: blue;
-    -fx-background-insets: 0px;
     -fx-padding: 0px;
 }
 .airport-button:hover{

@@ -34,6 +34,7 @@ public class FerryBoat extends Ship implements CivilianVehicle {
         onMove=false;
         arrivalTime=0;
         this.route = route;
+        setRoute(route.get(0).getRouteToPort(route.get(1)));
         lastVisitedPortIndex = 0;
         passengersList = new HashSet<>();
     }

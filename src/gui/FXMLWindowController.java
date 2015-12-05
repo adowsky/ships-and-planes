@@ -19,6 +19,7 @@ import javafx.scene.text.Text;
 import sun.rmi.server.InactiveGroupException;
 import world.Cross;
 import world.Crossing;
+import world.ports.CivilianAirport;
 import world.ports.Harbour;
 import world.ports.Port;
 import world.vehicles.FerryBoat;
@@ -35,6 +36,7 @@ import java.util.*;
 
 public class FXMLWindowController implements Initializable {
     private static FXMLWindowController instance;
+
     @FXML private Canvas canvas;
     @FXML private BorderPane controlPanel;
     @FXML private Pane mapPane;
@@ -46,7 +48,10 @@ public class FXMLWindowController implements Initializable {
     private EventHandler<ActionEvent> civilianShipClicked;
     private ChoosingController choosingTarget;
     private boolean choosingState = false;
-    MapInitializer initializer;
+    private MapInitializer initializer;
+    private Set<PortButton<Harbour>> harbourButtons;
+    private Set<PortButton<CivilianAirport>> CAirportButtons;
+
 
     public static FXMLWindowController getInstance(){
         synchronized(FXMLWindowController.class) {
@@ -64,26 +69,34 @@ public class FXMLWindowController implements Initializable {
         final GraphicsContext gc = canvas.getGraphicsContext2D();
         Image map = new Image(getClass().getResourceAsStream("blank-world-map (1).jpg"));
         System.out.println("Initialization");
-        //gc.setFill(Color.GREEN);
-       // gc.fillOval(10,10,10,10);
         gc.drawImage(map,0,0);
         vehicleDetails = new VehicleDetails();
         civilianShipClicked = event -> {
             vehicleDetails.setDetails(((VehicleButton)event.getSource()).getModel());
             controlPanel.setCenter(vehicleDetails);
+            allEnabled();
+            setChoosingState(false);
+            System.out.println("cleared");
         };
 
         Map<String, Harbour> ports= null;
         try{
             initializer = new MapInitializer(getClass().getResource("map.xml").getPath());
-            Set<PortButton<Harbour>> set = initializer.getHarbours();
-            set.forEach((btn) ->{btn.getStyleClass().add("seaport-button");
-            btn.setOnAction(event -> seaPortClick(null));});
+            harbourButtons = initializer.getHarbours();
+            CAirportButtons = initializer.getCivilianAirports();
+            harbourButtons.forEach((btn) ->{btn.getStyleClass().add("seaport-button");
+            btn.setOnAction(event -> seaPortClick(btn));});
             ports = initializer.getSeaPorts();
-            mapPane.getChildren().addAll(set);
+            mapPane.getChildren().addAll(harbourButtons);
         }catch (ParserConfigurationException ex){
             ex.printStackTrace();
             //TODO wyłączenie apki
+        }
+        try {
+            civilianPlane = FXMLLoader.load(getClass().getResource("civilian_ship_form.fxml"));
+            civilianAirForm = FXMLLoader.load(getClass().getResource("military_ship_form.fxml"));
+        }catch (IOException ex){
+            ex.printStackTrace();
         }
         VehicleButton vhc = new VehicleButton();
         Harbour reykjavik = ports.get("Reykjavik");
@@ -98,38 +111,18 @@ public class FXMLWindowController implements Initializable {
 
     }
 
-    @FXML public synchronized void seaPortClick(ActionEvent event){
-        Thread t;
-        if(civilianPlane == null) {
-            t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        civilianPlane = FXMLLoader.load(getClass().getResource("civilian_ship_form.fxml"));
-                        Platform.runLater(()->controlPanel.setCenter(civilianPlane));
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
-            t.setDaemon(true);
-            t.start();
+    @FXML public synchronized void seaPortClick(PortButton source){
+        if(choosingState){
+            String name = source.getModel().getName();
+            choosingTarget.ChoiceHasBeenMade(name);
+            return;
         }
+        FerryFormController.getInstance().setPortName(source.getModel().getName());
+        Platform.runLater(()->controlPanel.setCenter(civilianPlane));
+
     }
     @FXML public synchronized  void airPortClicked(ActionEvent event){
-        if(civilianAirForm == null) {
-            Thread t;
-            t = new Thread(() -> {
-                try {
-                    civilianAirForm = FXMLLoader.load(getClass().getResource("military_ship_form.fxml"));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                Platform.runLater(() -> controlPanel.setCenter(civilianAirForm));
-            });
-            t.setDaemon(true);
-            t.start();
-        }
+        Platform.runLater(() -> controlPanel.setCenter(civilianAirForm));
     }
 
     class VehicleDetails extends GridPane{
@@ -146,11 +139,16 @@ public class FXMLWindowController implements Initializable {
     }
     public void onlyCivilianShipsEnabled(){
         synchronized (enablingProtector) {
-
+            for(PortButton port : CAirportButtons){
+                port.setDisable(true);
+            }
         }
 
     }
     public void allEnabled(){
+        for(PortButton<Harbour> port : harbourButtons){
+            port.setDisable(false);
+        }
 
     }
     public void setChoosingTarget(ChoosingController o){
@@ -160,23 +158,30 @@ public class FXMLWindowController implements Initializable {
         choosingState = state;
     }
     public void addVehicleButton(Map<String, String[]> details){
-
+        VehicleButton btn = parseDetails(details);
+        mapPane.getChildren().add(btn);
+        btn.getModel().setReadyToTravel();
     }
-    private void parseDetails(Map<String, String[]> details){
-        int maxFuel = Integer.valueOf(details.get("Max fuel")[0]);
+    private VehicleButton parseDetails(Map<String, String[]> details){
         int maxCapacity = Integer.valueOf(details.get("Max capacity")[0]);
         int speed = Integer.valueOf(details.get("Speed")[0]);
         int staffAmount = Integer.valueOf(details.get("Staff amount")[0]);
         String type = details.get("Type")[0];
         String[] route = details.get("Route");
-
+        VehicleButton btn = new VehicleButton();
             //FACTORY
-        if(type.equals("FerryBoat")){
+        if(type.equals("Ferry")){
             List<Harbour> portList = new ArrayList<>();
             Map<String, Harbour> ports = initializer.getSeaPorts();
             for(String s: route){
                 portList.add(ports.get(s));
             }
-        }
+            Point2D modelLocation = portList.get(0).getLocation();
+            FerryBoat model = new FerryBoat(modelLocation, speed/100.0, portList, maxCapacity, details.get("Company")[0]);
+            btn.setModel(model);
+            btn.getStyleClass().add("civilian-ship");
+            btn.setOnAction(civilianShipClicked);
+        }//end of factory
+        return btn;
     }
 }

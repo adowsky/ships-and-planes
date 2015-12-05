@@ -28,8 +28,8 @@ public class PortButton<T extends Port> extends Button {
         if(location == null)
             location = new Point2D(model.getX(),model.getY());
         return location;
-
     }
+
     public void setName(String name){
         this.name = name;
     }

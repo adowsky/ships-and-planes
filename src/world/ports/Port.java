@@ -23,6 +23,15 @@ public abstract class Port implements Drawable, Cross {
     private Set<Port> landConnectionPorts;
     private MovingEngine<Vehicle> engine;
     private Map<Port,List<Cross>> ways;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getMaxCapacity() {
         return maxCapacity;
