@@ -25,8 +25,10 @@
     -fx-max-width: 20px;
     -fx-min-height: 20px;
     -fx-max-height: 20px;
-    -fx-background-color: blue;
+    -fx-background-color: transparent;
+    -fx-background-image: url("airport.png");
     -fx-padding: 0px;
+    -fx-background-insets: 0px;
 }
 .airport-button:hover{
     -fx-background-color: aqua;

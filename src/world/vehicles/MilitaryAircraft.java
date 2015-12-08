@@ -56,7 +56,6 @@ public class MilitaryAircraft extends Airplane {
     public void Draw() {
 
     }
-
     @Override
     public MilitaryAirport getNextPort() {
         return ((lastVisitedPortIndex+1) < route.size()) ? route.get(lastVisitedPortIndex + 1) : route.get(lastVisitedPortIndex);
@@ -77,5 +76,10 @@ public class MilitaryAircraft extends Airplane {
     public Map<String, String > getProperties(){
         Map<String , String > map = new HashMap<>();
         return map;
+    }
+
+    @Override
+    public Port getLastPort() {
+        return route.get(lastVisitedPortIndex);
     }
 }

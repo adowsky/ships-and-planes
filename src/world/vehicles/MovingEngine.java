@@ -1,5 +1,7 @@
 package world.vehicles;
 
+import world.World;
+
 /**
  * Responsible for moving something.
  * @param <T> Objects that needs moving service.

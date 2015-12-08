@@ -3,6 +3,10 @@ package world.vehicles;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Transform;
 import world.*;
 import world.ports.Port;
 
@@ -22,7 +26,7 @@ public abstract class Vehicle implements Drawable {
     private boolean running;
     private boolean readyToTravel;
     private MovingEngine<List<Cross>> engine;
-    private volatile Bounds bounds;
+    private volatile Shape bounds;
     boolean locationChanged;
     private double speed;
     private double speedX;
@@ -31,6 +35,7 @@ public abstract class Vehicle implements Drawable {
     private List<Cross> route;
     private int nextCrossing;
     private List<LocationChangedListener> listeners;
+    private Rotate transform;
 
     /**
      * Creates Vehicle with specific location and route
@@ -44,7 +49,7 @@ public abstract class Vehicle implements Drawable {
         running = false;
         this.speed = speed;
         engine = new VehicleMovingEngine(this);
-        bounds = new BoundingBox(location.getX(),location.getY(), WorldConstants.VEHICLE_WIDTH,WorldConstants.VEHICLE_HEIGHT);
+        bounds = new Rectangle(location.getX(),location.getY(), WorldConstants.VEHICLE_WIDTH,WorldConstants.VEHICLE_HEIGHT);
         locationChanged = false;
         nextCrossing = 0;
         speedX = 0;
@@ -54,9 +59,15 @@ public abstract class Vehicle implements Drawable {
 
     }
 
-    public synchronized Bounds getBounds() {
+    public synchronized Shape getBounds() {
         if(locationChanged) {
-            bounds = new BoundingBox(location.getX(), location.getY(), WorldConstants.VEHICLE_WIDTH, WorldConstants.VEHICLE_HEIGHT);
+            double x = location.getX();
+            double y = location.getY();
+            bounds =
+                    new Rectangle(x, y,
+                            WorldConstants.VEHICLE_WIDTH, WorldConstants.VEHICLE_HEIGHT);
+
+            bounds.setRotate(rotation);
             locationChanged = false;
         }
         return bounds;
@@ -182,11 +193,16 @@ public abstract class Vehicle implements Drawable {
         if(nextCrossing == route.size()){
             return;
         }
+        removeFromPreviousCrossingRegister();
+        if(!isOnRouteFinish())
+            route.get(nextCrossing).registerNewTravellingTo(route.get(nextCrossing+1),this);
         nextCrossing++;
         Point2D p = countSpeed();
         speedX = p.getX();
         speedY = p.getY();
         rotation = countRotation();
+        transform = new Rotate(rotation);
+
     }
 
     public void setRoute(List<Cross> l){
@@ -196,7 +212,7 @@ public abstract class Vehicle implements Drawable {
         speedX = p.getX();
         speedY = p.getY();
         rotation = countRotation();
-        System.out.println(this.getClass().getName()+"-"+this.getId()+": new Route loaded: "+route.size()+" entries.");
+        transform = new Rotate(rotation);
     }
     public double getRotation(){
         return  rotation;
@@ -251,10 +267,27 @@ public abstract class Vehicle implements Drawable {
             result = Math.toDegrees(Math.atan(Math.abs((speedX*1.0)/speedY)));
         return result;
     }
+    public Cross getCurrentCrossing(){
+        return (nextCrossing==0) ? getLastPort() : route.get(nextCrossing-1);
+    }
+    public boolean instersects(Vehicle v){
+        Shape s = Shape.intersect(bounds,v.getBounds());
+        if(s.getBoundsInLocal().getWidth()!=-1)
+            return  true;
+        return false;
+
+    }
+    public void removeFromPreviousCrossingRegister(){
+        if(nextCrossing > 0)
+            route.get(nextCrossing-1).removeFromTravellingTo(route.get(nextCrossing),this);
+        else
+            getLastPort().removeFromTravellingTo(route.get(nextCrossing),this);
+    }
     public abstract Port getDestination();
     public boolean getReadyToTravel(){
         return readyToTravel;
     }
     public abstract Map<String, String> getProperties();
+    public abstract Port getLastPort();
 
 }

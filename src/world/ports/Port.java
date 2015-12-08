@@ -3,15 +3,13 @@ package world.ports;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import world.*;
 import world.vehicles.MovingEngine;
 import world.vehicles.PortMovingEngine;
 import world.vehicles.Vehicle;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents port. Vehicle can stay there.
@@ -24,6 +22,7 @@ public abstract class Port implements Drawable, Cross {
     private MovingEngine<Vehicle> engine;
     private Map<Port,List<Cross>> ways;
     private String name;
+    private Map<Cross,List<Vehicle>> travellingMap;
 
     public String getName() {
         return name;
@@ -44,6 +43,7 @@ public abstract class Port implements Drawable, Cross {
         this.location = location;
         circle = new Circle(location.getX(), location.getY(), WorldConstants.PORT_RADIUS);
         engine = new PortMovingEngine(this);
+        travellingMap = new HashMap<>();
 
     }
     public List<Cross> getRouteToPort(Port port){
@@ -70,8 +70,8 @@ public abstract class Port implements Drawable, Cross {
     }
 
     @Override
-    public boolean intersect(Bounds bounds) {
-        return circle.intersects(bounds);
+    public boolean intersect(Shape bounds) {
+        return circle.intersects(bounds.getBoundsInLocal());
     }
 
     @Override
@@ -86,6 +86,26 @@ public abstract class Port implements Drawable, Cross {
      * @return true - Port have max value of vehicles, false - Port still have some space to land.
      */
     public abstract boolean isFull();
-
+    @Override
+    public List<Vehicle> getVehiclesTravellingTo(Cross name) {
+        return travellingMap.get(name);
+    }
+    @Override
+    public void registerNewTravellingTo(Cross name, Vehicle v){
+        List<Vehicle> vehicleList = travellingMap.get(name);
+        if(vehicleList == null){
+            vehicleList = new ArrayList<>();
+            travellingMap.put(name,vehicleList);
+        }
+        vehicleList.add(v);
+    }
+    @Override
+    public void removeFromTravellingTo(Cross name, Vehicle v){
+        List<Vehicle> vehicleList = travellingMap.get(name);
+        if(vehicleList == null){
+            return;
+        }
+        vehicleList.remove(v);
+    }
 
 }

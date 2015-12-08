@@ -31,7 +31,6 @@ public class VehicleButton extends Button implements LocationChangedListener {
                 setRotate(rotation);
             });
             this.rotation = rotation;
-            System.out.println("new rotation"+ rotation);
         }
         else
             Platform.runLater(()->relocate(location.getX(), location.getY()));

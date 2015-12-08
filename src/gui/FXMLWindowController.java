@@ -19,10 +19,12 @@ import javafx.scene.text.Text;
 import sun.rmi.server.InactiveGroupException;
 import world.Cross;
 import world.Crossing;
+import world.World;
 import world.ports.CivilianAirport;
 import world.ports.Harbour;
 import world.ports.Port;
 import world.vehicles.FerryBoat;
+import world.vehicles.Ship;
 import world.vehicles.Vehicle;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -70,6 +72,8 @@ public class FXMLWindowController implements Initializable {
         Image map = new Image(getClass().getResourceAsStream("blank-world-map (1).jpg"));
         System.out.println("Initialization");
         gc.drawImage(map,0,0);
+
+
         vehicleDetails = new VehicleDetails();
         civilianShipClicked = event -> {
             vehicleDetails.setDetails(((VehicleButton)event.getSource()).getModel());
@@ -86,8 +90,13 @@ public class FXMLWindowController implements Initializable {
             CAirportButtons = initializer.getCivilianAirports();
             harbourButtons.forEach((btn) ->{btn.getStyleClass().add("seaport-button");
             btn.setOnAction(event -> seaPortClick(btn));});
+            CAirportButtons.forEach((btn)->{
+                btn.getStyleClass().add("airport-button");
+                btn.setOnAction(event -> airPortClicked(btn));
+            });
             ports = initializer.getSeaPorts();
             mapPane.getChildren().addAll(harbourButtons);
+            mapPane.getChildren().addAll(CAirportButtons);
         }catch (ParserConfigurationException ex){
             ex.printStackTrace();
             //TODO wyłączenie apki
@@ -121,7 +130,7 @@ public class FXMLWindowController implements Initializable {
         Platform.runLater(()->controlPanel.setCenter(civilianPlane));
 
     }
-    @FXML public synchronized  void airPortClicked(ActionEvent event){
+    @FXML public synchronized  void airPortClicked(PortButton event){
         Platform.runLater(() -> controlPanel.setCenter(civilianAirForm));
     }
 
@@ -147,6 +156,9 @@ public class FXMLWindowController implements Initializable {
     }
     public void allEnabled(){
         for(PortButton<Harbour> port : harbourButtons){
+            port.setDisable(false);
+        }
+        for(PortButton port : CAirportButtons){
             port.setDisable(false);
         }
 

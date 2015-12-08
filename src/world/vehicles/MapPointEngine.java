@@ -34,6 +34,7 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>{
             return;
         toTheCenter();
         c.nextCrossing();
+
     }
     @Override
     public void clearCanMove(){

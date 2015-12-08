@@ -50,9 +50,7 @@ public class SynchronizedUpdateNotifier implements Runnable{
         }
     }
     private synchronized void notifyAboutUpdate(){
-        for(MovingEngine e : notificationList){
-            e.setCanMove();
-        }
+        notificationList.forEach((e)->e.setCanMove());
     }
 
 }

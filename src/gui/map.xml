@@ -36,13 +36,133 @@
         <connection name="Miami">seaTop</connection>
     </harbour>
     <!--Civilian Airports-->
+    <c-airport name="Brasilia" x="260" y="293">
+        <connection name="New York"></connection>
+        <connection name="Stockholm">africa germany</connection>
+        <connection name="Rome">africa</connection>
+        <connection name="Omsk">africa georgia</connection>
+        <connection name="Tokyo">africa pakistan middleAsia china</connection>
+        <connection name="New Delhi">africa pakistan</connection>
+        <connection name="Sydney">africa IndianOcean australia</connection>
+        <connection name="Kuala Lumpur">africa IndianOcean</connection>
+        <connection name="Antananariva">africa</connection>
+    </c-airport>
+    <c-airport name="New York" x="205" y="148">
+        <connection name="Brasilia"></connection>
+        <connection name="Stockholm">germany</connection>
+        <connection name="Rome">germany</connection>
+        <connection name="Omsk">africa georgia</connection>
+        <connection name="Tokyo">africa pakistan middleAsia china</connection>
+        <connection name="New Delhi">africa pakistan</connection>
+        <connection name="Sydney">africa IndianOcean australia</connection>
+        <connection name="Kuala Lumpur">africa IndianOcean</connection>
+        <connection name="Antananariva">africa</connection>
+    </c-airport>
+    <c-airport name="Stockholm" x="384" y="93">
+        <connection name="New York">germany</connection>
+        <connection name="Brasilia">germany africa</connection>
+        <connection name="Rome">germany</connection>
+        <connection name="Omsk">russia</connection>
+        <connection name="Tokyo">russia georgia pakistan middleAsia china</connection>
+        <connection name="New Delhi">russia georgia pakistan</connection>
+        <connection name="Sydney">africa IndianOcean australia</connection>
+        <connection name="Kuala Lumpur">africa IndianOcean</connection>
+        <connection name="Antananariva">africa</connection>
+    </c-airport>
+    <c-airport name="Rome" x="376" y="148">
+        <connection name="New York">germany</connection>
+        <connection name="Stockholm">germany</connection>
+        <connection name="Brasilia">africa</connection>
+        <connection name="Omsk">georgia</connection>
+        <connection name="Tokyo">georgia pakistan middleAsia china</connection>
+        <connection name="New Delhi">georgia pakistan</connection>
+        <connection name="Sydney">africa IndianOcean australia</connection>
+        <connection name="Kuala Lumpur">africa IndianOcean</connection>
+        <connection name="Antananariva">africa</connection>
+    </c-airport>
+    <c-airport name="Omsk" x="492" y="103">
+        <connection name="New York">georgia africa</connection>
+        <connection name="Stockholm">russia</connection>
+        <connection name="Rome">georgia</connection>
+        <connection name="Brasilia">georgia africa</connection>
+        <connection name="Tokyo">china</connection>
+        <connection name="New Delhi">china</connection>
+        <connection name="Sydney">china southChina</connection>
+        <connection name="Kuala Lumpur">china bengal</connection>
+        <connection name="Antananariva">china bengal IndianOcean</connection>
+    </c-airport>
+    <c-airport name="Tokyo" x="619" y="165">
+        <connection name="New York">china middleAsia pakistan africa</connection>
+        <connection name="Stockholm">china middleAsia pakistan georgia russia</connection>
+        <connection name="Rome">china middleAsia pakistan georgia</connection>
+        <connection name="Omsk">china</connection>
+        <connection name="Brasilia">china middleAsia pakistan africa</connection>
+        <connection name="New Delhi">china</connection>
+        <connection name="Sydney">southChina</connection>
+        <connection name="Kuala Lumpur">southChina</connection>
+        <connection name="Antananariva">southChina bengal IndianOcean</connection>
+    </c-airport>
+    <c-airport name="New Delhi" x="508" y="171">
+        <connection name="New York">pakistan africa</connection>
+        <connection name="Stockholm">pakistan georgia russia</connection>
+        <connection name="Rome">pakistan georgia</connection>
+        <connection name="Omsk">china</connection>
+        <connection name="Tokyo">china</connection>
+        <connection name="Brasilia">pakistan africa</connection>
+        <connection name="Sydney">IndianOcean australia</connection>
+        <connection name="Kuala Lumpur">bengal</connection>
+        <connection name="Antananariva">IndianOcean</connection>
+    </c-airport>
+    <c-airport name="Sydney" x="641" y="332">
+        <connection name="New York">australia IndianOcean africa</connection>
+        <connection name="Stockholm">australia IndianOcean africa</connection>
+        <connection name="Rome">australia IndianOcean africa</connection>
+        <connection name="Omsk">southChina china</connection>
+        <connection name="Tokyo">southChina</connection>
+        <connection name="New Delhi">australia IndianOcean</connection>
+        <connection name="Brasilia">australia IndianOcean africa</connection>
+        <connection name="Kuala Lumpur">australia</connection>
+        <connection name="Antananariva">australia IndianOcean</connection>
+    </c-airport>
+    <c-airport name="Kuala Lumpur" x="546" y="241">
+        <connection name="New York">IndianOcean africa</connection>
+        <connection name="Stockholm">IndianOcean africa</connection>
+        <connection name="Rome">IndianOcean africa</connection>
+        <connection name="Omsk">bengal china</connection>
+        <connection name="Tokyo">southChina</connection>
+        <connection name="New Delhi">bengal</connection>
+        <connection name="Sydney">australia</connection>
+        <connection name="Brasilia">IndianOcean africa</connection>
+        <connection name="Antananariva">IndianOcean</connection>
+    </c-airport>
+    <c-airport name="Antananariva" x="441" y="290">
+        <connection name="New York">afcrica</connection>
+        <connection name="Stockholm">africa</connection>
+        <connection name="Rome">africa</connection>
+        <connection name="Omsk">IndianOcean bengal china</connection>
+        <connection name="Tokyo">IndianOcean bengal southChina</connection>
+        <connection name="New Delhi">IndianOcean</connection>
+        <connection name="Sydney">IndianOcean australia</connection>
+        <connection name="Kuala Lumpur">IndianOcean</connection>
+        <connection name="Brasilia">africa</connection>
+    </c-airport>
     <!--Military Airports-->
 
     <!--Sea Crossings-->
     <sea-crossing name="seaTop" x="274" y="158" radius="10"/>
     <sea-crossing name="seaBot" x="330" y="270" radius="10"/>
     <!--Air Crossings-->
-
-
+    <air-crossing name="africa" x="346" y="192" radius="10" />
+    <air-crossing name="germany" x="403" y="119" radius="10" />
+    <air-crossing name="england" x="352" y="116" radius="10" />
+    <air-crossing name="russia" x="490" y="109" radius="10" />
+    <air-crossing name="georgia" x="436" y="151" radius="10" />
+    <air-crossing name="pakistan" x="492" y="194" radius="10" />
+    <air-crossing name="middleAsia" x="530" y="159" radius="10" />
+    <air-crossing name="china" x="553" y="175" radius="10" />
+    <air-crossing name="southChina" x="585" y="206" radius="10" />
+    <air-crossing name="IndianOcean" x="489" y="259" radius="10" />
+    <air-crossing name="australia" x="568" y="301" radius="10" />
+    <air-crossing name="bengal" x="531" y="228" radius="10" />
 </map>
 

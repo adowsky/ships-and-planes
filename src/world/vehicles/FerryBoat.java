@@ -104,6 +104,7 @@ public class FerryBoat extends Ship implements CivilianVehicle {
     @Override
     public void nextCrossing(){
         if(isOnRouteFinish()){
+            removeFromPreviousCrossingRegister();
             getNextPort().vehicleArrive(this);
         }
         else{
@@ -127,6 +128,11 @@ public class FerryBoat extends Ship implements CivilianVehicle {
                 Double.toString(getLocation().getX()).substring(0,5)+"x"+Double.toString(getLocation().getY()).substring(0,5));
         props.put("ID: ",Integer.toString(getId()));
         return props;
+    }
+
+    @Override
+    public Port getLastPort() {
+        return route.get(lastVisitedPortIndex);
     }
 
 

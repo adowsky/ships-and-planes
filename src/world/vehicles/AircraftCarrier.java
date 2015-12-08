@@ -56,4 +56,10 @@ public class AircraftCarrier extends Ship {
         Map<String,String> map = new HashMap<>();
         return map;
     }
+
+    @Override
+    public Port getLastPort() {
+        //TODO
+        return null;
+    }
 }

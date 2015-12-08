@@ -95,4 +95,9 @@ public class Airliner extends Airplane implements CivilianVehicle {
         Map<String , String > map = new HashMap<>();
         return map;
     }
+
+    @Override
+    public Port getLastPort() {
+        return route.get(lastVisitedPortIndex);
+    }
 }
