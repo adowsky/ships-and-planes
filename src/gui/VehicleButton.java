@@ -12,8 +12,11 @@ import world.vehicles.Vehicle;
 public class VehicleButton extends Button implements LocationChangedListener {
     private Vehicle model;
     private double rotation;
+    private double currentTranslation;
+    private final double TRANSLATION = 6.0;
     public void setModel(Vehicle vehicle){
         rotation = 0;
+        currentTranslation = 6;
         setRotate(0);
         this.model = vehicle;
         model.addLocationChangedListener(this);
@@ -24,7 +27,16 @@ public class VehicleButton extends Button implements LocationChangedListener {
     }
 
     @Override
-    public void fire(Point2D location, double rotation){
+    public void fire(Point2D location, double rotation, boolean translate){
+        if(translate){
+            if(currentTranslation > (-TRANSLATION)) {
+                currentTranslation -= Math.abs(model.getSpeedX()*5);
+            }
+        }
+        else{
+            if(currentTranslation < TRANSLATION)
+                currentTranslation += Math.abs(model.getSpeedX()*5);
+        }
         if(rotation != this.rotation) {
             Platform.runLater(() -> {
                 relocate(location.getX(), location.getY());
@@ -33,7 +45,16 @@ public class VehicleButton extends Button implements LocationChangedListener {
             this.rotation = rotation;
         }
         else
-            Platform.runLater(()->relocate(location.getX(), location.getY()));
+            Platform.runLater(()->{relocate(location.getX(), location.getY());
+                if(translate) {
+                    setTranslateX(currentTranslation);
+                    setTranslateY(currentTranslation);
+                }
+                else{
+                    setTranslateY(currentTranslation);
+                    setTranslateX(currentTranslation);
+                }
+            });
 
     }
 }

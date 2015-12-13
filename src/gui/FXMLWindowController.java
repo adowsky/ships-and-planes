@@ -10,19 +10,15 @@ import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import sun.rmi.server.InactiveGroupException;
-import world.Cross;
-import world.Crossing;
-import world.World;
 import world.ports.CivilianAirport;
 import world.ports.Harbour;
-import world.ports.Port;
 import world.vehicles.FerryBoat;
 import world.vehicles.Ship;
 import world.vehicles.Vehicle;
@@ -76,11 +72,13 @@ public class FXMLWindowController implements Initializable {
 
         vehicleDetails = new VehicleDetails();
         civilianShipClicked = event -> {
-            vehicleDetails.setDetails(((VehicleButton)event.getSource()).getModel());
-            controlPanel.setCenter(vehicleDetails);
-            allEnabled();
-            setChoosingState(false);
-            System.out.println("cleared");
+            Platform.runLater(()-> {
+                vehicleDetails.setDetails(((VehicleButton) event.getSource()).getModel());
+                controlPanel.setCenter(vehicleDetails);
+                allEnabled();
+                setChoosingState(false);
+            });
+
         };
 
         Map<String, Harbour> ports= null;
@@ -110,12 +108,20 @@ public class FXMLWindowController implements Initializable {
         VehicleButton vhc = new VehicleButton();
         Harbour reykjavik = ports.get("Reykjavik");
         Harbour salvador = ports.get("Salvador");
-        FerryBoat boat = new FerryBoat(reykjavik.getLocation(),0.01,Arrays.asList(reykjavik,ports.get("Salvador")),50,"KOMODO");
+        FerryBoat boat = new FerryBoat(reykjavik.getLocation(),0.01,Arrays.asList(reykjavik,salvador),50,"KOMODO");
         vhc.setModel(boat);
         vhc.getStyleClass().add("civilian-ship");
         vhc.setOnAction(civilianShipClicked);
         mapPane.getChildren().add(vhc);
         boat.setRoute(reykjavik.getRouteToPort(salvador));
+        boat.setReadyToTravel();
+        vhc = new VehicleButton();
+        boat = new FerryBoat(salvador.getLocation(),0.01,Arrays.asList(salvador,reykjavik),50,"KOMODO");
+        vhc.setModel(boat);
+        vhc.getStyleClass().add("civilian-ship");
+        vhc.setOnAction(civilianShipClicked);
+        mapPane.getChildren().add(vhc);
+        boat.setRoute(salvador.getRouteToPort(reykjavik));
         boat.setReadyToTravel();
 
     }
@@ -135,7 +141,10 @@ public class FXMLWindowController implements Initializable {
     }
 
     class VehicleDetails extends GridPane{
+     private   Vehicle v;
      public void setDetails(Vehicle v){
+
+         this.v=v;
          this.getChildren().clear();
          Map<String, String> map = v.getProperties();
          int i =0;
@@ -144,6 +153,21 @@ public class FXMLWindowController implements Initializable {
              add(new Label(map.get(key)),1,i);
              i++;
          }
+         if(v instanceof Ship) {
+             Button landing = new Button("Emergency Landing");
+             landing.setOnAction((event) -> {
+                 //TODO
+                 System.out.println("Emergency Landing");
+             });
+             add(landing,0,i++);
+         }
+         Button destroy = new Button("Destroy Vehicle");
+         destroy.setOnAction((event) ->{
+             //TODO
+             System.out.println("Destroying vehicle");
+         });
+         add(destroy,0,i++);
+
      }
     }
     public void onlyCivilianShipsEnabled(){
@@ -177,7 +201,6 @@ public class FXMLWindowController implements Initializable {
     private VehicleButton parseDetails(Map<String, String[]> details){
         int maxCapacity = Integer.valueOf(details.get("Max capacity")[0]);
         int speed = Integer.valueOf(details.get("Speed")[0]);
-        int staffAmount = Integer.valueOf(details.get("Staff amount")[0]);
         String type = details.get("Type")[0];
         String[] route = details.get("Route");
         VehicleButton btn = new VehicleButton();

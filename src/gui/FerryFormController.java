@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.IndexedCell;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import world.vehicles.FerryBoat;
 
 import java.net.URL;
@@ -23,7 +24,6 @@ public class FerryFormController implements ChoosingController, Initializable{
     private final String SUCCESS_MSG = "Ferryboat has been created!";
 
     private boolean choosing = false;
-    @FXML private TextField staffAmount;
     @FXML private TextField company;
     @FXML private TextField maxCapacity;
     @FXML private TextField speed;
@@ -44,6 +44,9 @@ public class FerryFormController implements ChoosingController, Initializable{
         }
 
     }
+    @FXML public void removeDockedVehicle(){
+
+    }
     public void setPortName(String name){
         portName.setText(name);
     }
@@ -61,7 +64,6 @@ public class FerryFormController implements ChoosingController, Initializable{
         routeButton.setText("Choose Route");
     }
     private void clearForm(){
-        staffAmount.clear();
         company.clear();
         maxCapacity.clear();
         speed.clear();
@@ -73,13 +75,14 @@ public class FerryFormController implements ChoosingController, Initializable{
             FXMLWindowController.getInstance().addVehicleButton(mapShipDetails());
             clearForm();
             info.setText(SUCCESS_MSG);
-        }else
+            info.setTextFill(Color.GREEN);
+        }else {
             info.setText(ERROR_MSG);
+            info.setTextFill(Color.RED);
+        }
 
     }
     private boolean validate(){
-        if(staffAmount.getText().equals(""))
-            return false;
         if(company.getText().equals(""))
             return false;
         if(maxCapacity.getText().equals(""))
@@ -92,7 +95,6 @@ public class FerryFormController implements ChoosingController, Initializable{
     }
     private Map<String, String[]> mapShipDetails(){
         Map<String, String[]> shipDetails = new HashMap<>();
-        shipDetails.put("Staff amount", new String[]{staffAmount.getText()});
         shipDetails.put("Company", new String[]{company.getText()});
         shipDetails.put("Max capacity", new String[]{maxCapacity.getText()});
         shipDetails.put("Speed", new String[]{speed.getText()});

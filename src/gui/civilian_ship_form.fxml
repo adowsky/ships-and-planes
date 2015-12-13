@@ -13,22 +13,26 @@
 <GridPane alignment="TOP_CENTER" hgap="2" vgap="2" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/" fx:controller="gui.FerryFormController">
     <children>
         <Label fx:id="portName" text="NAME" GridPane.rowIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" id="port-name"/>
-        <Label text="Staff Amount:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <TextField fx:id="staffAmount" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <!--<Label text="Staff Amount:" GridPane.columnIndex="0" GridPane.rowIndex="1" />-->
+        <!--<TextField fx:id="staffAmount" GridPane.columnIndex="1" GridPane.rowIndex="1" />-->
         <Label text="Company:" GridPane.rowIndex="2" />
         <Label text="Maximum Capacity:" GridPane.rowIndex="3" />
         <Label text="Speed:" GridPane.rowIndex="4" />
         <Label text="Route:" GridPane.rowIndex="5" />
-        <TextField fx:id="routeText" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+        <TextField fx:id="routeText"  editable="false" GridPane.rowIndex="5" GridPane.columnIndex="1" />
         <Button fx:id="routeButton" mnemonicParsing="false" text="Choose Route" GridPane.rowIndex="6" GridPane.columnIndex="1" onAction="#chooseRoute"/>
         <TextField fx:id="company" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <TextField fx:id="maxCapacity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <NumericTextField fx:id="speed" maxValue="5" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <HBox alignment="BOTTOM_RIGHT" prefHeight="8.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
             <children>
-                <Button mnemonicParsing="false" text="Create New Airliner" onAction="#addNewVehicle"/>
+                <Button mnemonicParsing="false" text="Create New Ferryboat" onAction="#addNewVehicle"/>
             </children>
         </HBox>
         <Label fx:id="info"  id="information" text="" GridPane.rowIndex="8" GridPane.columnSpan="2" />
+        <Label id="port-name" text="List of vehicles" GridPane.rowIndex="9" GridPane.columnSpan="2"/>
+        <ScrollPane GridPane.rowIndex="10" GridPane.columnSpan="2">
+        </ScrollPane>
+        <Button fx:id="removeDockedVehicle" text="Remove Vehicle" onAction="#removeDockedVehicle" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
     </children>
 </GridPane>

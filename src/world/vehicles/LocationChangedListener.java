@@ -6,5 +6,5 @@ import javafx.geometry.Point2D;
  * Listener.
  */
 public interface LocationChangedListener {
-    void fire(Point2D location, double rotation);
+    void fire(Point2D location, double rotation,boolean translate);
 }

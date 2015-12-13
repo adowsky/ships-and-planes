@@ -99,7 +99,10 @@ public abstract class Vehicle implements Drawable {
         location = new Point2D(x,y);
         locationChanged = true;
         for(LocationChangedListener l : listeners)
-            l.fire(location, rotation);
+            l.fire(location, rotation, transformCondition());
+    }
+    private boolean transformCondition(){
+        return speedX<0;
     }
     public void addLocationChangedListener(LocationChangedListener l){
         listeners.add(l);
