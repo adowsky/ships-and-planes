@@ -115,7 +115,6 @@ public class FerryBoat extends Ship implements CivilianVehicle {
     public void arrivedToPort(){
         super.arrivedToPort();
         lastVisitedPortIndex++;
-
     }
 
     @Override

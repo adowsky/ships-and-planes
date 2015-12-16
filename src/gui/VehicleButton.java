@@ -30,17 +30,25 @@ public class VehicleButton extends Button implements LocationChangedListener {
     public void fire(Point2D location, double rotation, boolean translate){
         if(translate){
             if(currentTranslation > (-TRANSLATION)) {
-                currentTranslation -= Math.abs(model.getSpeedX()*5);
+                currentTranslation -= Math.abs(model.getSpeedX()*7);
             }
         }
         else{
             if(currentTranslation < TRANSLATION)
-                currentTranslation += Math.abs(model.getSpeedX()*5);
+                currentTranslation += Math.abs(model.getSpeedX()*7);
         }
         if(rotation != this.rotation) {
             Platform.runLater(() -> {
                 relocate(location.getX(), location.getY());
                 setRotate(rotation);
+                if(translate) {
+                    setTranslateX(currentTranslation);
+                    setTranslateY(currentTranslation);
+                }
+                else{
+                    setTranslateY(currentTranslation);
+                    setTranslateX(currentTranslation);
+                }
             });
             this.rotation = rotation;
         }

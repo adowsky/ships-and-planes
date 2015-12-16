@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
  */
 public class NumericTextField extends TextField{
 
-    private int maxValue = 0;
+    private int maxValue = Integer.MAX_VALUE;
 
     public void setMaxValue(int maxValue) {
         this.maxValue = maxValue;
@@ -19,8 +19,9 @@ public class NumericTextField extends TextField{
 
     @Override
     public void replaceText(int start, int end, String text){
+        String current = getText();
         if(validate(text))
-            if(maxValueCondition( getText().replace(getText().substring(start,end),text) ))
+            if(maxValueCondition(current.substring(0,start)+text+current.substring(end,current.length())) )
                 super.replaceText(start, end, text);
             else
                 this.setText(String.valueOf(maxValue));
@@ -39,7 +40,14 @@ public class NumericTextField extends TextField{
     }
     private boolean maxValueCondition(String text){
         if(!"".equals(text)){
-            if(maxValue>0 && Integer.valueOf(text)<= maxValue){
+            int newValue=0;
+            try{
+                newValue = Integer.valueOf(text);
+            }catch(NumberFormatException ex){
+               // ex.printStackTrace();
+                return false;
+            }
+            if(maxValue>0 && newValue<= maxValue){
                 return true;
             }
         }else

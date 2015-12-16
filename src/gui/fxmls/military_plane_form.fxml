@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.collections.* ?>
+<?import gui.NumericTextField?>
+
+<GridPane alignment="TOP_CENTER" hgap="2" vgap="2" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/" fx:controller="gui.AircraftFormController" >
+    <children>
+        <Label fx:id="portName" text="NAME" GridPane.rowIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" id="port-name"/>
+        <Label text="Staff Amount:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <NumericTextField fx:id="staffAmount" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label text="Maximum Fuel:" GridPane.rowIndex="2" />
+        <NumericTextField fx:id="maxFuel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label text="Armament Type:" GridPane.rowIndex="3" />
+        <ComboBox fx:id="armType" GridPane.columnIndex="1" GridPane.rowIndex="3" items="" />
+        <Label text="Route:" GridPane.rowIndex="5" />
+        <TextField fx:id="routeText" GridPane.columnIndex="1" GridPane.rowIndex="5" editable="false" />
+        <Button fx:id="routeButton" onAction="#chooseRoute" mnemonicParsing="false" text="Choose route" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+        <HBox alignment="BOTTOM_RIGHT" prefHeight="8.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <children>
+                <Button mnemonicParsing="false" text="Create New Aircraft" onAction="#addNewVehicle" />
+            </children>
+        </HBox>
+        <Label id="information" fx:id="info" text="Information" GridPane.rowIndex="8" GridPane.columnSpan="2" />
+    </children>
+
+
+</GridPane>

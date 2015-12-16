@@ -30,6 +30,7 @@ public class Airliner extends Airplane implements CivilianVehicle {
         this.maxPassengersAmount=maxPassengersAmount;
         passengersList= new HashSet<>();
         this.route = route;
+        setRoute(route.get(0).getRouteToPort(route.get(1)));
         lastVisitedPortIndex = 0;
     }
 
@@ -44,6 +45,10 @@ public class Airliner extends Airplane implements CivilianVehicle {
     }
 
     public CivilianAirport getNextPort(){
+        if(lastVisitedPortIndex == route.size()-1){
+            Collections.reverse(route);
+            lastVisitedPortIndex = 0;
+        }
         return ((lastVisitedPortIndex+1) < route.size()) ? route.get(lastVisitedPortIndex + 1) : route.get(lastVisitedPortIndex);
     }
     @Override

@@ -26,7 +26,7 @@
     -fx-min-height: 20px;
     -fx-max-height: 20px;
     -fx-background-color: transparent;
-    -fx-background-image: url("airport.png");
+    -fx-background-image: url("../resources/airport.png");
     -fx-padding: 0px;
     -fx-background-insets: 0px;
 }
@@ -39,7 +39,7 @@
     -fx-min-height: 20px;
     -fx-max-height: 20px;
     -fx-background-color: transparent;
-    -fx-background-image: url("DockII.png");
+    -fx-background-image: url("../resources/DockII.png");
     -fx-background-insets: 0px;
     -fx-padding: 0px;
 }
@@ -52,7 +52,7 @@
     -fx-min-height: 20px;
     -fx-max-height: 20px;
     -fx-background-color: transparent   ;
-    -fx-background-image: url("ship.png");
+    -fx-background-image: url("../resources/ship.png");
     -fx-background-size: cover;
     /*-fx-rotate: 90deg;*/
 
@@ -61,3 +61,17 @@
 -fx-background-color: rgba(88, 104, 70, 0.6);
 
  }
+.civilian-plane{
+      -fx-min-width: 20px;
+      -fx-max-width: 20px;
+      -fx-min-height: 20px;
+      -fx-max-height: 20px;
+      -fx-background-color: transparent   ;
+      -fx-background-image: url("../resources/airplane_l.png");
+      -fx-background-size: cover;
+      /*-fx-rotate: 90deg;*/
+  }
+.civilian-plane:hover{
+    -fx-background-color: rgba(88, 104, 70, 0.6);
+
+}

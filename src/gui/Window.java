@@ -14,8 +14,8 @@ public class Window extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("coffee02.jpg")));
-        Parent root = FXMLLoader.load(getClass().getResource("layout.fxml"));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("resources/coffee02.jpg")));
+        Parent root = FXMLLoader.load(getClass().getResource("fxmls/layout.fxml"));
         Scene scene = new Scene(root,1137,500);
         primaryStage.setTitle("Statki i Samoloty");
         primaryStage.setResizable(false);

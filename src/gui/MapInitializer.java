@@ -84,15 +84,17 @@ public class MapInitializer {
     }
     private void gatherCrossings(String s){
         Map<String, Cross> map = null;
+        NodeList nodes = null;
         if(s.equals("air")) {
             airCrossings = new HashMap<>();
             map = airCrossings;
+            nodes = doc.getElementsByTagName("air-crossing");
         }
         if(s.equals("sea")) {
             seaCrossings = new HashMap<>();
             map = seaCrossings;
+            nodes = doc.getElementsByTagName("sea-crossing");
         }
-        NodeList nodes = doc.getElementsByTagName("sea-crossing");
         for(int i=0; i<nodes.getLength(); ++i){
             Node node = nodes.item(i);
             Element elem = (Element)node;
@@ -222,6 +224,9 @@ public class MapInitializer {
                 if(type.equals("sea")) {
                     rt.add(seaPorts.get(s));
                     route.put(seaPorts.get(s), rt);
+                }else if(type.equals("air")){
+                    rt.add(airPorts.get(s));
+                    route.put(airPorts.get(s), rt);
                 }
             }
             (list.get(i)).getModel().setWays(route);
@@ -240,7 +245,10 @@ public class MapInitializer {
             capacity = DEFAULT_CAPACITY;
         else
             capacity = Integer.valueOf(att);
-        return new CivilianAirport(sleepTime, capacity, location);
+        CivilianAirport c = new CivilianAirport(sleepTime, capacity, location);
+        c.setName(el.getAttribute("name"));
+        airPorts.put(el.getAttribute("name"),c);
+        return c;
     }
     public Map<String, Harbour> getSeaPorts(){
         return seaPorts;

@@ -185,7 +185,7 @@ public abstract class Vehicle implements Drawable {
         move(speedX,speedY);
     }
     public Cross getNextCrossing(){
-        return route.get(nextCrossing);
+        return (!route.isEmpty()) ? route.get(nextCrossing) : getDestination();
     }
 
     public boolean isOnRouteFinish(){

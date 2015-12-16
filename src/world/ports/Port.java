@@ -107,5 +107,10 @@ public abstract class Port implements Drawable, Cross {
         }
         vehicleList.remove(v);
     }
+    @Override
+    public String toString(){
+        return getClass().getSimpleName()+": "+name;
+    }
+
 
 }
