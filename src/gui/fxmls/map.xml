@@ -136,7 +136,7 @@
         <connection name="Antananariva">IndianOcean</connection>
     </c-airport>
     <c-airport name="Antananariva" x="441" y="290">
-        <connection name="New York">afcrica</connection>
+        <connection name="New York">africa</connection>
         <connection name="Stockholm">africa</connection>
         <connection name="Rome">africa</connection>
         <connection name="Omsk">IndianOcean bengal china</connection>
@@ -147,7 +147,12 @@
         <connection name="Brasilia">africa</connection>
     </c-airport>
     <!--Military Airports-->
-
+    <m-airport name="Siberia" x="657" y="77">
+        <connection name="Etiopia">china bengal</connection>
+    </m-airport>
+    <m-airport name="Etiopia" x="442" y="251">
+        <connection name="Siberia">bengal china</connection>
+    </m-airport>
     <!--Sea Crossings-->
     <sea-crossing name="seaTop" x="274" y="158" radius="10"/>
     <sea-crossing name="seaBot" x="330" y="270" radius="10"/>

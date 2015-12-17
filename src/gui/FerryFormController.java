@@ -95,8 +95,8 @@ public class FerryFormController implements ChoosingController, Initializable{
             return false;
         return true;
     }
-    private Map<String, String[]> mapShipDetails(){
-        Map<String, String[]> shipDetails = new HashMap<>();
+    private Map<String, Object[]> mapShipDetails(){
+        Map<String, Object[]> shipDetails = new HashMap<>();
         shipDetails.put("Company", new String[]{company.getText()});
         shipDetails.put("Max capacity", new String[]{maxCapacity.getText()});
         shipDetails.put("Speed", new String[]{speed.getText()});

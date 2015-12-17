@@ -42,6 +42,7 @@ public class FXMLWindowController implements Initializable {
     private Object enablingProtector = new Object();
     private Parent civilianPlane = null;
     private Parent civilianAirForm = null;
+    private Parent militaryAirForm = null;
     private VehicleDetails vehicleDetails;
     private EventHandler<ActionEvent> civilianShipClicked;
     private ChoosingController choosingTarget;
@@ -110,6 +111,7 @@ public class FXMLWindowController implements Initializable {
         try {
             civilianPlane = FXMLLoader.load(getClass().getResource("fxmls/civilian_ship_form.fxml"));
             civilianAirForm = FXMLLoader.load(getClass().getResource("fxmls/civilian_plane_form.fxml"));
+            militaryAirForm = FXMLLoader.load(getClass().getResource("fxmls/military_plane_form.fxml"));
         }catch (IOException ex){
             ex.printStackTrace();
         }
@@ -160,7 +162,7 @@ public class FXMLWindowController implements Initializable {
             return;
         }
         AircraftFormController.getInstance().setPortName(source.getModel().toString());
-        Platform.runLater(() -> controlPanel.setCenter(civilianAirForm));
+        Platform.runLater(() -> controlPanel.setCenter(militaryAirForm));
     }
 
     class VehicleDetails extends GridPane{
@@ -221,28 +223,28 @@ public class FXMLWindowController implements Initializable {
     public void setChoosingState(boolean state){
         choosingState = state;
     }
-    public void addVehicleButton(Map<String, String[]> details){
+    public void addVehicleButton(Map<String, Object[]> details){
         VehicleButton btn = parseDetails(details);
         mapPane.getChildren().add(btn);
         btn.getModel().setReadyToTravel();
     }
-    private VehicleButton parseDetails(Map<String, String[]> details){
+    private VehicleButton parseDetails(Map<String, Object[]> details){
 
-        int speed = Integer.valueOf(details.get("Speed")[0]);
-        String type = details.get("Type")[0];
-        String[] route = details.get("Route");
+        int speed = Integer.valueOf((String)details.get("Speed")[0]);
+        String type = (String)details.get("Type")[0];
+        String[] route = (String[])details.get("Route");
         int maxCapacity = 0;
         if(details.get("Max capacity") != null)
-            maxCapacity = Integer.valueOf(details.get("Max capacity")[0]);
+            maxCapacity = Integer.valueOf((String)details.get("Max capacity")[0]);
         int staffAmount = 0;
         if(details.get("Staff amount") != null)
-            staffAmount = Integer.valueOf(details.get("Staff amount")[0]);
+            staffAmount = Integer.valueOf((String)details.get("Staff amount")[0]);
         int maxFuel = 0;
         if(details.get("Max fuel") != null)
-            maxFuel = Integer.valueOf(details.get("Max fuel")[0]);
+            maxFuel = Integer.valueOf((String)details.get("Max fuel")[0]);
         ArmamentType armType = null;
         if(details.get("Armament") != null)
-            armType = (ArmamentType)(Object)details.get("Armament")[0];
+            armType = (ArmamentType)details.get("Armament")[0];
         VehicleButton btn = new VehicleButton();
             //FACTORY
         if(type.equals("Ferry")){
@@ -252,7 +254,7 @@ public class FXMLWindowController implements Initializable {
                 portList.add(ports.get(s));
             }
             Point2D modelLocation = portList.get(0).getLocation();
-            FerryBoat model = new FerryBoat(modelLocation, speed/100.0, portList, maxCapacity, details.get("Company")[0]);
+            FerryBoat model = new FerryBoat(modelLocation, speed/100.0, portList, maxCapacity,(String)details.get("Company")[0]);
             btn.setModel(model);
             btn.getStyleClass().add("civilian-ship");
             btn.setOnAction(civilianShipClicked);
@@ -270,7 +272,7 @@ public class FXMLWindowController implements Initializable {
         }else if(type.equals("Aircraft")){
             List<MilitaryAirport> portList = new ArrayList<>();
             //TODO implements initializer method to get military ports
-            Map<String, MilitaryAirport> ports = null;
+            Map<String, MilitaryAirport> ports = initializer.getMAirPorts();
             for(String s: route){
                 portList.add(ports.get(s));
             }

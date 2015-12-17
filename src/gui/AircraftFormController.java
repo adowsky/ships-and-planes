@@ -30,7 +30,6 @@ public class AircraftFormController implements ChoosingController, Initializable
     private boolean choosing = false;
     @FXML private TextField maxFuel;
     @FXML private TextField staffAmount;
-    @FXML private TextField maxCapacity;
     @FXML private Button routeButton;
     @FXML private Label info;
     @FXML private TextField routeText;
@@ -73,8 +72,6 @@ public class AircraftFormController implements ChoosingController, Initializable
     private void clearForm(){
         staffAmount.clear();
         maxFuel.clear();
-        maxCapacity.clear();
-//        speed.clear();
         routeText.clear();
     }
     @FXML public void addNewVehicle(ActionEvent event){
@@ -95,19 +92,18 @@ public class AircraftFormController implements ChoosingController, Initializable
             return false;
         if(maxFuel.getText().equals(""))
             return false;
-        if(maxCapacity.getText().equals(""))
+        if(armType.getSelectionModel().isEmpty())
             return false;
-//        if(speed.getText().equals(""))
-//            return false;
         if(routeText.getText().equals(""))
             return false;
         return true;
     }
-    private Map<String, String[]> mapShipDetails(){
-        Map<String, String[]> shipDetails = new HashMap<>();
+    private Map<String, Object[]> mapShipDetails(){
+        Map<String, Object[]> shipDetails = new HashMap<>();
         shipDetails.put("Max fuel", new String[]{maxFuel.getText()});
         shipDetails.put("Staff amount",new String[]{staffAmount.getText()});
-        shipDetails.put("Armament", new String[]{(String)armType.getSelectionModel().getSelectedItem()});
+        Object arm = armType.getSelectionModel().getSelectedItem();
+        shipDetails.put("Armament", new ArmamentType[]{((ArmamentType)armType.getSelectionModel().getSelectedItem())});
         shipDetails.put("Speed", new String[]{String.valueOf(WorldConstants.AIRPLANE_SPEED)});
         shipDetails.put("Route", routeText.getText().trim().split("-"));
         shipDetails.put("Type", new String[]{"Aircraft"});

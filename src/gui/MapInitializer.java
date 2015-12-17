@@ -6,8 +6,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import world.AvailabilityType;
 import world.Cross;
 import world.Crossing;
+import world.MoveType;
 import world.ports.CivilianAirport;
 import world.ports.Harbour;
 import world.ports.MilitaryAirport;
@@ -53,7 +55,7 @@ public class MapInitializer {
         if(doc == null)
             return set;
         if(seaCrossings == null)
-            gatherCrossings("sea");
+            gatherCrossings(MoveType.SEA);
         NodeList buttons = doc.getElementsByTagName("harbour");
         for(int i = 0; i< buttons.getLength(); i++){
             Node node = buttons.item(i);
@@ -66,18 +68,18 @@ public class MapInitializer {
             set.add(btn);
             seaPorts.put(el.getAttribute("name"),btn.getModel());
         }
-        setWays("sea", list, routes);
+        setWays(MoveType.SEA, AvailabilityType.CIVILIAN, list, routes);
         return set;
     }
-    private void gatherCrossings(String s){
+    private void gatherCrossings(MoveType s){
         Map<String, Cross> map = null;
         NodeList nodes = null;
-        if(s.equals("air")) {
+        if(s == MoveType.AIR) {
             airCrossings = new HashMap<>();
             map = airCrossings;
             nodes = doc.getElementsByTagName("air-crossing");
         }
-        if(s.equals("sea")) {
+        else if(s == MoveType.SEA) {
             seaCrossings = new HashMap<>();
             map = seaCrossings;
             nodes = doc.getElementsByTagName("sea-crossing");
@@ -139,7 +141,7 @@ public class MapInitializer {
         if(doc == null)
             return set;
         if(airCrossings == null)
-            gatherCrossings("air");
+            gatherCrossings(MoveType.AIR);
         NodeList buttons = doc.getElementsByTagName("c-airport");
         for(int i = 0; i< buttons.getLength(); i++){
             Node node = buttons.item(i);
@@ -152,14 +154,14 @@ public class MapInitializer {
             airPorts.put(el.getAttribute("name"),btn.getModel());
             set.add(btn);
         }
-        setWays("air", list, routes);
+        setWays(MoveType.AIR, AvailabilityType.CIVILIAN, list, routes);
         return set;
     }
-    public void setWays(String type, List<PortButton> list,List<Map<String,String[]>> routes){
+    public void setWays(MoveType type,AvailabilityType atype, List<PortButton> list,List<Map<String,String[]>> routes){
         Map<String, Cross> crosses =null;
-        if(type.equals("sea"))
+        if(type.equals( MoveType.SEA))
             crosses = seaCrossings;
-        else if(type.equals("air"))
+        else if(type == MoveType.AIR)
             crosses = airCrossings;
         for(int i = 0; i<list.size();++i){
             Map<Port,List<Cross>> route = new HashMap<>();
@@ -172,12 +174,15 @@ public class MapInitializer {
                     if(tmp!= null)
                         rt.add(tmp);
                 }
-                if(type.equals("sea")) {
+                if(type == MoveType.SEA && atype == AvailabilityType.CIVILIAN) {
                     rt.add(seaPorts.get(s));
                     route.put(seaPorts.get(s), rt);
-                }else if(type.equals("air")){
+                }else if(type == MoveType.AIR && atype == AvailabilityType.CIVILIAN){
                     rt.add(airPorts.get(s));
                     route.put(airPorts.get(s), rt);
+                }else if(type == MoveType.AIR && atype == AvailabilityType.MILITARY){
+                    rt.add(mAirPorts.get(s));
+                    route.put(mAirPorts.get(s), rt);
                 }
             }
             (list.get(i)).getModel().setWays(route);
@@ -209,7 +214,7 @@ public class MapInitializer {
         if(doc == null)
             return set;
         if(airCrossings == null)
-            gatherCrossings("air");
+            gatherCrossings(MoveType.AIR);
         NodeList buttons = doc.getElementsByTagName("m-airport");
         for(int i = 0; i< buttons.getLength(); i++){
             Node node = buttons.item(i);
@@ -222,7 +227,7 @@ public class MapInitializer {
             mAirPorts.put(el.getAttribute("name"),btn.getModel());
             set.add(btn);
         }
-        setWays("air", list, routes);
+        setWays(MoveType.AIR, AvailabilityType.MILITARY, list, routes);
         return set;
     }
 
@@ -260,5 +265,6 @@ public class MapInitializer {
     public Map<String, CivilianAirport> getCAirports(){
         return airPorts;
     }
+    public Map<String, MilitaryAirport> getMAirPorts() {return mAirPorts;}
 }
 

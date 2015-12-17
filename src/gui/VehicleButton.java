@@ -5,6 +5,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import world.vehicles.LocationChangedListener;
 import world.vehicles.Notifiable;
+import world.vehicles.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
 
 /**
@@ -12,7 +13,7 @@ import world.vehicles.Vehicle;
  */
 public class VehicleButton extends Button implements LocationChangedListener, Notifiable{
     private Vehicle model;
-    private boolean tick = false;
+    private volatile boolean tick = false;
     private double rotation;
     private double currentTranslation;
     private final double TRANSLATION = 6.0;
@@ -47,39 +48,41 @@ public class VehicleButton extends Button implements LocationChangedListener, No
     }
     private void translate(boolean translate) {
         boolean condition = true;
+        SynchronizedUpdateNotifier.getInstance().addToList(this);
         while (condition) {
             if (translate) {
                 setRotate(rotation-90);
-                if (currentTranslation > (-TRANSLATION) && tick) {
-                    currentTranslation -= Math.abs(model.getSpeedX() * 7);
-                    tick = false;
-                } else {
-                    condition = false;
-                    setRotate(rotation);
+                synchronized (this) {
+                    if (currentTranslation > (-TRANSLATION) && tick) {
+                        currentTranslation -= Math.abs(model.getSpeedX() * 7);
+                        tick = false;
+                    } else {
+                        setRotate(rotation);
+                        condition = false;
+                    }
                 }
             } else {
                 setRotate(rotation+90);
-                if (currentTranslation < TRANSLATION && tick){
-                    currentTranslation += Math.abs(model.getSpeedX() * 7);
-                    tick=false;
+                synchronized (this) {
+                    if (currentTranslation < TRANSLATION && tick) {
+                        currentTranslation += Math.abs(model.getSpeedX() * 7);
+                        tick = false;
+                    } else {
+                        setRotate(rotation);
+                        condition = false;
+                    }
                 }
-                else {
-                    setRotate(rotation);
-                    condition = false;
-                }
+
             }
-            if (translate) {
-                setTranslateX(currentTranslation);
-                setTranslateY(currentTranslation);
-            } else {
-                setTranslateY(currentTranslation);
-                setTranslateX(currentTranslation);
-            }
+            setTranslateX(currentTranslation);
+            setTranslateY(currentTranslation);
+
         }
+        SynchronizedUpdateNotifier.getInstance().removeFromList(this);
     }
 
     @Override
-    public void tick() {
+    public synchronized void tick() {
         tick = true;
     }
 }

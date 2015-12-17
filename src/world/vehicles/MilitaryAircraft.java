@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import world.ports.MilitaryAirport;
 import world.ports.Port;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class MilitaryAircraft extends Airplane {
         super(location,speed,staffAmount,maxFuel);
         this.armamentType=armamentType;
         this.route = route;
+        setRoute(route.get(0).getRouteToPort(route.get(1)));
         lastVisitedPortIndex = 0;
     }
 
@@ -58,6 +60,10 @@ public class MilitaryAircraft extends Airplane {
     }
     @Override
     public MilitaryAirport getNextPort() {
+        if(lastVisitedPortIndex == route.size()-1){
+            Collections.reverse(route);
+            lastVisitedPortIndex = 0;
+        }
         return ((lastVisitedPortIndex+1) < route.size()) ? route.get(lastVisitedPortIndex + 1) : route.get(lastVisitedPortIndex);
     }
     public void nextCrossing(){

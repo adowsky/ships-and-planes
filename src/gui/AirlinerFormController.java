@@ -99,8 +99,8 @@ public class AirlinerFormController implements ChoosingController, Initializable
             return false;
         return true;
     }
-    private Map<String, String[]> mapShipDetails(){
-        Map<String, String[]> shipDetails = new HashMap<>();
+    private Map<String, Object[]> mapShipDetails(){
+        Map<String, Object[]> shipDetails = new HashMap<>();
         shipDetails.put("Max fuel", new String[]{maxFuel.getText()});
         shipDetails.put("Staff amount",new String[]{staffAmount.getText()});
         shipDetails.put("Max capacity", new String[]{maxCapacity.getText()});
