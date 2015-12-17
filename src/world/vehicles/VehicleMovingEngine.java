@@ -97,4 +97,9 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
         Shape s = Shape.intersect(vehicleInFront.getBounds(),vehicle.getBounds());
         return s.getBoundsInLocal().getWidth()<0 ? false : true;
     }
+
+    @Override
+    public void tick() {
+        this.setCanMove();
+    }
 }

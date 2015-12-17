@@ -6,7 +6,7 @@ import world.World;
  * Responsible for moving something.
  * @param <T> Objects that needs moving service.
  */
-public interface MovingEngine<T> extends Runnable {
+public interface MovingEngine<T> extends Runnable, Notifiable {
     void hitTheRoad(T c);
 
     void setCanMove();

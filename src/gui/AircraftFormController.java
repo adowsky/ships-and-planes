@@ -107,10 +107,10 @@ public class AircraftFormController implements ChoosingController, Initializable
         Map<String, String[]> shipDetails = new HashMap<>();
         shipDetails.put("Max fuel", new String[]{maxFuel.getText()});
         shipDetails.put("Staff amount",new String[]{staffAmount.getText()});
-        shipDetails.put("Max capacity", new String[]{maxCapacity.getText()});
+        shipDetails.put("Armament", new String[]{(String)armType.getSelectionModel().getSelectedItem()});
         shipDetails.put("Speed", new String[]{String.valueOf(WorldConstants.AIRPLANE_SPEED)});
         shipDetails.put("Route", routeText.getText().trim().split("-"));
-        shipDetails.put("Type", new String[]{"Airliner"});
+        shipDetails.put("Type", new String[]{"Aircraft"});
         return shipDetails;
     }
 

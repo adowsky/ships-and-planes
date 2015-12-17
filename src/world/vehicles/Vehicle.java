@@ -209,7 +209,9 @@ public abstract class Vehicle implements Drawable {
     }
 
     public void setRoute(List<Cross> l){
+        removeFromPreviousCrossingRegister();
         route = l;
+        getLastPort().registerNewTravellingTo(route.get(0),this);
         nextCrossing = 0;
         Point2D p = countSpeed();
         speedX = p.getX();
@@ -283,8 +285,11 @@ public abstract class Vehicle implements Drawable {
     public void removeFromPreviousCrossingRegister(){
         if(nextCrossing > 0)
             route.get(nextCrossing-1).removeFromTravellingTo(route.get(nextCrossing),this);
-        else
-            getLastPort().removeFromTravellingTo(route.get(nextCrossing),this);
+        else {
+            Port last = getLastPort();
+            if(last != null && route != null)
+                last.removeFromTravellingTo(route.get(nextCrossing), this);
+        }
     }
     public abstract Port getDestination();
     public boolean getReadyToTravel(){

@@ -9,7 +9,7 @@ import java.util.List;
  * Managing and synchronizing updates of Moving Engines.
  */
 public class SynchronizedUpdateNotifier implements Runnable{
-    private volatile List<MovingEngine> notificationList;
+    private volatile List<Notifiable> notificationList;
     private final double UPDATES_PER_MILLIS;
     private static SynchronizedUpdateNotifier instance;
     private SynchronizedUpdateNotifier(){
@@ -25,8 +25,11 @@ public class SynchronizedUpdateNotifier implements Runnable{
 
         return instance;
     }
-    public synchronized void addToList(MovingEngine e){
+    public synchronized void addToList(Notifiable e){
         notificationList.add(e);
+    }
+    public synchronized void removeFromList(Notifiable e){
+        notificationList.remove(e);
     }
 
     @Override
@@ -50,7 +53,8 @@ public class SynchronizedUpdateNotifier implements Runnable{
         }
     }
     private synchronized void notifyAboutUpdate(){
-        notificationList.forEach((e)->e.setCanMove());
+        notificationList.forEach((e)->e.tick());
     }
+
 
 }

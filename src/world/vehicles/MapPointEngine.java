@@ -5,7 +5,7 @@ import world.Cross;
 /**
  * Created by ado on 29/11/15.
  */
-public abstract class MapPointEngine implements MovingEngine<Vehicle>{
+public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiable{
     private final Object monitor;
     private boolean canMove;
     private Cross cross;
@@ -72,5 +72,9 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>{
         synchronized (monitor) {
             canMove = true;
         }
+    }
+    @Override
+    public void tick(){
+        setCanMove();
     }
 }

@@ -25,7 +25,7 @@
         <NumericTextField fx:id="speed" maxValue="5" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <HBox alignment="BOTTOM_RIGHT" prefHeight="8.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
             <children>
-                <Button mnemonicParsing="false" text="Create New Airliner" onAction="#addNewVehicle"/>
+                <Button mnemonicParsing="false" text="Create New Ferryboat" onAction="#addNewVehicle"/>
             </children>
         </HBox>
         <Label fx:id="info"  id="information" text="" GridPane.rowIndex="8" GridPane.columnSpan="2" />

@@ -53,6 +53,10 @@ public class FerryFormController implements ChoosingController, Initializable{
         routeText.appendText(name.split(" ")[1]);
     }
     public void enableChoosing(){
+        choosing = true;
+        FXMLWindowController.getInstance().onlyCivilianShipsEnabled();
+        FXMLWindowController.getInstance().setChoosingState(true);
+        FXMLWindowController.getInstance().setChoosingTarget(this);
         routeButton.setText("Stop");
     }
     public void disableChoosing(){
