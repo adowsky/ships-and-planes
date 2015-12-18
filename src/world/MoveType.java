@@ -1,9 +1,9 @@
 package world;
 
 /**
- * Created by ado on 17.12.15.
+ * Types of movement.
  */
 public enum MoveType {
     AIR,
-    SEA;
+    SEA
 }

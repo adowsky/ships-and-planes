@@ -66,6 +66,8 @@ public class MilitaryAircraft extends Airplane {
         }
         return ((lastVisitedPortIndex+1) < route.size()) ? route.get(lastVisitedPortIndex + 1) : route.get(lastVisitedPortIndex);
     }
+
+    @Override
     public void nextCrossing(){
         if(isOnRouteFinish()){
             getNextPort().aircraftArrive(this);

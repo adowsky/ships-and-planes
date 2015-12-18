@@ -1,9 +1,6 @@
 package world.vehicles;
 
 import javafx.geometry.Point2D;
-import world.World;
-
-import java.util.Set;
 
 /**
  * Represents Ship.

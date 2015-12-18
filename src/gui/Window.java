@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * Main Class of the apps contains launcher.
+ */
 public class Window extends Application{
     public Window(){
         super();

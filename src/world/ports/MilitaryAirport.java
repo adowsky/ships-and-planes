@@ -14,11 +14,23 @@ import java.util.Map;
 public class MilitaryAirport extends AirPort {
     private List<MilitaryAircraft> planesList;
     private int timeToNextDeparture;
+
+    /**
+     * Creates Miliatry airport
+     * @param timeToNextDeparture
+     * @param capacity
+     * @param location
+     */
     public MilitaryAirport(int timeToNextDeparture, int capacity, Point2D location){
         super(capacity,location);
         this.timeToNextDeparture=timeToNextDeparture;
         planesList=new ArrayList<>();
     }
+
+    /**
+     * Services aircraft arrival.
+     * @param plane
+     */
     public void aircraftArrive(MilitaryAircraft plane){
         if(isFull())
             return;
@@ -28,10 +40,20 @@ public class MilitaryAirport extends AirPort {
         plane.setRoute(getRouteToPort(plane.getNextPort()));
         vehicleDeparture(plane);
     }
+
+    /**
+     * Maintains aircraft
+     * @param plane
+     */
      private void maintainAircraft(MilitaryAircraft plane){
         plane.refuel();
         plane.maintenanceStart(timeToNextDeparture);
     }
+
+    /**
+     * Services departure of aircraft.
+     * @param vehicle
+     */
     private void vehicleDeparture(MilitaryAircraft vehicle){
         vehicle.setReadyToTravel();
         planesList.remove(vehicle);

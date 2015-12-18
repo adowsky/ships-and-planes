@@ -1,8 +1,11 @@
 package world.vehicles;
 
 /**
- * Created by ado on 17.12.15.
+ *  Object that can be notify about something.
  */
 public interface Notifiable {
+    /**
+     * Notification method.
+     */
     void tick();
 }

@@ -22,22 +22,32 @@ public class Crossing implements Cross{
     private String name;
     private Map<Cross, List<Vehicle>> travellingMap;
 
+    /**
+     * Creates new instance of class.
+     * @param x X coordinate of location
+     * @param y Y coordinate of location
+     * @param radius radius value
+     */
     public Crossing(double x, double y, int radius){
         circle = new Circle(x,y,radius);
-        name = "Crossing name";
+        name = "Crossing: ";
         engine = new CrossingMovingEngine(this);
         SynchronizedUpdateNotifier.getInstance().addToList(engine);
         travellingMap = new HashMap<>();
     }
+    @Override
     public boolean intersect(Shape bounds){
         return circle.intersects(bounds.getBoundsInLocal());
     }
+    @Override
     public synchronized void goThrough(Vehicle vehicle){
         engine.hitTheRoad(vehicle);
     }
+    @Override
     public double  getX(){
         return circle.getCenterX();
     }
+    @Override
     public double getY(){
         return circle.getCenterY();
     }

@@ -3,15 +3,24 @@ package gui;
 import javafx.scene.control.TextField;
 
 /**
- * Created by ado on 05.12.15.
+ * TextFiled limited only to numeric signs.
  */
 public class NumericTextField extends TextField{
 
     private int maxValue = Integer.MAX_VALUE;
 
+    /**
+     * Sets maximum value that can be written in the field
+     * @param maxValue maximum value
+     */
     public void setMaxValue(int maxValue) {
         this.maxValue = maxValue;
     }
+
+    /**
+     * Returns maximum value that can be written in the field
+     * @return maximum value that can be written in the field
+     */
     public int getMaxValue(){
         return maxValue;
     }
@@ -35,9 +44,21 @@ public class NumericTextField extends TextField{
                 this.setText(String.valueOf(maxValue));
 
     }
+
+    /**
+     * Validates text that wants to be placed in the field.
+     * @param text text that wants to be placed in the field
+     * @return  if text is valid.
+     */
     private boolean validate(String text){
         return ( ("").equals(text) || text.matches("[0-9]") );
     }
+
+    /**
+     * checks if after addition of new element the value will be lower than max value.
+     * @param text new Value.
+     * @return if new value is lower than max value.
+     */
     private boolean maxValueCondition(String text){
         if(!"".equals(text)){
             int newValue=0;
@@ -51,7 +72,7 @@ public class NumericTextField extends TextField{
                 return true;
             }
         }else
-        return true;
+            return true;
 
         return false;
     }

@@ -52,7 +52,10 @@ public class FXMLWindowController implements Initializable {
     private Set<PortButton<CivilianAirport>> CAirportButtons;
     private Set<PortButton<MilitaryAirport>> MAirportButtons;
 
-
+    /**
+     * Returns instance of class.
+     * @return instance of class.
+     */
     public static FXMLWindowController getInstance(){
         synchronized(FXMLWindowController.class) {
             if (instance == null){
@@ -136,6 +139,10 @@ public class FXMLWindowController implements Initializable {
 
     }
 
+    /**
+     * Handler for button event.
+     * @param source source
+     */
     @FXML public synchronized void seaPortClick(PortButton source){
         if(choosingState){
             String name = source.getModel().getName();
@@ -146,6 +153,10 @@ public class FXMLWindowController implements Initializable {
         Platform.runLater(()->controlPanel.setCenter(civilianPlane));
 
     }
+    /**
+     * Handler for button event.
+     * @param source source
+     */
     @FXML public synchronized  void airPortClicked(PortButton source){
         if(choosingState){
             String name = source.getModel().getName();
@@ -155,6 +166,10 @@ public class FXMLWindowController implements Initializable {
         AirlinerFormController.getInstance().setPortName(source.getModel().toString());
         Platform.runLater(() -> controlPanel.setCenter(civilianAirForm));
     }
+    /**
+     * Handler for button event.
+     * @param source source
+     */
     @FXML public synchronized  void mAirPortClicked(PortButton source){
         if(choosingState){
             String name = source.getModel().getName();
@@ -165,6 +180,9 @@ public class FXMLWindowController implements Initializable {
         Platform.runLater(() -> controlPanel.setCenter(militaryAirForm));
     }
 
+    /**
+     * Panel with details of vehicle.
+     */
     class VehicleDetails extends GridPane{
      private   Vehicle v;
      public void setDetails(Vehicle v){
@@ -178,7 +196,7 @@ public class FXMLWindowController implements Initializable {
              add(new Label(map.get(key)),1,i);
              i++;
          }
-         if(v instanceof Ship) {
+         if(v instanceof Airplane) {
              Button landing = new Button("Emergency Landing");
              landing.setOnAction((event) -> {
                  //TODO
@@ -195,6 +213,10 @@ public class FXMLWindowController implements Initializable {
 
      }
     }
+
+    /**
+     * Disables all ports excepts harbours.
+     */
     public void onlyCivilianShipsEnabled(){
         synchronized (enablingProtector) {
             for(PortButton port : CAirportButtons){
@@ -203,11 +225,19 @@ public class FXMLWindowController implements Initializable {
         }
 
     }
+
+    /**
+     * Disables all ports excepts civilian airport.
+     */
     public void onlyCivilianPlanesEnabled(){
         for(PortButton port : harbourButtons){
             port.setDisable(true);
         }
     }
+
+    /**
+     * Enables all ports.
+     */
     public void allEnabled(){
         for(PortButton<Harbour> port : harbourButtons){
             port.setDisable(false);
@@ -217,17 +247,38 @@ public class FXMLWindowController implements Initializable {
         }
 
     }
+
+    /**
+     * Sets choosing controller as target to send events about click.
+     * @param o controller.
+     */
     public void setChoosingTarget(ChoosingController o){
         choosingTarget = o;
     }
+
+    /**
+     * Sets state of choosing flag
+     * @param state state.
+     */
     public void setChoosingState(boolean state){
         choosingState = state;
     }
+
+    /**
+     * Adds new vehicle to the map
+     * @param details map of vehicle details.
+     */
     public void addVehicleButton(Map<String, Object[]> details){
         VehicleButton btn = parseDetails(details);
         mapPane.getChildren().add(btn);
         btn.getModel().setReadyToTravel();
     }
+
+    /**
+     * Parses details and creates vehicle button from them.
+     * @param details details of new vehicle
+     * @return new vehicle button
+     */
     private VehicleButton parseDetails(Map<String, Object[]> details){
 
         int speed = Integer.valueOf((String)details.get("Speed")[0]);

@@ -17,6 +17,11 @@ public class VehicleButton extends Button implements LocationChangedListener, No
     private double rotation;
     private double currentTranslation;
     private final double TRANSLATION = 6.0;
+
+    /**
+     * Sets model of the button
+     * @param vehicle model
+     */
     public void setModel(Vehicle vehicle){
         rotation = 0;
         currentTranslation = 6;
@@ -25,6 +30,10 @@ public class VehicleButton extends Button implements LocationChangedListener, No
         model.addLocationChangedListener(this);
     }
 
+    /**
+     * Returns model of the button.
+     * @return  model of the button.
+     */
     public Vehicle getModel() {
         return model;
     }
@@ -45,6 +54,12 @@ public class VehicleButton extends Button implements LocationChangedListener, No
             });
 
     }
+
+    /**
+     * Translates the button if needed.
+     * @param translate translation flag
+     * @param rot new rotation.
+     */
     private void translate(boolean translate, double rot) {
         boolean needToTranslate = (translate && currentTranslation > (-TRANSLATION)) || (!translate && currentTranslation < TRANSLATION);
         if(needToTranslate) {

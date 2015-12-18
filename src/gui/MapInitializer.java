@@ -17,7 +17,6 @@ import world.ports.Port;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.util.*;
 
@@ -35,6 +34,12 @@ public class MapInitializer {
     private Map<String, Harbour> seaPorts;
     private Map<String, CivilianAirport> airPorts;
     private Map<String, MilitaryAirport> mAirPorts;
+
+    /**
+     * Creates new MapInitializer with source specified in parm.
+     * @param path path of source
+     * @throws MapInitException Problem with source.
+     */
     public MapInitializer(String path) throws MapInitException {
         try {
             builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -48,6 +53,11 @@ public class MapInitializer {
         airPorts = new HashMap<>();
         mAirPorts = new HashMap<>();
     }
+
+    /**
+     * Gathers harbours from xml file.
+     * @return set of harbour from source file.
+     */
     public Set<PortButton<Harbour>> getHarbours(){
         Set<PortButton<Harbour>> set = new HashSet<>();
         List<PortButton> list = new ArrayList<>();
@@ -71,6 +81,11 @@ public class MapInitializer {
         setWays(MoveType.SEA, AvailabilityType.CIVILIAN, list, routes);
         return set;
     }
+
+    /**
+     * Gathers crossings form source file.
+     * @param s kind of crossing
+     */
     private void gatherCrossings(MoveType s){
         Map<String, Cross> map = null;
         NodeList nodes = null;
@@ -96,6 +111,11 @@ public class MapInitializer {
             map.put(name,c);
         }
     }
+
+    /**
+     * Sets layouts(localization) of the port button.
+     * @param btn   button that have layouts set.
+     */
     private void setLayouts(PortButton btn){
         String att = el.getAttribute("x");
         btn.setLayoutX(Double.valueOf(att));
@@ -120,6 +140,11 @@ public class MapInitializer {
         seaPorts.put(el.getAttribute("name"),h);
         return h;
     }
+
+    /**
+     * Returns map of routes for specific port as array of strings.
+     * @return map of routes for specific port as array of strings.
+     */
     private Map<String,String[]>  getMapOfRoutesAsStrings(){
         NodeList nodes = el.getElementsByTagName("connection");
         Map <String, String[]> map = new HashMap<>();
@@ -133,6 +158,11 @@ public class MapInitializer {
         return map;
 
     }
+
+    /**
+     * Gathers civilian airports from source file.
+     * @return civilian airports.
+     */
     public synchronized Set<PortButton<CivilianAirport>> getCivilianAirports(){
 
         Set<PortButton<CivilianAirport>> set = new HashSet<>();
@@ -157,6 +187,14 @@ public class MapInitializer {
         setWays(MoveType.AIR, AvailabilityType.CIVILIAN, list, routes);
         return set;
     }
+
+    /**
+     * Set routes to specific port.
+     * @param type  movement type
+     * @param atype civility type
+     * @param list  list of port buttons
+     * @param routes map of routes saved as Strings.
+     */
     public void setWays(MoveType type,AvailabilityType atype, List<PortButton> list,List<Map<String,String[]>> routes){
         Map<String, Cross> crosses =null;
         if(type.equals( MoveType.SEA))
@@ -188,6 +226,12 @@ public class MapInitializer {
             (list.get(i)).getModel().setWays(route);
         }
     }
+
+    /**
+     * Gathers single civilian airport from source.
+     * @param location location of civilian airport
+     * @return new civilian airport.
+     */
     private CivilianAirport gatherCivilianAirport(Point2D location){
         String att =  el.getAttribute("sleep-time");
         int sleepTime;
@@ -206,6 +250,11 @@ public class MapInitializer {
         airPorts.put(el.getAttribute("name"),c);
         return c;
     }
+
+    /**
+     * Gathers military airports from source file.
+     * @return set of military airports.
+     */
     public synchronized Set<PortButton<MilitaryAirport>> getMilitaryAirports(){
 
         Set<PortButton<MilitaryAirport>> set = new HashSet<>();
@@ -231,6 +280,11 @@ public class MapInitializer {
         return set;
     }
 
+    /**
+     * Gathers single military airport form source.
+     * @param location location of port
+     * @return new military airport
+     */
     private MilitaryAirport gatherMilitaryAirport(Point2D location){
         String att =  el.getAttribute("sleep-time");
         int sleepTime;
@@ -259,12 +313,25 @@ public class MapInitializer {
         mAirPorts.put(el.getAttribute("name"),c);
         return c;
     }
+
+    /**
+     * Returns map of Harbours
+     * @return map of Harbours
+     */
     public Map<String, Harbour> getSeaPorts(){
         return seaPorts;
     }
+    /**
+     * Returns map of Civilian airports
+     * @return map of Civilian Airports
+     */
     public Map<String, CivilianAirport> getCAirports(){
         return airPorts;
     }
+    /**
+     * Returns map of military airports
+     * @return map of miliatry airports
+     */
     public Map<String, MilitaryAirport> getMAirPorts() {return mAirPorts;}
 }
 

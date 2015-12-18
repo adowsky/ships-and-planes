@@ -14,6 +14,13 @@ public class Harbour extends SeaPort implements CivilianPort {
     private List<CivilianVehicle> shipsList;
     private Set<Passenger> passengersSet;
     private int timeToNextDeparture;
+
+    /**
+     * Creates Harbour
+     * @param timeToNextDeparture
+     * @param capacity
+     * @param location
+     */
     public Harbour(int timeToNextDeparture, int capacity, Point2D location){
         super(capacity, location);
         shipsList = new ArrayList<>();
@@ -32,9 +39,13 @@ public class Harbour extends SeaPort implements CivilianPort {
 
     }
 
+    /**
+     * Services arrival of vehicle.
+     * @param vehicle
+     * @param <T> type of vehicle.
+     */
     public synchronized  <T extends Ship & CivilianVehicle> void vehicleArrive(T vehicle) {
         canLand();
-        System.out.println("przybyłżem");
         vehicle.arrivedToPort();
         Set<Passenger> pList = vehicle.getVehiclePassengers();
         passengersService(pList,passengersSet,getLandConnectionPorts());
@@ -43,9 +54,19 @@ public class Harbour extends SeaPort implements CivilianPort {
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
         vehicleDeparture(vehicle);
     }
+
+    /**
+     * Start maintenance of vehicle
+     * @param vehicle vehicle to maintain.
+     */
     private void maintainVehicle(Ship vehicle){
         vehicle.maintenanceStart(timeToNextDeparture);
     }
+
+    /**
+     * Services departure of vehicle.
+     * @param vehicle vehicle that is going to departure.
+     */
     private void vehicleDeparture(CivilianVehicle vehicle){
         Port nextPort = vehicle.getNextPort();
         Collection<Passenger> newPassengersList = new HashSet<>();
@@ -70,6 +91,10 @@ public class Harbour extends SeaPort implements CivilianPort {
 
     }
 
+    /**
+     * Checks when vehicle can land.
+     * @return if vehicle can land.
+     */
     public synchronized boolean canLand() {
         while (shipsList.size()>= getMaxCapacity()){
             try{

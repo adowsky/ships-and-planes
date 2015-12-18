@@ -14,6 +14,13 @@ import java.util.Map;
 public class AircraftCarrier extends Ship {
     private ArmamentType armament;
     private List<MilitaryAircraft> producedPlanes;
+
+    /**
+     * Creates airport.
+     * @param location
+     * @param maxVelocity
+     * @param armament
+     */
     public AircraftCarrier(Point2D location, double maxVelocity, ArmamentType armament){
         super(location,maxVelocity);
         this.armament=armament;

@@ -2,7 +2,6 @@ package world.vehicles;
 
 import javafx.scene.shape.Shape;
 import world.Cross;
-import world.World;
 
 import java.util.List;
 

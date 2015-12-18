@@ -24,19 +24,35 @@ public abstract class Port implements Drawable, Cross {
     private String name;
     private Map<Cross,List<Vehicle>> travellingMap;
 
+    /**
+     * Returns name of the port.
+     * @return name of the port.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name of the port.
+     * @param name  name of the port.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns maximum capacity of the port.
+     * @return  maximum capacity of the port.
+     */
     public int getMaxCapacity() {
         return maxCapacity;
     }
 
-
+    /**
+     * Creates new Port
+     * @param maxCapacity
+     * @param location
+     */
     public Port(int maxCapacity, Point2D location) {
         this.maxCapacity = maxCapacity;
         landConnectionPorts = new HashSet<>();
@@ -46,12 +62,28 @@ public abstract class Port implements Drawable, Cross {
         travellingMap = new HashMap<>();
 
     }
+
+    /**
+     * Returns route(List of Crosses) to specific port.
+     * @param port
+     * @return  route(List of Crosses) to specific port.
+     */
     public List<Cross> getRouteToPort(Port port){
         return ways.get(port);
     }
+
+    /**
+     * Sets map of routes to specific ports.
+     * @param ways map.
+     */
     public void setWays(Map<Port,List<Cross>> ways){
         this.ways = ways;
     }
+
+    /**
+     * Returns set of ports that connected with current port by land.
+     * @return
+     */
     public Set<Port> getLandConnectionPorts() {
         return landConnectionPorts;
     }
@@ -65,6 +97,11 @@ public abstract class Port implements Drawable, Cross {
     public double getY() {
         return circle.getCenterY();
     }
+
+    /**
+     * Returns location of the port.
+     * @return location of the port.
+     */
     public Point2D getLocation(){
         return  location;
     }

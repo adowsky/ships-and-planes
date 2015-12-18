@@ -88,13 +88,22 @@ public class Journey {
         this.route = route;
     }
 
+    /**
+     * Returns amount of ports in route.
+     * @return amount of ports in route.
+     */
+
     public int getNumberOfPortsInRoute(){
         return route.size();
     }
+
+    /**
+     * Returns Port from collection specified by index.
+     * @param index specific index.
+     * @return Port from collection specified by index.
+     */
     public CivilianPort getPortByIndex(int index){
         return  route.get(index);
     }
-
-
 
 }
