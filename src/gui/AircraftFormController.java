@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
- * Created by ado on 16.12.15.
+ * Controller of form to create new Aircraft.
  */
 public class AircraftFormController implements ChoosingController, Initializable {
 
@@ -36,10 +36,18 @@ public class AircraftFormController implements ChoosingController, Initializable
     @FXML private Label portName;
     @FXML private ComboBox armType;
 
+    /**
+     * Returns instance of AircraftFormController
+     * @return instance of AircraftFormController
+     */
     public static AircraftFormController getInstance(){
         return instance;
     }
 
+    /**
+     * Handler for "Choose route" button event.
+     * @param event
+     */
     @FXML public void chooseRoute(ActionEvent event){
         if(!choosing) {
             enableChoosing();
@@ -51,11 +59,20 @@ public class AircraftFormController implements ChoosingController, Initializable
     @FXML public void removeDockedVehicle(){
 
     }
+
+    /**
+     * Sets name of port
+     * @param name name of port.
+     */
     public void setPortName(String name){
         portName.setText(name);
         routeText.clear();
         routeText.appendText(name.split(":")[1].trim());
     }
+
+    /**
+     * Enables choosing.
+     */
     public void enableChoosing(){
         choosing = true;
         FXMLWindowController.getInstance().onlyCivilianPlanesEnabled();
@@ -63,30 +80,62 @@ public class AircraftFormController implements ChoosingController, Initializable
         FXMLWindowController.getInstance().setChoosingTarget(this);
         routeButton.setText("Stop");
     }
+
+    /**
+     * Disables choosing.
+     */
     public void disableChoosing(){
         choosing = false;
         FXMLWindowController.getInstance().allEnabled();
         FXMLWindowController.getInstance().setChoosingState(false);
         routeButton.setText("Choose Route");
     }
+
+    /**
+     * Clears form
+     */
     private void clearForm(){
         staffAmount.clear();
         maxFuel.clear();
         routeText.clear();
     }
+
+    /**
+     * Handler for add button event.
+     * @param event
+     */
     @FXML public void addNewVehicle(ActionEvent event){
         disableChoosing();
         if(validate()){
-            FXMLWindowController.getInstance().addVehicleButton(mapShipDetails());
-            clearForm();
-            info.setText(SUCCESS_MSG);
-            info.setTextFill(Color.GREEN);
+            successAddition();
         }else {
-            info.setText(ERROR_MSG);
-            info.setTextFill(Color.RED);
+            additionFailed();
         }
 
     }
+
+    /**
+     * Service addition and shows information about success.
+     */
+    private void successAddition(){
+        FXMLWindowController.getInstance().addVehicleButton(mapShipDetails());
+        clearForm();
+        info.setText(SUCCESS_MSG);
+        info.setTextFill(Color.GREEN);
+    }
+
+    /**
+     * Shows information that addition failed.
+     */
+    private void additionFailed(){
+        info.setText(ERROR_MSG);
+        info.setTextFill(Color.RED);
+    }
+
+    /**
+     * Validate form.
+     * @return if form is valid.
+     */
     private boolean validate(){
         if(staffAmount.getText().equals(""))
             return false;
@@ -98,6 +147,11 @@ public class AircraftFormController implements ChoosingController, Initializable
             return false;
         return true;
     }
+
+    /**
+     * Creates map with ship details form current form.
+     * @return details of the ship to create.
+     */
     private Map<String, Object[]> mapShipDetails(){
         Map<String, Object[]> shipDetails = new HashMap<>();
         shipDetails.put("Max fuel", new String[]{maxFuel.getText()});

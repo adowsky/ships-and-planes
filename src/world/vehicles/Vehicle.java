@@ -59,6 +59,10 @@ public abstract class Vehicle implements Drawable {
 
     }
 
+    /**
+     * Returns bounds of object.
+     * @return bounds of object.
+     */
     public synchronized Shape getBounds() {
         if(locationChanged) {
             double x = location.getX();
@@ -73,6 +77,10 @@ public abstract class Vehicle implements Drawable {
         return bounds;
     }
 
+    /**
+     * returns speed value.
+     * @return speed value.
+     */
     public double getSpeed() {
         return speed;
     }
@@ -177,20 +185,42 @@ public abstract class Vehicle implements Drawable {
     public boolean isRunning(){
         return running;
     }
+
+    /**
+     * Changes location of object.
+     * @param x X axis movement
+     * @param y Y axis movement
+     */
     public synchronized void move(double x, double y){
         setLocation(location.getX() + x, location.getY() + y);
     }
 
+    /**
+     * Changes location of object by speed values.
+     */
     public synchronized void move(){
         move(speedX,speedY);
     }
+
+    /**
+     * Returns next Crossing on route list.
+     * @return next Crossing
+     */
     public Cross getNextCrossing(){
         return (!route.isEmpty()) ? route.get(nextCrossing) : getDestination();
     }
 
+    /**
+     * Returns if it's end of route
+     * @return if it is route finish
+     */
     public boolean isOnRouteFinish(){
         return nextCrossing+1 >=route.size();
     }
+
+    /**
+     * Changes crossing to the next one.
+     */
     public synchronized void nextCrossing(){
         //TODO instancyjne klasy muszą nadpisać o uruchomienie lądowania
         if(nextCrossing == route.size()){
@@ -208,6 +238,10 @@ public abstract class Vehicle implements Drawable {
 
     }
 
+    /**
+     * Sets new route
+     * @param l list of crossing (route).
+     */
     public void setRoute(List<Cross> l){
         removeFromPreviousCrossingRegister();
         route = l;
@@ -222,13 +256,26 @@ public abstract class Vehicle implements Drawable {
     public double getRotation(){
         return  rotation;
     }
+
+    /**
+     * Returns speed of Y axis.
+     * @return speed of Y axis.
+     */
     public double getSpeedY() {
         return speedY;
     }
-
+    /**
+     * Returns speed of X axis.
+     * @return speed of X axis.
+     */
     public double getSpeedX() {
         return speedX;
     }
+
+    /**
+     * Counts new values of speeds depend on current location and destination's location.
+     * @return Point with values of Xspeed and Yspeed.
+     */
     private Point2D countSpeed(){
         Cross crossing = getNextCrossing();
         int destX;
@@ -254,6 +301,11 @@ public abstract class Vehicle implements Drawable {
             speedY = -speedY;
         return new Point2D(speedX,speedY);
     }
+
+    /**
+     * Counts rotation to new destination.
+     * @return new Rotation.
+     */
     private double countRotation(){
         double result;
         if(speedX>0 && speedY>0) {
@@ -272,6 +324,11 @@ public abstract class Vehicle implements Drawable {
             result = Math.toDegrees(Math.atan(Math.abs((speedX*1.0)/speedY)));
         return result;
     }
+
+    /**
+     * Returns last visited crossing.
+     * @return last visited crossing.
+     */
     public Cross getCurrentCrossing(){
         return (nextCrossing==0) ? getLastPort() : route.get(nextCrossing-1);
     }
@@ -280,8 +337,11 @@ public abstract class Vehicle implements Drawable {
         if(s.getBoundsInLocal().getWidth()!=-1)
             return  true;
         return false;
-
     }
+
+    /**
+     * Removes itself from previous crossing register (path).
+     */
     public void removeFromPreviousCrossingRegister(){
         if(nextCrossing > 0)
             route.get(nextCrossing-1).removeFromTravellingTo(route.get(nextCrossing),this);
@@ -291,11 +351,31 @@ public abstract class Vehicle implements Drawable {
                 last.removeFromTravellingTo(route.get(nextCrossing), this);
         }
     }
+
+    /**
+     * Returns port of destination
+     * @return port of destination
+     */
     public abstract Port getDestination();
+
+    /**
+     * Returns ready to travel flag
+     * @return ready to travel flag
+     */
     public boolean getReadyToTravel(){
         return readyToTravel;
     }
+
+    /**
+     * Returns properties of the object.
+     * @return properties of the object.
+     */
     public abstract Map<String, String> getProperties();
+
+    /**
+     * Return last visited port.
+     * @return last visited port.
+     */
     public abstract Port getLastPort();
 
 }

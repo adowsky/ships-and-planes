@@ -93,8 +93,6 @@ public class AirlinerFormController implements ChoosingController, Initializable
             return false;
         if(maxCapacity.getText().equals(""))
             return false;
-//        if(speed.getText().equals(""))
-//            return false;
         if(routeText.getText().equals(""))
             return false;
         return true;

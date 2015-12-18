@@ -16,6 +16,11 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
     private final Object routKeeper;
     private final Object movingGate;
     private Vehicle vehicleInFront;
+
+    /**
+     * Creates new VehicleMovingEngine
+     * @param vehicle vehicle of engine
+     */
     public VehicleMovingEngine(Vehicle vehicle){
         this.vehicle = vehicle;
         vehicleInFront = null;
@@ -70,11 +75,20 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
             canMove = true;
         }
     }
+
+    /**
+     * Return state of flag can Move.
+     * @return flag canMove
+     */
     public  boolean canMove(){
         synchronized (movingGate) {
             return canMove;
         }
     }
+
+    /**
+     * Sets vehicle that is in front of current one.
+     */
     private void setFrontVehicle(){
         List<Vehicle> list =vehicle.getCurrentCrossing().getVehiclesTravellingTo(vehicle.getNextCrossing());
         if(list == null) {
@@ -91,6 +105,11 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
             }
         }
     }
+
+    /**
+     * Checks if current vehicle doesn't intersect with vehicle in front.
+     * @return if current vehicle doesn't intersect with vehicle in front.
+     */
     public boolean shipIntersects(){
         if(vehicleInFront == null)
             return false;

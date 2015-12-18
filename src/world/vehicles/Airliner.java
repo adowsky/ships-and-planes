@@ -44,6 +44,10 @@ public class Airliner extends Airplane implements CivilianVehicle {
         passengersList.clear();
     }
 
+    /**
+     * Returns next Airport on list.
+     * @return next Airport on list.
+     */
     public CivilianAirport getNextPort(){
         if(lastVisitedPortIndex == route.size()-1){
             Collections.reverse(route);

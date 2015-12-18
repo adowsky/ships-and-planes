@@ -32,57 +32,87 @@ public class VehicleButton extends Button implements LocationChangedListener, No
     @Override
     public void fire(Point2D location, double rotation, boolean translate){
 
+        translate(translate, rotation);
         if(rotation != this.rotation) {
             Platform.runLater(() -> {
                 relocate(location.getX(), location.getY());
                 setRotate(rotation);
-                translate(translate);
             });
             this.rotation = rotation;
         }
         else
             Platform.runLater(()->{relocate(location.getX(), location.getY());
-            translate(translate);
             });
 
     }
-    private void translate(boolean translate) {
-        boolean condition = true;
-        SynchronizedUpdateNotifier.getInstance().addToList(this);
-        while (condition) {
-            if (translate) {
-                setRotate(rotation-90);
-                synchronized (this) {
-                    if (currentTranslation > (-TRANSLATION) && tick) {
-                        currentTranslation -= Math.abs(model.getSpeedX() * 7);
-                        tick = false;
-                    } else {
-                        setRotate(rotation);
-                        condition = false;
+    private void translate(boolean translate, double rot) {
+        boolean needToTranslate = (translate && currentTranslation > (-TRANSLATION)) || (!translate && currentTranslation < TRANSLATION);
+        if(needToTranslate) {
+            SynchronizedUpdateNotifier.getInstance().addToList(this);
+
+            while (needToTranslate) {
+                double tmpRotation = rot;
+                if (translate) {
+                    if (model.getSpeedY()>0)
+                    tmpRotation += 90;
+
+
+
+                        if (currentTranslation > (-TRANSLATION) ) {
+                            synchronized (this) {
+                                if(tick) {
+                                    currentTranslation -= Math.abs(model.getSpeedX());
+                                    tick = false;
+                                }else
+                                    trySleep();
+                            }
+                        } else {
+                            tmpRotation = rotation;
+                            needToTranslate = false;
+                        }
+
+                } else {
+                    if (model.getSpeedY()<=0)
+                        tmpRotation += 90;
+
+                        if (currentTranslation < TRANSLATION) {
+                            synchronized (this) {
+                                if (tick) {
+                                    currentTranslation += Math.abs(model.getSpeedX());
+                                    tick = false;
+                                }
+                                else
+                                    trySleep();
+                            }
+                        } else {
+                            tmpRotation = rotation;
+                            needToTranslate = false;
+                        }
                     }
-                }
-            } else {
-                setRotate(rotation+90);
-                synchronized (this) {
-                    if (currentTranslation < TRANSLATION && tick) {
-                        currentTranslation += Math.abs(model.getSpeedX() * 7);
-                        tick = false;
-                    } else {
-                        setRotate(rotation);
-                        condition = false;
-                    }
-                }
+
+
+                final double rotationToDo = tmpRotation;
+                Platform.runLater(() ->{
+                    setRotate(rotationToDo);
+                    setTranslateX(currentTranslation);
+                    setTranslateY(currentTranslation);
+                });
+
 
             }
-            setTranslateX(currentTranslation);
-            setTranslateY(currentTranslation);
-
+            SynchronizedUpdateNotifier.getInstance().removeFromList(this);
         }
-        SynchronizedUpdateNotifier.getInstance().removeFromList(this);
     }
 
     @Override
     public synchronized void tick() {
         tick = true;
+    }
+    private void trySleep() {
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 }

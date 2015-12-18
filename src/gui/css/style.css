@@ -74,13 +74,25 @@
 .civilian-plane:hover{
     -fx-background-color: rgba(88, 104, 70, 0.6);
 }
+.military-plane{
+    -fx-min-width: 20px;
+    -fx-max-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-height: 20px;
+    -fx-background-color: transparent   ;
+    -fx-background-image: url("../resources/mplane.png");
+    -fx-background-size: cover;
+ }
+.military-plane:hover{
+    -fx-background-color: rgba(88, 104, 70, 0.6);
+}
 .military-airport-button{
     -fx-min-width: 20px;
     -fx-max-width: 20px;
     -fx-min-height: 20px;
     -fx-max-height: 20px;
     -fx-background-color: transparent   ;
-    -fx-background-image: url("../resources/mairport.jpg");
+    -fx-background-image: url("../resources/mairport.png");
     -fx-background-size: cover;
 }
 .military-airport-button:hover{

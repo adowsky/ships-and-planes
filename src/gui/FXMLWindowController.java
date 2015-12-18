@@ -122,17 +122,17 @@ public class FXMLWindowController implements Initializable {
         vhc.setModel(boat);
         vhc.getStyleClass().add("civilian-ship");
         vhc.setOnAction(civilianShipClicked);
-        mapPane.getChildren().add(vhc);
         boat.setRoute(reykjavik.getRouteToPort(salvador));
         boat.setReadyToTravel();
+        mapPane.getChildren().add(vhc);
         vhc = new VehicleButton();
         boat = new FerryBoat(salvador.getLocation(),0.01,Arrays.asList(salvador,reykjavik),50,"KOMODO");
         vhc.setModel(boat);
         vhc.getStyleClass().add("civilian-ship");
         vhc.setOnAction(civilianShipClicked);
-        mapPane.getChildren().add(vhc);
         boat.setRoute(salvador.getRouteToPort(reykjavik));
         boat.setReadyToTravel();
+        mapPane.getChildren().add(vhc);
 
     }
 
