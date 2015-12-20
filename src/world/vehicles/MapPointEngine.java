@@ -1,6 +1,7 @@
 package world.vehicles;
 
 import world.Cross;
+import world.vehicles.movement.MovingEngine;
 
 /**
  * Template of moving engine for Cross.

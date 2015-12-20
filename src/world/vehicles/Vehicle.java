@@ -1,19 +1,18 @@
 package world.vehicles;
 
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Transform;
 import world.*;
 import world.ports.Port;
+import world.vehicles.movement.MovingEngine;
+import world.vehicles.movement.MovingEngineTypes;
+import world.vehicles.movement.VehicleMovingEngineFactory;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Represents vehicle
@@ -42,13 +41,13 @@ public abstract class Vehicle implements Drawable {
      * @param location location on map
 
      */
-    public Vehicle(Point2D location, double speed){
+    public Vehicle(Point2D location, double speed, MovingEngineTypes types){
         id=nextId++;
         this.location=location;
         readyToTravel = false;
         running = false;
         this.speed = speed;
-        engine = new VehicleMovingEngine(this);
+        engine = VehicleMovingEngineFactory.getInstance().getMovingEngine(types, this);
         bounds = new Rectangle(location.getX(),location.getY(), WorldConstants.VEHICLE_WIDTH,WorldConstants.VEHICLE_HEIGHT);
         locationChanged = false;
         nextCrossing = 0;
@@ -56,7 +55,9 @@ public abstract class Vehicle implements Drawable {
         speedY = 0;
         listeners = new LinkedList<>();
         rotation = 0;
-
+    }
+    public Vehicle(Point2D location, double speed){
+        this(location,speed,MovingEngineTypes.STANDARD);
     }
 
     /**

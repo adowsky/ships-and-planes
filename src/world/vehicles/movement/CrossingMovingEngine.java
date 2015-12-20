@@ -1,6 +1,7 @@
-package world.vehicles;
+package world.vehicles.movement;
 
 import world.Crossing;
+import world.vehicles.MapPointEngine;
 
 /**
  * Moving engine to move vehicle through crossing.

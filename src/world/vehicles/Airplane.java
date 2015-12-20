@@ -1,6 +1,7 @@
 package world.vehicles;
 
 import javafx.geometry.Point2D;
+import world.vehicles.movement.MovingEngineTypes;
 
 /**
  * Represents plane.
@@ -19,6 +20,12 @@ public abstract class Airplane extends Vehicle {
      */
     public Airplane(Point2D location,  double speed, int staffAmount, int maxFuel){
         super(location, speed);
+        this.staffAmount=staffAmount;
+        this.maxFuel=maxFuel;
+        currentFuel=maxFuel;
+    }
+    public Airplane(Point2D location, double speed, int staffAmount, int maxFuel, MovingEngineTypes type){
+        super(location, speed, type);
         this.staffAmount=staffAmount;
         this.maxFuel=maxFuel;
         currentFuel=maxFuel;

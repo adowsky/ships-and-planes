@@ -3,6 +3,7 @@ package world.vehicles;
 import javafx.geometry.Point2D;
 import world.ports.MilitaryAirport;
 import world.ports.Port;
+import world.vehicles.movement.MovingEngine;
 
 import java.util.Collections;
 import java.util.HashMap;

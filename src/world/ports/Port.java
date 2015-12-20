@@ -1,12 +1,11 @@
 package world.ports;
 
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import world.*;
-import world.vehicles.MovingEngine;
-import world.vehicles.PortMovingEngine;
+import world.vehicles.movement.MovingEngine;
+import world.vehicles.movement.PortMovingEngine;
 import world.vehicles.Vehicle;
 
 import java.util.*;
@@ -149,5 +148,7 @@ public abstract class Port implements Drawable, Cross {
         return getClass().getSimpleName()+": "+name;
     }
 
-
+    public Set<Port> getAllRoutes(){
+        return ways.keySet();
+    }
 }

@@ -1,4 +1,6 @@
-package world.vehicles;
+package world.vehicles.movement;
+
+import world.vehicles.Vehicle;
 
 import java.util.Random;
 

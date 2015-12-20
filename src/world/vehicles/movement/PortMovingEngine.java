@@ -1,12 +1,13 @@
- package world.vehicles;
+ package world.vehicles.movement;
 
 import world.ports.Port;
+import world.vehicles.MapPointEngine;
 
 
-/**
+ /**
  * Moves vehicle to the Port.
  */
-public class PortMovingEngine extends MapPointEngine{
+public class PortMovingEngine extends MapPointEngine {
     /**
      * Creates instance of class.
      * @param port

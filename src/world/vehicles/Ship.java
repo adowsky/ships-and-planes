@@ -1,6 +1,7 @@
 package world.vehicles;
 
 import javafx.geometry.Point2D;
+import world.vehicles.movement.MovingEngineTypes;
 
 /**
  * Represents Ship.
@@ -13,7 +14,9 @@ public abstract class Ship extends Vehicle {
      */
     public Ship(Point2D location, double maxVelocity){
         super(location, maxVelocity);
-        World.getInstance().addToShipList(this);
+    }
+    public Ship(Point2D location, double maxVelocity, MovingEngineTypes type){
+        super(location, maxVelocity, type);
     }
 
 }

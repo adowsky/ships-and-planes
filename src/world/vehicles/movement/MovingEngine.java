@@ -1,4 +1,7 @@
-package world.vehicles;
+package world.vehicles.movement;
+
+import world.vehicles.Notifiable;
+import world.vehicles.Vehicle;
 
 /**
  * Responsible for moving something.

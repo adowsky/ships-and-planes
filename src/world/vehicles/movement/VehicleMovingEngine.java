@@ -1,7 +1,9 @@
-package world.vehicles;
+package world.vehicles.movement;
 
 import javafx.scene.shape.Shape;
 import world.Cross;
+import world.vehicles.SynchronizedUpdateNotifier;
+import world.vehicles.Vehicle;
 
 import java.util.List;
 
