@@ -8,6 +8,7 @@ import world.*;
 import world.ports.Port;
 import world.vehicles.movement.MovingEngine;
 import world.vehicles.movement.MovingEngineTypes;
+import world.vehicles.movement.MovingState;
 import world.vehicles.movement.VehicleMovingEngineFactory;
 
 import java.util.LinkedList;
@@ -33,7 +34,9 @@ public abstract class Vehicle implements Drawable {
     private double rotation;
     private List<Cross> route;
     private int nextCrossing;
-    private List<LocationChangedListener> listeners;
+    private List<LocationChangedListener> locationChangedListeners;
+    private List<MovementStateListerner> movementStateListerners;
+
     private Rotate transform;
 
     /**
@@ -53,7 +56,8 @@ public abstract class Vehicle implements Drawable {
         nextCrossing = 0;
         speedX = 0;
         speedY = 0;
-        listeners = new LinkedList<>();
+        locationChangedListeners = new LinkedList<>();
+        movementStateListerners = new LinkedList<>();
         rotation = 0;
     }
     public Vehicle(Point2D location, double speed){
@@ -107,14 +111,13 @@ public abstract class Vehicle implements Drawable {
     public synchronized void setLocation(double x, double y){
         location = new Point2D(x,y);
         locationChanged = true;
-        for(LocationChangedListener l : listeners)
-            l.fire(location, rotation, transformCondition());
+        locationChangedListeners.forEach((o) -> o.fire(location, rotation, transformCondition()));
     }
     private boolean transformCondition(){
         return speedX<0;
     }
     public void addLocationChangedListener(LocationChangedListener l){
-        listeners.add(l);
+        locationChangedListeners.add(l);
     }
 
     /**
@@ -158,12 +161,15 @@ public abstract class Vehicle implements Drawable {
             //TODO
         }
     }
-
+    public void addMovementStateChangesListener(MovementStateListerner l){
+        movementStateListerners.add(l);
+    }
     /**
      * Sets readyToTravel flag on true value.
      */
     public void setReadyToTravel(){
         readyToTravel = true;
+        movementStateListerners.forEach((o) -> o.movementStateChanges(MovingState.MOVING));
         engine.hitTheRoad(route);
     }
     /**
@@ -171,6 +177,7 @@ public abstract class Vehicle implements Drawable {
      */
     public void arrivedToPort(){
         readyToTravel = false;
+        movementStateListerners.forEach((o) -> o.movementStateChanges(MovingState.STAYING));
     }
 
     /**
@@ -223,7 +230,6 @@ public abstract class Vehicle implements Drawable {
      * Changes crossing to the next one.
      */
     public synchronized void nextCrossing(){
-        //TODO instancyjne klasy muszą nadpisać o uruchomienie lądowania
         if(nextCrossing == route.size()){
             return;
         }
@@ -253,6 +259,7 @@ public abstract class Vehicle implements Drawable {
         speedY = p.getY();
         rotation = countRotation();
         transform = new Rotate(rotation);
+        engine.hitTheRoad(l);
     }
     public double getRotation(){
         return  rotation;
@@ -339,7 +346,9 @@ public abstract class Vehicle implements Drawable {
             return  true;
         return false;
     }
-
+    public boolean isReadyToTravel(){
+        return  readyToTravel;
+    }
     /**
      * Removes itself from previous crossing register (path).
      */

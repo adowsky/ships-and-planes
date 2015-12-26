@@ -13,6 +13,7 @@ import java.util.List;
 public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
     private Vehicle vehicle;
     private boolean canMove;
+    private boolean running;
     private  volatile List<Cross> route;
     private final Object routKeeper;
     private final Object movingGate;
@@ -28,9 +29,8 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
         this.movingGate = new Object();
         SynchronizedUpdateNotifier.getInstance().addToList(this);
         routKeeper = new Object();
-        Thread t = new Thread(this);
-        t.setDaemon(true);
-        t.start();
+        running = false;
+
 
     }
     @Override
@@ -41,6 +41,14 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
     }
     @Override
     public void hitTheRoad(List<Cross> route) {
+        synchronized (this) {
+            if (!running) {
+                Thread t = new Thread(this);
+                t.setDaemon(true);
+                t.start();
+                running = true;
+            }
+        }
         synchronized (routKeeper) {
             this.route = route;
         }
@@ -49,7 +57,7 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
     @Override
     public void runInThread(){
         while(true) {
-            if(!vehicle.getReadyToTravel()){
+            if(!vehicle.getReadyToTravel() || route.size() == 0){
                 trySleep();
             }
             else {
@@ -115,7 +123,7 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
         if(vehicleInFront == null)
             return false;
         Shape s = Shape.intersect(vehicleInFront.getBounds(),vehicle.getBounds());
-        return s.getBoundsInLocal().getWidth()<0 ? false : true;
+        return s.getBoundsInLocal().getWidth()>= 0;
     }
 
     @Override

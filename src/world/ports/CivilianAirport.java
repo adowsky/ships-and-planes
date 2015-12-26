@@ -2,7 +2,6 @@ package world.ports;
 
 import javafx.geometry.Point2D;
 import world.vehicles.CivilianVehicle;
-import world.Cross;
 import world.Passenger;
 import world.vehicles.Airplane;
 
@@ -59,6 +58,17 @@ public class CivilianAirport extends AirPort implements CivilianPort{
     @Override
     public void passengerWentAway(Passenger passenger) {
         passengersSet.remove(passenger);
+    }
+
+    @Override
+    public List<CivilianPort> getAllConnections() {
+
+            List<CivilianPort> portListForPassenger = new ArrayList<>();
+            for(Port p : getAllRoutes()){
+                portListForPassenger.add((CivilianPort)p);
+            }
+            getLandConnectionPorts().forEach((p)-> portListForPassenger.add((CivilianPort)p));
+        return portListForPassenger;
     }
 
     public boolean canLand() {

@@ -82,6 +82,9 @@ public class Crossing implements Cross{
         }
         vehicleList.add(v);
     }
-
+    @Override
+    public String toString(){
+        return "Crossing: "+name;
+    }
 
 }

@@ -1,12 +1,9 @@
 package world.ports;
 
 import javafx.geometry.Point2D;
-import world.Cross;
 import world.vehicles.MilitaryAircraft;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents military airport. It is a port.
@@ -25,6 +22,7 @@ public class MilitaryAirport extends AirPort {
         super(capacity,location);
         this.timeToNextDeparture=timeToNextDeparture;
         planesList=new ArrayList<>();
+        MilitaryAirportContainer.getInstance().addToSet(this);
     }
 
     /**

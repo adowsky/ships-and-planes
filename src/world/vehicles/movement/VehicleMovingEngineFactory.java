@@ -27,7 +27,6 @@ public class VehicleMovingEngineFactory {
             case DODGING_PORTS:
                 return new DodgingPortsMovingEngine(v);
             default:
-
                 break;
         }
         return me;

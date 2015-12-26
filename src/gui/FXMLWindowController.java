@@ -18,9 +18,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import world.ports.CivilianAirport;
-import world.ports.Harbour;
-import world.ports.MilitaryAirport;
+import world.PassengerGenerator;
+import world.ports.*;
 import world.vehicles.*;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,6 +50,7 @@ public class FXMLWindowController implements Initializable {
     private Set<PortButton<Harbour>> harbourButtons;
     private Set<PortButton<CivilianAirport>> CAirportButtons;
     private Set<PortButton<MilitaryAirport>> MAirportButtons;
+    private PassengerGenerator passengerGenerator;
 
     /**
      * Returns instance of class.
@@ -69,6 +69,7 @@ public class FXMLWindowController implements Initializable {
         synchronized (FXMLWindowController.class){
             instance = this;
         }
+        passengerGenerator = PassengerGenerator.getInstance();
         final GraphicsContext gc = canvas.getGraphicsContext2D();
         Image map = new Image(getClass().getResourceAsStream("resources/blank-world-map (1).jpg"));
         System.out.println("Initialization");
@@ -107,6 +108,10 @@ public class FXMLWindowController implements Initializable {
             mapPane.getChildren().addAll(harbourButtons);
             mapPane.getChildren().addAll(CAirportButtons);
             mapPane.getChildren().addAll(MAirportButtons);
+            List<CivilianPort> db = new ArrayList<>();
+            db.addAll(initializer.getCAirports().values());
+            db.addAll(initializer.getSeaPorts().values());
+            passengerGenerator.setPortDataBase(db);
         }catch (MapInitException ex){
             ex.printStackTrace();
             Platform.exit();
@@ -121,6 +126,8 @@ public class FXMLWindowController implements Initializable {
         VehicleButton vhc = new VehicleButton();
         Harbour reykjavik = ports.get("Reykjavik");
         Harbour salvador = ports.get("Salvador");
+        passengerGenerator.getPassengers(50);
+        /*
         FerryBoat boat = new FerryBoat(reykjavik.getLocation(),0.01,Arrays.asList(reykjavik,salvador),50,"KOMODO");
         vhc.setModel(boat);
         vhc.getStyleClass().add("civilian-ship");
@@ -135,6 +142,13 @@ public class FXMLWindowController implements Initializable {
         vhc.setOnAction(civilianShipClicked);
         boat.setRoute(salvador.getRouteToPort(reykjavik));
         boat.setReadyToTravel();
+        mapPane.getChildren().add(vhc);
+        vhc = new VehicleButton();*/
+        AircraftCarrier carrier = new AircraftCarrier(reykjavik,0.02,ArmamentType.NUCLEAR_WEAPON);
+        vhc.setModel(carrier);
+        vhc.getStyleClass().add("civilian-ship");
+        vhc.setOnAction(civilianShipClicked);
+        carrier.setReadyToTravel();
         mapPane.getChildren().add(vhc);
 
     }
@@ -308,6 +322,7 @@ public class FXMLWindowController implements Initializable {
             FerryBoat model = new FerryBoat(modelLocation, speed/100.0, portList, maxCapacity,(String)details.get("Company")[0]);
             btn.setModel(model);
             btn.getStyleClass().add("civilian-ship");
+            passengerGenerator.getPassengers(model.getMaxPassengersAmount());
             btn.setOnAction(civilianShipClicked);
         }else if(type.equals("Airliner")){
             List<CivilianAirport> portList = new ArrayList<>();
@@ -319,6 +334,7 @@ public class FXMLWindowController implements Initializable {
             Airliner model = new Airliner(modelLocation, speed/100.0, portList, staffAmount, maxFuel, maxCapacity);
             btn.setModel(model);
             btn.getStyleClass().add("civilian-plane");
+            passengerGenerator.getPassengers(model.getMaxPassengersAmount());
             btn.setOnAction(civilianShipClicked);
         }else if(type.equals("Aircraft")){
             List<MilitaryAirport> portList = new ArrayList<>();
@@ -328,12 +344,13 @@ public class FXMLWindowController implements Initializable {
                 portList.add(ports.get(s));
             }
             Point2D modelLocation = portList.get(0).getLocation();
-            MilitaryAircraft model = new MilitaryAircraft(modelLocation, speed/100.0, portList, staffAmount, maxFuel, armType);
+            MilitaryAircraft model = new MilitaryAircraft(modelLocation, speed/100.0, portList, staffAmount, maxFuel, armType,false);
             btn.setModel(model);
             btn.getStyleClass().add("military-plane");
             btn.setOnAction(civilianShipClicked);
         }
         //end of factory
+
         return btn;
     }
 }

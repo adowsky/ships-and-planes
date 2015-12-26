@@ -124,7 +124,7 @@ public class FerryBoat extends Ship implements CivilianVehicle {
         props.put("Passengers Amount: ", Integer.toString(passengersList.size()));
         props.put("Company: ",company);
         props.put("Location: ",
-                Double.toString(getLocation().getX()).substring(0,5)+"x"+Double.toString(getLocation().getY()).substring(0,5));
+                Double.toString(getLocation().getX()).split("\\.")[0]+"x"+Double.toString(getLocation().getY()).split("\\.")[0]);
         props.put("ID: ",Integer.toString(getId()));
         return props;
     }

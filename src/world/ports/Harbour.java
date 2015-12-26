@@ -13,6 +13,7 @@ import java.util.*;
 public class Harbour extends SeaPort implements CivilianPort {
     private List<CivilianVehicle> shipsList;
     private Set<Passenger> passengersSet;
+    private List<CivilianPort> portListForPassenger;
     private int timeToNextDeparture;
 
     /**
@@ -83,11 +84,25 @@ public class Harbour extends SeaPort implements CivilianPort {
 
     @Override
     public void passengerHasCome(Passenger passenger) {
-
+        passengersSet.add(passenger);
+        System.out.println("Przybył: "+passenger.getFirstname()+" "+passenger.getLastname());
     }
 
     @Override
     public void passengerWentAway(Passenger passenger) {
+        passengersSet.remove(passenger);
+    }
+
+    @Override
+    public List<CivilianPort> getAllConnections() {
+        if(portListForPassenger == null) {
+            portListForPassenger = new ArrayList<>();
+            for(Port p : getAllRoutes()){
+                portListForPassenger.add((CivilianPort)p);
+            }
+            getLandConnectionPorts().forEach((p)-> portListForPassenger.add((CivilianPort)p));
+        }
+        return  portListForPassenger;
 
     }
 

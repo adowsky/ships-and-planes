@@ -16,17 +16,23 @@ public class AircraftCarrier extends Ship {
     private List<MilitaryAircraft> producedPlanes;
     private Port lastVisitedPort;
     private Port nextPort;
-
+    private static Map<Port, Map<Port, List<Cross>>> flightRoutes;
     /**
      * Creates airport.
      * @param location
      * @param maxVelocity
      * @param armament
      */
-    public AircraftCarrier(Point2D location, double maxVelocity, ArmamentType armament){
-        super(location,maxVelocity, MovingEngineTypes.DODGING_PORTS);
+    public AircraftCarrier(Port location, double maxVelocity, ArmamentType armament){
+        super(location.getLocation(),maxVelocity, MovingEngineTypes.DODGING_PORTS);
         this.armament=armament;
         producedPlanes = new ArrayList<>();
+        lastVisitedPort = location;
+        nextPort = location;
+        Port newPort = randNewPort();
+        setRoute(location.getRouteToPort(newPort));
+
+        nextPort = newPort;
     }
     /**
      * Returns the armament type of the aircraft carrier's instance.
@@ -35,7 +41,9 @@ public class AircraftCarrier extends Ship {
     public ArmamentType getArmament() {
         return armament;
     }
-
+    public static void setFlightRoutes(Map<Port, Map<Port, List<Cross>>> map ){
+        flightRoutes = map;
+    }
     /**
      * Sets armament type.
      * @param armament armament type to set.
@@ -63,15 +71,20 @@ public class AircraftCarrier extends Ship {
         }
     }
     private Port randNewPort(){
-        Set<Port> rout = getNextPort().getAllRoutes();
-        Random random = new Random();
-        int target = random.nextInt(rout.size());
-        int i = 0;
-        for(Port p : rout){
-            if(i==target){
-                return p;
+        Port next = getNextPort();
+        if(next != null) {
+            Set<Port> rout = getNextPort().getAllRoutes();
+            Random random = new Random();
+            int target = random.nextInt(rout.size());
+            int i = 0;
+            for (Port p : rout) {
+                if (i == target) {
+                    return p;
+                }
+                i++;
             }
-            i++;
+        }else{
+
         }
         return null;
     }
@@ -89,6 +102,10 @@ public class AircraftCarrier extends Ship {
     @Override
     public Map<String, String> getProperties() {
         Map<String,String> map = new HashMap<>();
+        map.put("Armament type:", getArmament().toString());
+        map.put("Location: ",
+                Double.toString(getLocation().getX()).split("\\.")[0]+"x"+Double.toString(getLocation().getY()).split("\\.")[0]);
+        map.put("ID: ",Integer.toString(getId()));
         return map;
     }
 
@@ -96,4 +113,20 @@ public class AircraftCarrier extends Ship {
     public Port getLastPort() {
         return lastVisitedPort;
     }
+    private void releaseAircrafts(){
+        final Map<Port,List<Cross>> map = flightRoutes.get(getNextPort());
+        if(map == null)
+            return;
+        producedPlanes.forEach((o) ->{
+            List<Cross> route = map.get(o.getNextPort());
+            if(route != null){
+                o.setRoute(route);
+                o.setReadyToTravel();
+            }
+        });
+
+
+
+    }
+
 }

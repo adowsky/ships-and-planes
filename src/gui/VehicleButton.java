@@ -3,15 +3,13 @@ package gui;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
-import world.vehicles.LocationChangedListener;
-import world.vehicles.Notifiable;
-import world.vehicles.SynchronizedUpdateNotifier;
-import world.vehicles.Vehicle;
+import world.vehicles.*;
+import world.vehicles.movement.MovingState;
 
 /**
  * Represents vehicle, contains vehicle model inside.
  */
-public class VehicleButton extends Button implements LocationChangedListener, Notifiable{
+public class VehicleButton extends Button implements LocationChangedListener, MovementStateListerner, Notifiable{
     private Vehicle model;
     private volatile boolean tick = false;
     private double rotation;
@@ -28,6 +26,7 @@ public class VehicleButton extends Button implements LocationChangedListener, No
         setRotate(0);
         this.model = vehicle;
         model.addLocationChangedListener(this);
+        model.addMovementStateChangesListener(this);
     }
 
     /**
@@ -40,8 +39,8 @@ public class VehicleButton extends Button implements LocationChangedListener, No
 
     @Override
     public void fire(Point2D location, double rotation, boolean translate){
-
-        translate(translate, rotation);
+        if(getLayoutX()> 0 && getLayoutY()>0)
+            translate(translate, rotation);
         if(rotation != this.rotation) {
             Platform.runLater(() -> {
                 relocate(location.getX(), location.getY());
@@ -70,13 +69,10 @@ public class VehicleButton extends Button implements LocationChangedListener, No
                 if (translate) {
                     if (model.getSpeedY()>0)
                     tmpRotation += 90;
-
-
-
                         if (currentTranslation > (-TRANSLATION) ) {
                             synchronized (this) {
                                 if(tick) {
-                                    currentTranslation -= Math.abs(model.getSpeedX());
+                                    currentTranslation -= Math.abs(model.getSpeed());
                                     tick = false;
                                 }else
                                     trySleep();
@@ -93,7 +89,7 @@ public class VehicleButton extends Button implements LocationChangedListener, No
                         if (currentTranslation < TRANSLATION) {
                             synchronized (this) {
                                 if (tick) {
-                                    currentTranslation += Math.abs(model.getSpeedX());
+                                    currentTranslation += Math.abs(model.getSpeed());
                                     tick = false;
                                 }
                                 else
@@ -105,15 +101,12 @@ public class VehicleButton extends Button implements LocationChangedListener, No
                         }
                     }
 
-
                 final double rotationToDo = tmpRotation;
                 Platform.runLater(() ->{
                     setRotate(rotationToDo);
                     setTranslateX(currentTranslation);
                     setTranslateY(currentTranslation);
                 });
-
-
             }
             SynchronizedUpdateNotifier.getInstance().removeFromList(this);
         }
@@ -129,5 +122,13 @@ public class VehicleButton extends Button implements LocationChangedListener, No
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public void movementStateChanges(MovingState state) {
+        if(state == MovingState.MOVING){
+            Platform.runLater(()->setVisible(true));
+        }else if ( state == MovingState.STAYING)
+            Platform.runLater(()->setVisible(false));
     }
 }

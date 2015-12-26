@@ -16,6 +16,8 @@ public class DodgingPortsMovingEngine implements MovingEngine<List<Cross>> {
         private  volatile List<Cross> route;
         private final Object routKeeper;
         private final Object movingGate;
+        private boolean running;
+        private boolean routeChanged;
         private Vehicle vehicleInFront;
 
         /**
@@ -28,10 +30,7 @@ public class DodgingPortsMovingEngine implements MovingEngine<List<Cross>> {
             this.movingGate = new Object();
             SynchronizedUpdateNotifier.getInstance().addToList(this);
             routKeeper = new Object();
-            Thread t = new Thread(this);
-            t.setDaemon(true);
-            t.start();
-
+            running = false;
         }
         @Override
         public void clearCanMove(){
@@ -41,8 +40,17 @@ public class DodgingPortsMovingEngine implements MovingEngine<List<Cross>> {
         }
         @Override
         public void hitTheRoad(List<Cross> route) {
+            synchronized (this) {
+                if (!running) {
+                    Thread t = new Thread(this);
+                    t.setDaemon(true);
+                    t.start();
+                    running = true;
+                }
+            }
             synchronized (routKeeper) {
                 this.route = route;
+                routeChanged=true;
             }
             setCanMove();
         }
@@ -52,7 +60,7 @@ public class DodgingPortsMovingEngine implements MovingEngine<List<Cross>> {
                 if(!vehicle.getReadyToTravel()){
                     trySleep();
                 }
-                else {
+                else if(routeChanged) {
                     for (Cross o : route) {
                         while (!o.intersect(vehicle.getBounds())) {
                             if (canMove() && !shipIntersects()) {
@@ -67,10 +75,12 @@ public class DodgingPortsMovingEngine implements MovingEngine<List<Cross>> {
                         if(!vehicle.isOnRouteFinish())
                             o.goThrough(vehicle);
                         else{
+                            routeChanged = false;
                             vehicle.nextCrossing();
                         }
                         setFrontVehicle();
                     }
+
                 }
             }
         }

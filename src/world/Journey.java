@@ -25,6 +25,9 @@ public class Journey {
         this.route=route;
         lastVisitedPortIndex=0;
     }
+    public Journey(){
+
+    }
     /**
      * Returns last visited port
      * @return last visited port

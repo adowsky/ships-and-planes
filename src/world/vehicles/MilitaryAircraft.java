@@ -17,7 +17,6 @@ public class MilitaryAircraft extends Airplane {
     private ArmamentType armamentType;
     private List<MilitaryAirport> route;
     private int lastVisitedPortIndex;
-    private MovingEngine<Vehicle> engine;
 
     /**
      * Creates MilitaryAircraft
@@ -26,14 +25,14 @@ public class MilitaryAircraft extends Airplane {
      * @param maxFuel maximum value of fuel
      * @param armamentType armament type
      */
-    public MilitaryAircraft(Point2D location,double speed, List<MilitaryAirport>route, int staffAmount, int maxFuel, ArmamentType armamentType){
+    public MilitaryAircraft(Point2D location,double speed, List<MilitaryAirport>route, int staffAmount, int maxFuel, ArmamentType armamentType, boolean formCarrier){
         super(location,speed,staffAmount,maxFuel);
         this.armamentType=armamentType;
         this.route = route;
-        setRoute(route.get(0).getRouteToPort(route.get(1)));
-        lastVisitedPortIndex = 0;
+        if(!formCarrier)
+            setRoute(route.get(0).getRouteToPort(route.get(1)));
+        lastVisitedPortIndex = -1;
     }
-
     /**
      * Returns armament type
      * @return armament type
@@ -77,6 +76,7 @@ public class MilitaryAircraft extends Airplane {
             super.nextCrossing();
         }
     }
+
     @Override
     public Port getDestination() {
         return ((lastVisitedPortIndex+1) < route.size()) ? route.get(lastVisitedPortIndex + 1) : route.get(lastVisitedPortIndex);

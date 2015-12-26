@@ -1,9 +1,10 @@
 package world;
 
 import world.ports.CivilianPort;
+import world.ports.Port;
 import world.vehicles.Vehicle;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents passenger.
@@ -31,6 +32,9 @@ public class Passenger {
         this.age=age;
         this.journey=journey;
         currentVehicle=null;
+    }
+    public Passenger(){
+
     }
 
     /**
@@ -187,4 +191,29 @@ public class Passenger {
         nextPortIsVisited();
     }
 
+    public void newJourney(List<CivilianPort> db) throws Exception{
+        // non determined time because of condition using random function.
+        List<CivilianPort> route= new ArrayList<>();
+        Random rand = new Random();
+        if(journey == null) {
+            journey = new Journey();
+            route.add(db.get(rand.nextInt(db.size())));
+            route.get(0).passengerHasCome(this);
+        } else{
+            route.add(journey.getRoute().get(journey.getRoute().size() - 1));
+        }
+        int size = rand.nextInt(4)+1;
+        for(int i=0; i<size; i++){
+            boolean found= false;
+            while(!found) {
+                List<CivilianPort> set =  route.get(i).getAllConnections();
+                CivilianPort randed = set.get(rand.nextInt(set.size()));
+                if(!route.contains(randed)){
+                    route.add(randed);
+                    found = true;
+                }
+            }
+        }
+        journey.setRoute(route);
+    }
 }
