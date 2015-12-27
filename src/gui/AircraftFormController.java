@@ -11,7 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import world.WorldConstants;
+import world.vehicles.AircraftCarrier;
 import world.vehicles.ArmamentType;
+import world.vehicles.MilitaryAircraft;
+import world.vehicles.Vehicle;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -26,7 +29,7 @@ public class AircraftFormController implements ChoosingController, Initializable
     private static AircraftFormController instance;
     private final String ERROR_MSG = "Error occurred! Check all form fields and try again!";
     private final String SUCCESS_MSG = "Aircraft has been created!";
-
+    private AircraftCarrier fromSea = null;
     private boolean choosing = false;
     @FXML private TextField maxFuel;
     @FXML private TextField staffAmount;
@@ -68,6 +71,21 @@ public class AircraftFormController implements ChoosingController, Initializable
         portName.setText(name);
         routeText.clear();
         routeText.appendText(name.split(":")[1].trim());
+    }
+    public void setPortName(Class<?> cls){
+        portName.setText(cls.getSimpleName());
+        routeText.clear();
+    }
+
+    public void setFromSea(AircraftCarrier fromSea) {
+        this.fromSea = fromSea;
+    }
+    public void lockArmamentType(ArmamentType arm){
+        armType.getSelectionModel().select(arm);
+        armType.setEditable(false);
+    }
+    public void unlockArmamentType(){
+        armType.setEditable(true);
     }
 
     /**
@@ -118,7 +136,12 @@ public class AircraftFormController implements ChoosingController, Initializable
      * Service addition and shows information about success.
      */
     private void successAddition(){
-        FXMLWindowController.getInstance().addVehicleButton(mapShipDetails());
+        if(fromSea != null) {
+            FXMLWindowController.getInstance().addVehicleButton(mapShipDetails(), false);
+        }
+
+        else
+            FXMLWindowController.getInstance().addVehicleButton(mapShipDetails(),true);
         clearForm();
         info.setText(SUCCESS_MSG);
         info.setTextFill(Color.GREEN);
@@ -161,12 +184,19 @@ public class AircraftFormController implements ChoosingController, Initializable
         shipDetails.put("Speed", new String[]{String.valueOf(WorldConstants.AIRPLANE_SPEED)});
         shipDetails.put("Route", routeText.getText().trim().split("-"));
         shipDetails.put("Type", new String[]{"Aircraft"});
+        if(fromSea != null)
+            shipDetails.put("Start", new String[]{"false"});
+        else
+            shipDetails.put("Start", new String[]{"true"});
         return shipDetails;
     }
 
     @Override
     public void ChoiceHasBeenMade(String item) {
-        routeText.appendText("-"+item);
+        if(routeText.getText().isEmpty())
+            routeText.appendText(item);
+        else
+            routeText.appendText("-"+item);
     }
 
     @Override

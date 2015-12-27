@@ -5,6 +5,7 @@ import world.Cross;
 import world.vehicles.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
     public VehicleMovingEngine(Vehicle vehicle){
         this.vehicle = vehicle;
         vehicleInFront = null;
+        route = new LinkedList<>();
         this.movingGate = new Object();
         SynchronizedUpdateNotifier.getInstance().addToList(this);
         routKeeper = new Object();

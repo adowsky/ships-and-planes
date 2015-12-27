@@ -313,6 +313,39 @@ public class MapInitializer {
         mAirPorts.put(el.getAttribute("name"),c);
         return c;
     }
+    public Map<Port, Map<Port,List<Cross>>> getConnectionForAircraftCarrier() throws MapInitException{
+        Map<Port,Map<Port,List<Cross>>> result = new HashMap<>();
+        if(mAirPorts.isEmpty())
+            throw new MapInitException("Military airports not initialized!", MapInitException.ErrorType.PORTS_NOT_INIT);
+        if(seaPorts.isEmpty())
+            throw new MapInitException("Harbours not initialized!", MapInitException.ErrorType.PORTS_NOT_INIT);
+        NodeList conns = doc.getElementsByTagName("carrier-connection");
+        for(int i =0; i<conns.getLength(); i++){
+            Node n = conns.item(i);
+            Element e = (Element)n;
+            String from = e.getAttribute("from");
+            String to = e.getAttribute("to");
+            List<String> route = Arrays.asList(e.getTextContent().split(" "));
+            Port portFrom = seaPorts.get(from);
+            Port portTo = mAirPorts.get(to);
+            if(portFrom == null)
+                throw new MapInitException("Specific Harbour does not exist!", MapInitException.ErrorType.FILE_NOT_COHERENT);
+            if(portTo == null)
+                throw new MapInitException("Specific Military airport does not exist!", MapInitException.ErrorType.FILE_NOT_COHERENT);
+            Map<Port,List<Cross>> map = result.get(portFrom);
+            if(map == null) {
+                map = new HashMap<>();
+                result.put(portFrom, map);
+            }
+            if(map.containsKey(portTo))
+                throw new MapInitException("Destination port duplicate!", MapInitException.ErrorType.FILE_NOT_COHERENT);
+            List<Cross> crosses = new LinkedList<>();
+            route.forEach((s)->crosses.add(airCrossings.get(s)));
+            crosses.add(portTo);
+            map.put(portTo,crosses);
+        }
+        return result;
+    }
 
     /**
      * Returns map of Harbours

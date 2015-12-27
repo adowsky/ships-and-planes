@@ -85,7 +85,6 @@ public class Harbour extends SeaPort implements CivilianPort {
     @Override
     public void passengerHasCome(Passenger passenger) {
         passengersSet.add(passenger);
-        System.out.println("Przybył: "+passenger.getFirstname()+" "+passenger.getLastname());
     }
 
     @Override

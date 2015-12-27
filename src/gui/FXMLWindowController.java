@@ -2,12 +2,14 @@ package gui;
 
 import exceptions.gui.MapInitException;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -46,6 +48,7 @@ public class FXMLWindowController implements Initializable {
     private EventHandler<ActionEvent> civilianShipClicked;
     private ChoosingController choosingTarget;
     private boolean choosingState = false;
+    private VehicleButton fromSea = null;
     private MapInitializer initializer;
     private Set<PortButton<Harbour>> harbourButtons;
     private Set<PortButton<CivilianAirport>> CAirportButtons;
@@ -111,6 +114,7 @@ public class FXMLWindowController implements Initializable {
             List<CivilianPort> db = new ArrayList<>();
             db.addAll(initializer.getCAirports().values());
             db.addAll(initializer.getSeaPorts().values());
+            AircraftCarrier.setFlightRoutes(initializer.getConnectionForAircraftCarrier());
             passengerGenerator.setPortDataBase(db);
         }catch (MapInitException ex){
             ex.printStackTrace();
@@ -147,7 +151,7 @@ public class FXMLWindowController implements Initializable {
         AircraftCarrier carrier = new AircraftCarrier(reykjavik,0.02,ArmamentType.NUCLEAR_WEAPON);
         vhc.setModel(carrier);
         vhc.getStyleClass().add("civilian-ship");
-        vhc.setOnAction(civilianShipClicked);
+        vhc.setOnAction((e)->militaryShipClicked(vhc));
         carrier.setReadyToTravel();
         mapPane.getChildren().add(vhc);
 
@@ -167,11 +171,29 @@ public class FXMLWindowController implements Initializable {
         Platform.runLater(()->controlPanel.setCenter(civilianPlane));
 
     }
+    @FXML public synchronized void militaryShipClicked(VehicleButton source){
+
+        ObservableList list = vehicleDetails.getChildren();
+        fromSea = source;
+        Platform.runLater(()->{
+            AircraftFormController.getInstance().setPortName(source.getModel().getClass());
+            AircraftFormController.getInstance().setFromSea((AircraftCarrier)source.getModel());
+            AircraftFormController.getInstance().lockArmamentType(((AircraftCarrier)source.getModel()).getArmament());
+            list.clear();
+            Map<String, String> map = source.getModel().getProperties();
+            int i =map.size()-1;
+            for(String s : map.keySet()){
+                vehicleDetails.add(new Label(s+": "+map.get(s)),0,i);
+                i--;
+            }
+            controlPanel.setTop(vehicleDetails);
+            controlPanel.setCenter(militaryAirForm);});
+    }
     /**
      * Handler for button event.
      * @param source source
      */
-    @FXML public synchronized  void airPortClicked(PortButton source){
+    @FXML public synchronized void airPortClicked(PortButton source){
         if(choosingState){
             String name = source.getModel().getName();
             choosingTarget.ChoiceHasBeenMade(name);
@@ -191,6 +213,8 @@ public class FXMLWindowController implements Initializable {
             return;
         }
         AircraftFormController.getInstance().setPortName(source.getModel().toString());
+        AircraftFormController.getInstance().setFromSea(null);
+        AircraftFormController.getInstance().unlockArmamentType();
         Platform.runLater(() -> controlPanel.setCenter(militaryAirForm));
     }
 
@@ -287,6 +311,16 @@ public class FXMLWindowController implements Initializable {
         mapPane.getChildren().add(btn);
         btn.getModel().setReadyToTravel();
     }
+    public VehicleButton addVehicleButton(Map<String, Object[]> details,boolean startTravel){
+        VehicleButton btn = parseDetails(details);
+        mapPane.getChildren().add(btn);
+        if(startTravel)
+            btn.getModel().setReadyToTravel();
+        else {
+            btn.setVisible(false);
+        }
+        return btn;
+    }
 
     /**
      * Parses details and creates vehicle button from them.
@@ -310,6 +344,9 @@ public class FXMLWindowController implements Initializable {
         ArmamentType armType = null;
         if(details.get("Armament") != null)
             armType = (ArmamentType)details.get("Armament")[0];
+        boolean start = false;
+        if(details.get("Start") != null)
+            start = Boolean.valueOf((String)details.get("Start")[0]);
         VehicleButton btn = new VehicleButton();
             //FACTORY
         if(type.equals("Ferry")){
@@ -338,13 +375,14 @@ public class FXMLWindowController implements Initializable {
             btn.setOnAction(civilianShipClicked);
         }else if(type.equals("Aircraft")){
             List<MilitaryAirport> portList = new ArrayList<>();
-            //TODO implements initializer method to get military ports
             Map<String, MilitaryAirport> ports = initializer.getMAirPorts();
             for(String s: route){
                 portList.add(ports.get(s));
             }
             Point2D modelLocation = portList.get(0).getLocation();
-            MilitaryAircraft model = new MilitaryAircraft(modelLocation, speed/100.0, portList, staffAmount, maxFuel, armType,false);
+            MilitaryAircraft model = new MilitaryAircraft(modelLocation, speed/100.0, portList, staffAmount, maxFuel, armType,!start);
+            if(!start)
+                ((AircraftCarrier)fromSea.getModel()).addProducedPlane(model);
             btn.setModel(model);
             btn.getStyleClass().add("military-plane");
             btn.setOnAction(civilianShipClicked);

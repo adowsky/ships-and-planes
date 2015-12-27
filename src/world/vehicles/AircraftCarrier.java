@@ -3,6 +3,7 @@ package world.vehicles;
 import javafx.geometry.Point2D;
 import world.Cross;
 import world.ports.Harbour;
+import world.ports.MilitaryAirport;
 import world.ports.Port;
 import world.vehicles.movement.MovingEngineTypes;
 
@@ -60,6 +61,7 @@ public class AircraftCarrier extends Ship {
     @Override
     public void nextCrossing(){
         if(isOnRouteFinish()){
+            releaseAircrafts();
             removeFromPreviousCrossingRegister();
             Port newPort = randNewPort();
             setRoute(nextPort.getRouteToPort(newPort));
@@ -117,16 +119,19 @@ public class AircraftCarrier extends Ship {
         final Map<Port,List<Cross>> map = flightRoutes.get(getNextPort());
         if(map == null)
             return;
+        List<MilitaryAircraft> toRemove = new LinkedList<>();
         producedPlanes.forEach((o) ->{
             List<Cross> route = map.get(o.getNextPort());
             if(route != null){
+                o.setLocation(getLocation().getX(),getLocation().getY());
                 o.setRoute(route);
                 o.setReadyToTravel();
+                toRemove.add(o);
             }
         });
-
-
-
+        producedPlanes.removeAll(toRemove);
     }
-
+    public void addProducedPlane(MilitaryAircraft plane){
+        producedPlanes.add(plane);
+    }
 }

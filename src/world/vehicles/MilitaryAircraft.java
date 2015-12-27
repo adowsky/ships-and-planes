@@ -17,6 +17,7 @@ public class MilitaryAircraft extends Airplane {
     private ArmamentType armamentType;
     private List<MilitaryAirport> route;
     private int lastVisitedPortIndex;
+    private boolean fromSea;
 
     /**
      * Creates MilitaryAircraft
@@ -29,9 +30,14 @@ public class MilitaryAircraft extends Airplane {
         super(location,speed,staffAmount,maxFuel);
         this.armamentType=armamentType;
         this.route = route;
+        lastVisitedPortIndex = 0;
         if(!formCarrier)
             setRoute(route.get(0).getRouteToPort(route.get(1)));
-        lastVisitedPortIndex = -1;
+        else {
+            lastVisitedPortIndex = -1;
+        }
+
+        fromSea = formCarrier;
     }
     /**
      * Returns armament type
@@ -53,7 +59,9 @@ public class MilitaryAircraft extends Airplane {
         super.arrivedToPort();
         lastVisitedPortIndex++;
     }
-
+    public void setFromSea(){
+        fromSea = true;
+    }
     @Override
     public void Draw() {
 
@@ -61,9 +69,15 @@ public class MilitaryAircraft extends Airplane {
     @Override
     public MilitaryAirport getNextPort() {
         if(lastVisitedPortIndex == route.size()-1){
+            if(fromSea) {
+                route.remove(route.size() - 1);
+                fromSea = false;
+            }
             Collections.reverse(route);
             lastVisitedPortIndex = 0;
         }
+   /*     if(fromSea && lastVisitedPortIndex == -1)
+            return route.get(0);*/
         return ((lastVisitedPortIndex+1) < route.size()) ? route.get(lastVisitedPortIndex + 1) : route.get(lastVisitedPortIndex);
     }
 
@@ -89,6 +103,8 @@ public class MilitaryAircraft extends Airplane {
 
     @Override
     public Port getLastPort() {
+        if(lastVisitedPortIndex<0)
+            return null;
         return route.get(lastVisitedPortIndex);
     }
 }
