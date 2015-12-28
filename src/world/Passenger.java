@@ -4,12 +4,13 @@ import world.ports.CivilianPort;
 import world.ports.Port;
 import world.vehicles.Vehicle;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Represents passenger.
  */
-public class Passenger {
+public class Passenger implements Serializable{
     private String firstname;
     private String lastname;
     private String pesel;

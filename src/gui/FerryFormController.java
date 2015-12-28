@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import world.vehicles.FerryBoat;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,7 @@ import java.util.ResourceBundle;
 /**
  * Controller for creating form of civilian ship.
  */
-public class FerryFormController implements ChoosingController, Initializable{
+public class FerryFormController implements ChoosingController, Initializable, Serializable{
     private static FerryFormController instance;
     private final String ERROR_MSG = "Error occurred! Check all form fields and try again!";
     private final String SUCCESS_MSG = "Ferryboat has been created!";

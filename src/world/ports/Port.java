@@ -1,22 +1,24 @@
 package world.ports;
 
 import javafx.geometry.Point2D;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import world.*;
+import world.vehicles.Circle;
 import world.vehicles.movement.MovingEngine;
 import world.vehicles.movement.PortMovingEngine;
 import world.vehicles.Vehicle;
 
+import java.io.Serializable;
 import java.util.*;
+import java.util.List;
 
 /**
  * Represents port. Vehicle can stay there.
  */
-public abstract class Port implements Drawable, Cross {
+public abstract class Port implements Drawable, Cross, Serializable {
     private int maxCapacity;
     private Circle circle;
-    private Point2D location;
+    private Point location;
     private Set<Port> landConnectionPorts;
     private MovingEngine<Vehicle> engine;
     private Map<Port,List<Cross>> ways;
@@ -55,10 +57,11 @@ public abstract class Port implements Drawable, Cross {
     public Port(int maxCapacity, Point2D location) {
         this.maxCapacity = maxCapacity;
         landConnectionPorts = new HashSet<>();
-        this.location = location;
+        this.location = new Point(location.getX(),location.getY());
         circle = new Circle(location.getX(), location.getY(), WorldConstants.PORT_RADIUS);
         engine = new PortMovingEngine(this);
         travellingMap = new HashMap<>();
+        SerializeContainer.getInstance().addObjectToSerialize(this);
 
     }
 
@@ -102,7 +105,7 @@ public abstract class Port implements Drawable, Cross {
      * @return location of the port.
      */
     public Point2D getLocation(){
-        return  location;
+        return new Point2D(location.getX(),location.getY());
     }
 
     @Override

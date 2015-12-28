@@ -3,7 +3,6 @@ package world.vehicles;
 import javafx.geometry.Point2D;
 import world.ports.MilitaryAirport;
 import world.ports.Port;
-import world.vehicles.movement.MovingEngine;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,8 +75,6 @@ public class MilitaryAircraft extends Airplane {
             Collections.reverse(route);
             lastVisitedPortIndex = 0;
         }
-   /*     if(fromSea && lastVisitedPortIndex == -1)
-            return route.get(0);*/
         return ((lastVisitedPortIndex+1) < route.size()) ? route.get(lastVisitedPortIndex + 1) : route.get(lastVisitedPortIndex);
     }
 

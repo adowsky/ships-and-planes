@@ -2,12 +2,13 @@ package world;
 
 import world.ports.CivilianPort;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Represents passenger's journey.
  */
-public class Journey {
+public class Journey implements Serializable{
     private boolean business;
     private int duration;
     private List<CivilianPort> route;

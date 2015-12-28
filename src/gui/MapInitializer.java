@@ -18,12 +18,13 @@ import world.ports.Port;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Class to initialize map's elements.
  */
-public class MapInitializer {
+public class MapInitializer implements Serializable{
     private DocumentBuilder builder;
     private Document doc;
     private volatile Element el;

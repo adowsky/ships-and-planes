@@ -1,35 +1,25 @@
 package world.vehicles;
 
+import gui.VehicleButton;
 import world.WorldConstants;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Managing and synchronizing updates of Moving Engines.
  */
-public class SynchronizedUpdateNotifier implements Runnable{
-    private volatile List<Notifiable> notificationList;
-    private final double UPDATES_PER_MILLIS;
-    private static SynchronizedUpdateNotifier instance;
-    private SynchronizedUpdateNotifier(){
-        notificationList = new LinkedList<>();
-        UPDATES_PER_MILLIS = WorldConstants.UPDATES_PER_SEC / 1000.0;
+public enum SynchronizedUpdateNotifier implements Runnable, Serializable{
+    INSTANCE;
+    private volatile List<Notifiable> notificationList = new LinkedList<>();
+    private final double UPDATES_PER_MILLIS = WorldConstants.UPDATES_PER_SEC / 1000.;
+    SynchronizedUpdateNotifier(){
         Thread t= new Thread(this);
         t.setDaemon(true);
         t.start();
     }
 
-    /**
-     * Return instance of class.
-     * @return singleton instance of class
-     */
-    public static synchronized  SynchronizedUpdateNotifier getInstance(){
-        if(instance == null)
-            instance = new SynchronizedUpdateNotifier();
-
-        return instance;
-    }
 
     /**
      * Adds to list of objects that are notified when specific time elapsed.
@@ -78,6 +68,18 @@ public class SynchronizedUpdateNotifier implements Runnable{
     private synchronized void notifyAboutUpdate(){
         notificationList.forEach((e)->e.tick());
     }
+    public List<Notifiable> toSerialize(){
+        List<Notifiable> output = new LinkedList<>();
+        notificationList.forEach(e ->{
+            if(e instanceof VehicleButton){
 
-
+            }else{
+                output.add(e);
+            }
+        });
+        return output;
+    }
+    public void addNewList(List<Notifiable> x){
+        notificationList = x;
+    }
 }

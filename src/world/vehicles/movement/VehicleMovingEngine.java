@@ -5,21 +5,27 @@ import world.Cross;
 import world.vehicles.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * It's responsible for vehicle's moving;
  */
 public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
+    private static long serialVersionUID = 1L;
     private Vehicle vehicle;
-    private boolean canMove;
-    private boolean running;
+    private transient boolean canMove;
+    private transient boolean running;
     private  volatile List<Cross> route;
-    private final Object routKeeper;
-    private final Object movingGate;
+    private transient Object routKeeper;
+    private transient Object movingGate;
     private Vehicle vehicleInFront;
-
+    private transient Thread thread;
+    private Cross current;
     /**
      * Creates new VehicleMovingEngine
      * @param vehicle vehicle of engine
@@ -29,7 +35,7 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
         vehicleInFront = null;
         route = new LinkedList<>();
         this.movingGate = new Object();
-        SynchronizedUpdateNotifier.getInstance().addToList(this);
+        SynchronizedUpdateNotifier.INSTANCE.addToList(this);
         routKeeper = new Object();
         running = false;
 
@@ -43,19 +49,20 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
     }
     @Override
     public void hitTheRoad(List<Cross> route) {
-        synchronized (this) {
-            if (!running) {
-                Thread t = new Thread(this);
-                t.setDaemon(true);
-                t.start();
-                running = true;
-            }
-        }
         synchronized (routKeeper) {
             this.route = route;
         }
         setCanMove();
+        synchronized (this) {
+            if (!running) {
+                running = true;
+                thread = new Thread(this);
+                thread.setDaemon(true);
+                thread.start();
+            }
+        }
     }
+
     @Override
     public void runInThread(){
         while(true) {
@@ -63,23 +70,63 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
                 trySleep();
             }
             else {
-                for (Cross o : route) {
-                    while (!o.intersect(vehicle.getBounds())) {
-                        if (canMove() && !shipIntersects()) {
-                            synchronized (this) {
-                                vehicle.move();
-                                canMove = false;
+                if (current == null) {
+                    for (Cross o : route) {
+                        current = o;
+                        while (!o.intersect(vehicle.getBounds())) {
+                            if (canMove() && !shipIntersects()) {
+                                synchronized (this) {
+                                    vehicle.move();
+                                    canMove = false;
+                                }
+                            } else {
+                                trySleep();
                             }
-                        } else {
-                           trySleep();
                         }
+                        o.goThrough(vehicle);
+                        setFrontVehicle();
                     }
-                    o.goThrough(vehicle);
-                    setFrontVehicle();
+                    current = null;
+                } else{
+                    ListIterator<Cross> iter = route.listIterator();
+                    Cross item = null;
+                    while(iter.hasNext() && item!= current)
+                        item = iter.next();
+                    iter.previous();
+                    while (iter.hasNext()){
+                        current = iter.next();
+                        while (!current.intersect(vehicle.getBounds())) {
+                            if (canMove() && !shipIntersects()) {
+                                synchronized (this) {
+                                    vehicle.move();
+                                    canMove = false;
+                                }
+                            } else {
+                                trySleep();
+                            }
+                        }
+                        current.goThrough(vehicle);
+                        setFrontVehicle();
+
+                    }
+                    current = null;
                 }
             }
         }
     }
+
+    @Override
+    public synchronized void stop() {
+        SynchronizedUpdateNotifier.INSTANCE.removeFromList(this);
+        running = false;
+        thread.interrupt();
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
+    }
+
     @Override
     public void setCanMove() {
         synchronized (movingGate) {
@@ -131,5 +178,12 @@ public class VehicleMovingEngine implements MovingEngine<List<Cross>> {
     @Override
     public void tick() {
         this.setCanMove();
+    }
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        routKeeper = new Object();
+        movingGate = new Object();
+        running = false;
     }
 }

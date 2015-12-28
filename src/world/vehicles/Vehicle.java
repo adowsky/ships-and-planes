@@ -11,6 +11,7 @@ import world.vehicles.movement.MovingEngineTypes;
 import world.vehicles.movement.MovingState;
 import world.vehicles.movement.VehicleMovingEngineFactory;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,15 +19,15 @@ import java.util.Map;
 /**
  * Represents vehicle
  */
-public abstract class Vehicle implements Drawable {
-    private  volatile Point2D location;
+public abstract class Vehicle implements Drawable, Serializable {
+    private  volatile Point location;
     private final int id;
     private static int nextId=0;
     private int nextPortIndex;
     private boolean running;
     private boolean readyToTravel;
     private MovingEngine<List<Cross>> engine;
-    private volatile Shape bounds;
+    private transient volatile Shape bounds;
     boolean locationChanged;
     private double speed;
     private double speedX;
@@ -34,10 +35,10 @@ public abstract class Vehicle implements Drawable {
     private double rotation;
     private List<Cross> route;
     private int nextCrossing;
-    private List<LocationChangedListener> locationChangedListeners;
-    private List<MovementStateListerner> movementStateListerners;
+    private transient List<LocationChangedListener> locationChangedListeners;
+    private transient List<MovementStateListerner> movementStateListerners;
 
-    private Rotate transform;
+    private transient Rotate transform;
 
     /**
      * Creates Vehicle with specific location and route
@@ -46,7 +47,7 @@ public abstract class Vehicle implements Drawable {
      */
     public Vehicle(Point2D location, double speed, MovingEngineTypes types){
         id=nextId++;
-        this.location=location;
+        this.location=new Point(location.getX(),location.getY());
         readyToTravel = false;
         running = false;
         this.speed = speed;
@@ -56,9 +57,8 @@ public abstract class Vehicle implements Drawable {
         nextCrossing = 0;
         speedX = 0;
         speedY = 0;
-        locationChangedListeners = new LinkedList<>();
-        movementStateListerners = new LinkedList<>();
         rotation = 0;
+        SerializeContainer.getInstance().addObjectToSerialize(this);
     }
     public Vehicle(Point2D location, double speed){
         this(location,speed,MovingEngineTypes.STANDARD);
@@ -69,7 +69,7 @@ public abstract class Vehicle implements Drawable {
      * @return bounds of object.
      */
     public synchronized Shape getBounds() {
-        if(locationChanged) {
+        if(locationChanged || bounds == null) {
             double x = location.getX();
             double y = location.getY();
             bounds =
@@ -105,19 +105,23 @@ public abstract class Vehicle implements Drawable {
      * @return location of vehicle
      */
     public Point2D getLocation() {
-        return location;
+        return new Point2D(location.getX(),location.getY());
     }
 
     public synchronized void setLocation(double x, double y){
-        location = new Point2D(x,y);
+        location.setX(x);
+        location.setY(y);
         locationChanged = true;
-        locationChangedListeners.forEach((o) -> o.fire(location, rotation, transformCondition()));
+        locationChangedListeners.forEach((o) -> o.fire(new Point2D(location.getX(),location.getY()), rotation, transformCondition()));
     }
     private boolean transformCondition(){
         return speedX<0;
     }
     public void addLocationChangedListener(LocationChangedListener l){
+        if(locationChangedListeners == null)
+            locationChangedListeners = new LinkedList<>();
         locationChangedListeners.add(l);
+
     }
 
     /**
@@ -161,7 +165,9 @@ public abstract class Vehicle implements Drawable {
             //TODO
         }
     }
-    public void addMovementStateChangesListener(MovementStateListerner l){
+    public synchronized void addMovementStateChangesListener(MovementStateListerner l){
+        if(movementStateListerners == null)
+            movementStateListerners = new LinkedList<>();
         movementStateListerners.add(l);
     }
     /**
@@ -284,7 +290,7 @@ public abstract class Vehicle implements Drawable {
 
     /**
      * Counts new values of speeds depend on current location and destination's location.
-     * @return Point with values of Xspeed and Yspeed.
+     * @return world.Point with values of Xspeed and Yspeed.
      */
     private Point2D countSpeed(){
         Cross crossing = getNextCrossing();
@@ -362,6 +368,9 @@ public abstract class Vehicle implements Drawable {
             if(last != null && route != null)
                 last.removeFromTravellingTo(route.get(nextCrossing), this);
         }
+    }
+    public void destroy(){
+        engine.stop();
     }
 
     /**

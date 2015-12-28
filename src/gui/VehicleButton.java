@@ -6,10 +6,12 @@ import javafx.scene.control.Button;
 import world.vehicles.*;
 import world.vehicles.movement.MovingState;
 
+import java.io.Serializable;
+
 /**
  * Represents vehicle, contains vehicle model inside.
  */
-public class VehicleButton extends Button implements LocationChangedListener, MovementStateListerner, Notifiable{
+public class VehicleButton extends Button implements LocationChangedListener, MovementStateListerner, Notifiable, Serializable{
     private Vehicle model;
     private volatile boolean tick = false;
     private double rotation;
@@ -62,9 +64,9 @@ public class VehicleButton extends Button implements LocationChangedListener, Mo
     private void translate(boolean translate, double rot) {
         boolean needToTranslate = (translate && currentTranslation > (-TRANSLATION)) || (!translate && currentTranslation < TRANSLATION);
         if(needToTranslate) {
-            SynchronizedUpdateNotifier.getInstance().addToList(this);
+            SynchronizedUpdateNotifier.INSTANCE.addToList(this);
 
-            while (needToTranslate) {
+            while (needToTranslate && !Thread.interrupted()) {
                 double tmpRotation = rot;
                 if (translate) {
                     if (model.getSpeedY()>0)
@@ -108,7 +110,7 @@ public class VehicleButton extends Button implements LocationChangedListener, Mo
                     setTranslateY(currentTranslation);
                 });
             }
-            SynchronizedUpdateNotifier.getInstance().removeFromList(this);
+            SynchronizedUpdateNotifier.INSTANCE.removeFromList(this);
         }
     }
 
@@ -130,5 +132,9 @@ public class VehicleButton extends Button implements LocationChangedListener, Mo
             Platform.runLater(()->setVisible(true));
         }else if ( state == MovingState.STAYING)
             Platform.runLater(()->setVisible(false));
+    }
+    public void destroy(){
+        model.destroy();
+        model = null;
     }
 }

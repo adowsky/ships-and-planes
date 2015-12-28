@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,13 +18,15 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import world.PassengerGenerator;
+import world.vehicles.SerializationParser;
+import world.SerializeContainer;
 import world.ports.*;
 import world.vehicles.*;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 
@@ -33,9 +34,10 @@ import java.util.*;
  * FXML Controller for application's window.
  */
 
-public class FXMLWindowController implements Initializable {
+public class FXMLWindowController implements Initializable,Serializable {
     private static FXMLWindowController instance;
 
+    private final String SAVE_FILE = "map.save";
     @FXML private Canvas canvas;
     @FXML private BorderPane controlPanel;
     @FXML private Pane mapPane;
@@ -46,6 +48,9 @@ public class FXMLWindowController implements Initializable {
     private Parent militaryAirForm = null;
     private VehicleDetails vehicleDetails;
     private EventHandler<ActionEvent> civilianShipClicked;
+    private EventHandler<ActionEvent> militaryShipClicked;
+    private EventHandler<ActionEvent> militaryPlaneClicked;
+    private EventHandler<ActionEvent> civilianPlaneClicked;
     private ChoosingController choosingTarget;
     private boolean choosingState = false;
     private VehicleButton fromSea = null;
@@ -82,14 +87,33 @@ public class FXMLWindowController implements Initializable {
         vehicleDetails = new VehicleDetails();
         civilianShipClicked = event -> {
             Platform.runLater(()-> {
-                vehicleDetails.setDetails(((VehicleButton) event.getSource()).getModel());
+                vehicleDetails.setDetails((VehicleButton) event.getSource());
                 controlPanel.setCenter(vehicleDetails);
                 allEnabled();
                 setChoosingState(false);
             });
 
         };
-
+        militaryShipClicked = event -> {
+            ObservableList list = vehicleDetails.getChildren();
+            VehicleButton source =(VehicleButton)event.getSource();
+            fromSea =source;
+            Platform.runLater(()->{
+                AircraftFormController.getInstance().setPortName(source.getModel().getClass());
+                AircraftFormController.getInstance().setFromSea((AircraftCarrier)source.getModel());
+                AircraftFormController.getInstance().lockArmamentType(((AircraftCarrier)source.getModel()).getArmament());
+                list.clear();
+                Map<String, String> propertiesMap = source.getModel().getProperties();
+                int i =propertiesMap.size()-1;
+                for(String s : propertiesMap.keySet()){
+                    vehicleDetails.add(new Label(s+": "+propertiesMap.get(s)),0,i);
+                    i--;
+                }
+                VBox box = new VBox();
+                box.getChildren().addAll(vehicleDetails,militaryAirForm);
+                controlPanel.setCenter(box);
+            });
+        };
         Map<String, Harbour> ports= null;
         try{
             initializer = new MapInitializer(getClass().getResource("fxmls/map.xml").getPath());
@@ -131,7 +155,7 @@ public class FXMLWindowController implements Initializable {
         Harbour reykjavik = ports.get("Reykjavik");
         Harbour salvador = ports.get("Salvador");
         passengerGenerator.getPassengers(50);
-        /*
+
         FerryBoat boat = new FerryBoat(reykjavik.getLocation(),0.01,Arrays.asList(reykjavik,salvador),50,"KOMODO");
         vhc.setModel(boat);
         vhc.getStyleClass().add("civilian-ship");
@@ -147,14 +171,13 @@ public class FXMLWindowController implements Initializable {
         boat.setRoute(salvador.getRouteToPort(reykjavik));
         boat.setReadyToTravel();
         mapPane.getChildren().add(vhc);
-        vhc = new VehicleButton();*/
+        vhc = new VehicleButton();
         AircraftCarrier carrier = new AircraftCarrier(reykjavik,0.02,ArmamentType.NUCLEAR_WEAPON);
         vhc.setModel(carrier);
         vhc.getStyleClass().add("civilian-ship");
-        vhc.setOnAction((e)->militaryShipClicked(vhc));
+        vhc.setOnAction(militaryShipClicked);
         carrier.setReadyToTravel();
         mapPane.getChildren().add(vhc);
-
     }
 
     /**
@@ -171,24 +194,7 @@ public class FXMLWindowController implements Initializable {
         Platform.runLater(()->controlPanel.setCenter(civilianPlane));
 
     }
-    @FXML public synchronized void militaryShipClicked(VehicleButton source){
 
-        ObservableList list = vehicleDetails.getChildren();
-        fromSea = source;
-        Platform.runLater(()->{
-            AircraftFormController.getInstance().setPortName(source.getModel().getClass());
-            AircraftFormController.getInstance().setFromSea((AircraftCarrier)source.getModel());
-            AircraftFormController.getInstance().lockArmamentType(((AircraftCarrier)source.getModel()).getArmament());
-            list.clear();
-            Map<String, String> map = source.getModel().getProperties();
-            int i =map.size()-1;
-            for(String s : map.keySet()){
-                vehicleDetails.add(new Label(s+": "+map.get(s)),0,i);
-                i--;
-            }
-            controlPanel.setTop(vehicleDetails);
-            controlPanel.setCenter(militaryAirForm);});
-    }
     /**
      * Handler for button event.
      * @param source source
@@ -222,10 +228,10 @@ public class FXMLWindowController implements Initializable {
      * Panel with details of vehicle.
      */
     class VehicleDetails extends GridPane{
-     private   Vehicle v;
-     public void setDetails(Vehicle v){
-
-         this.v=v;
+     private   VehicleButton btn;
+     public void setDetails(VehicleButton btn){
+         Vehicle v = btn.getModel();
+         this.btn = btn;
          this.getChildren().clear();
          Map<String, String> map = v.getProperties();
          int i =0;
@@ -244,8 +250,10 @@ public class FXMLWindowController implements Initializable {
          }
          Button destroy = new Button("Destroy Vehicle");
          destroy.setOnAction((event) ->{
-             //TODO
+             mapPane.getChildren().remove(btn);
+             btn.destroy();
              System.out.println("Destroying vehicle");
+
          });
          add(destroy,0,i++);
 
@@ -390,5 +398,64 @@ public class FXMLWindowController implements Initializable {
         //end of factory
 
         return btn;
+    }
+    @FXML public void loadFromFile(){
+        try(ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(SAVE_FILE)))){
+            Set<Serializable> serializables = (Set<Serializable>)in.readObject();
+            List<Notifiable> list = (List<Notifiable>)in.readObject();
+            SerializationParser parser = new SerializationParser(serializables);
+            parser.parse();
+            mapPane.getChildren().clear();
+            mapPane.getChildren().add(canvas);
+            final GraphicsContext gc = canvas.getGraphicsContext2D();
+            Image map = new Image(getClass().getResourceAsStream("resources/blank-world-map (1).jpg"));
+            gc.drawImage(map,0,0);
+            mapPane.getChildren().addAll(finishParsingPorts(parser.getPortButtonsWithName()));
+            mapPane.getChildren().addAll(finishParsingVehicles(parser.getVehicleButtonsWithName()));
+            SynchronizedUpdateNotifier.INSTANCE.addNewList(list);
+        }catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+    }
+    private Set<PortButton> finishParsingPorts(Set<PortButton> list){
+        for(PortButton p : list){
+            if(p.getName().equals("harbour")){
+                p.setOnAction(event -> seaPortClick(p));
+            }else if(p.getName().equals("military airport")){
+                p.setOnAction(event -> mAirPortClicked(p));
+            }else if(p.getName().equals("civilian airport")){
+                p.setOnAction(event -> airPortClicked(p));
+            }
+        }
+        return  list;
+    }
+    private Set<VehicleButton> finishParsingVehicles(Set<VehicleButton> list){
+        for(VehicleButton p : list){
+            if(p.getModel().getClass().getSimpleName().equals("Airliner")){
+                p.setOnAction(civilianShipClicked);
+                p.getModel().setReadyToTravel();
+            }else if(p.getModel().getClass().getSimpleName().equals("FerryBoat")){
+                p.setOnAction(civilianShipClicked);
+                p.getModel().setReadyToTravel();
+            }else if(p.getModel().getClass().getSimpleName().equals("AircraftCarrier")){
+                p.setOnAction(militaryShipClicked);
+                p.getModel().setReadyToTravel();
+            }else if(p.getModel().getClass().getSimpleName().equals("MilitaryAircraft")){
+                p.setOnAction(civilianShipClicked);
+                p.getModel().setReadyToTravel();
+            }
+        }
+        return  list;
+    }
+    @FXML public void saveToFile(){
+        try(ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(SAVE_FILE)))){
+
+            out.writeObject(SerializeContainer.getInstance().getSerializables());
+            out.writeObject(SynchronizedUpdateNotifier.INSTANCE.toSerialize());
+
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }
     }
 }

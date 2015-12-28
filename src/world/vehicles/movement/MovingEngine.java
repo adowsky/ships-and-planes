@@ -3,11 +3,13 @@ package world.vehicles.movement;
 import world.vehicles.Notifiable;
 import world.vehicles.Vehicle;
 
+import java.io.Serializable;
+
 /**
  * Responsible for moving something.
  * @param <T> Objects that needs moving service.
  */
-public interface MovingEngine<T> extends Runnable, Notifiable {
+public interface MovingEngine<T> extends Runnable, Notifiable, Serializable {
     /**
      * Runs the whole sequence of movement engine.
      * @param c type of using element.
@@ -25,6 +27,8 @@ public interface MovingEngine<T> extends Runnable, Notifiable {
      */
 
     void runInThread();
+    void stop();
+    boolean isRunning();
 
     /**
      * returns canMove flag.
@@ -39,7 +43,7 @@ public interface MovingEngine<T> extends Runnable, Notifiable {
 
     @Override
     default void run() {
-        while(true) {
+        while(isRunning()) {
             runInThread();
         }
     }
@@ -52,6 +56,7 @@ public interface MovingEngine<T> extends Runnable, Notifiable {
             Thread.sleep(1);
         } catch (InterruptedException ex) {
             ex.printStackTrace();
+            System.out.println("Vehicle destroyed.");
         }
     }
 

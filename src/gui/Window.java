@@ -7,10 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.Serializable;
+
 /**
  * Main Class of the apps contains launcher.
  */
-public class Window extends Application{
+public class Window extends Application implements Serializable{
     public Window(){
         super();
     }

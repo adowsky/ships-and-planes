@@ -2,10 +2,12 @@ package gui;
 
 import javafx.scene.control.TextField;
 
+import java.io.Serializable;
+
 /**
  * TextFiled limited only to numeric signs.
  */
-public class NumericTextField extends TextField{
+public class NumericTextField extends TextField implements Serializable{
 
     private int maxValue = Integer.MAX_VALUE;
 

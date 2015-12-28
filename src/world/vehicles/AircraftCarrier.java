@@ -7,12 +7,13 @@ import world.ports.MilitaryAirport;
 import world.ports.Port;
 import world.vehicles.movement.MovingEngineTypes;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Class represents aircraft carrier.  It have ship's properties and it is a vehicle factory.
  */
-public class AircraftCarrier extends Ship {
+public class AircraftCarrier extends Ship implements Serializable {
     private ArmamentType armament;
     private List<MilitaryAircraft> producedPlanes;
     private Port lastVisitedPort;

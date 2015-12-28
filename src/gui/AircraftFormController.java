@@ -16,6 +16,7 @@ import world.vehicles.ArmamentType;
 import world.vehicles.MilitaryAircraft;
 import world.vehicles.Vehicle;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,7 @@ import java.util.ResourceBundle;
 /**
  * Controller of form to create new Aircraft.
  */
-public class AircraftFormController implements ChoosingController, Initializable {
+public class AircraftFormController implements ChoosingController, Initializable,Serializable {
 
     private static AircraftFormController instance;
     private final String ERROR_MSG = "Error occurred! Check all form fields and try again!";

@@ -4,12 +4,13 @@ import javafx.geometry.Bounds;
 import javafx.scene.shape.Shape;
 import world.vehicles.Vehicle;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Crossing point.
  */
-public interface Cross {
+public interface Cross extends Serializable{
     /**
      * Moves vehicle through cross
      * @param vehicle vehicle to move.

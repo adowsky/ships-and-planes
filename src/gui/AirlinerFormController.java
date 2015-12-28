@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import world.WorldConstants;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.ResourceBundle;
 /**
  * Controller of form to create airliners.
  */
-public class AirlinerFormController implements ChoosingController, Initializable{
+public class AirlinerFormController implements ChoosingController, Initializable, Serializable{
     private static AirlinerFormController instance;
     private final String ERROR_MSG = "Error occurred! Check all form fields and try again!";
     private final String SUCCESS_MSG = "Airliner has been created!";

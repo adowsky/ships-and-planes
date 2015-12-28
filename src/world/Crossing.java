@@ -1,7 +1,7 @@
 package world;
 
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
+import world.vehicles.Circle;
 import world.vehicles.movement.CrossingMovingEngine;
 import world.vehicles.movement.MovingEngine;
 import world.vehicles.SynchronizedUpdateNotifier;
@@ -31,7 +31,7 @@ public class Crossing implements Cross{
         circle = new Circle(x,y,radius);
         name = "Crossing: ";
         engine = new CrossingMovingEngine(this);
-        SynchronizedUpdateNotifier.getInstance().addToList(engine);
+        SynchronizedUpdateNotifier.INSTANCE.addToList(engine);
         travellingMap = new HashMap<>();
     }
     @Override

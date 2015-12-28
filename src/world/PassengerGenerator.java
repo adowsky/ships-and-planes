@@ -4,12 +4,13 @@ import exceptions.world.PassengerCreationException;
 import world.ports.CivilianPort;
 import world.ports.Port;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Generates Passengers.
  */
-public class PassengerGenerator {
+public class PassengerGenerator implements Serializable{
     private static PassengerGenerator instance;
     private Random rand;
     private final List<FirstName> FIRST_NAMES;

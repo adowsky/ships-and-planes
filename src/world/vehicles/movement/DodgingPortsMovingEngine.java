@@ -5,20 +5,27 @@ import world.Cross;
 import world.vehicles.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Moving Engine which doesn't allow vehicle to go into Port.
  */
 public class DodgingPortsMovingEngine implements MovingEngine<List<Cross>> {
+        private static long serialVersionUID = 1L;
         private Vehicle vehicle;
         private boolean canMove;
         private  volatile List<Cross> route;
-        private final Object routKeeper;
-        private final Object movingGate;
-        private boolean running;
+        private transient Object routKeeper;
+        private transient Object movingGate;
+        private transient boolean running;
         private boolean routeChanged;
         private Vehicle vehicleInFront;
+        private Cross current;
+        private transient Thread thread;
 
         /**
          * Creates new DodgingPortsMovingEngine
@@ -28,7 +35,7 @@ public class DodgingPortsMovingEngine implements MovingEngine<List<Cross>> {
             this.vehicle = vehicle;
             vehicleInFront = null;
             this.movingGate = new Object();
-            SynchronizedUpdateNotifier.getInstance().addToList(this);
+            SynchronizedUpdateNotifier.INSTANCE.addToList(this);
             routKeeper = new Object();
             running = false;
         }
@@ -42,10 +49,10 @@ public class DodgingPortsMovingEngine implements MovingEngine<List<Cross>> {
         public void hitTheRoad(List<Cross> route) {
             synchronized (this) {
                 if (!running) {
-                    Thread t = new Thread(this);
-                    t.setDaemon(true);
-                    t.start();
                     running = true;
+                    thread = new Thread(this);
+                    thread.setDaemon(true);
+                    thread.start();
                 }
             }
             synchronized (routKeeper) {
@@ -61,30 +68,69 @@ public class DodgingPortsMovingEngine implements MovingEngine<List<Cross>> {
                     trySleep();
                 }
                 else if(routeChanged) {
-                    for (Cross o : route) {
-                        while (!o.intersect(vehicle.getBounds())) {
-                            if (canMove() && !shipIntersects()) {
-                                synchronized (this) {
-                                    vehicle.move();
-                                    canMove = false;
+                    if (current == null) {
+                        for (Cross o : route) {
+                            current = o;
+                            while (!o.intersect(vehicle.getBounds())) {
+                                if (canMove() && !shipIntersects()) {
+                                    synchronized (this) {
+                                        vehicle.move();
+                                        canMove = false;
+                                    }
+                                } else {
+                                    trySleep();
                                 }
-                            } else {
-                                trySleep();
                             }
+                            if (!vehicle.isOnRouteFinish())
+                                o.goThrough(vehicle);
+                            else {
+                                routeChanged = false;
+                                vehicle.nextCrossing();
+                            }
+                            setFrontVehicle();
                         }
-                        if(!vehicle.isOnRouteFinish())
-                            o.goThrough(vehicle);
-                        else{
-                            routeChanged = false;
-                            vehicle.nextCrossing();
-                        }
-                        setFrontVehicle();
-                    }
+                        current = null;
+                    }else{
+                        ListIterator<Cross> iter = route.listIterator();
+                        Cross item = null;
+                        while(iter.hasNext() && item!= current)
+                            item = iter.next();
+                        iter.previous();
+                        while (iter.hasNext()){
+                            current = iter.next();
+                            while (!current.intersect(vehicle.getBounds())) {
+                                if (canMove() && !shipIntersects()) {
+                                    synchronized (this) {
+                                        vehicle.move();
+                                        canMove = false;
+                                    }
+                                } else {
+                                    trySleep();
+                                }
+                            }
+                            current.goThrough(vehicle);
+                            setFrontVehicle();
 
+                        }
+                        current = null;
+                    }
                 }
             }
         }
-        @Override
+
+    @Override
+    public synchronized void stop() {
+        SynchronizedUpdateNotifier.INSTANCE.removeFromList(this);
+        running = false;
+        thread.interrupt();
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
+    }
+
+    @Override
         public void setCanMove() {
             synchronized (movingGate) {
                 canMove = true;
@@ -136,6 +182,14 @@ public class DodgingPortsMovingEngine implements MovingEngine<List<Cross>> {
         public void tick() {
             this.setCanMove();
         }
+
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        routKeeper = new Object();
+        movingGate = new Object();
+        running = false;
+    }
 
 
 }

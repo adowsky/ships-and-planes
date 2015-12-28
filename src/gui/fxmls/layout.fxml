@@ -20,6 +20,12 @@
          <top>
             <Text id="panel-name" text="Control Panel" BorderPane.alignment="CENTER" />
          </top>
+          <bottom>
+              <HBox>
+              <Button text="Load from File" onAction="#loadFromFile"/>
+              <Button text="Save to File" onAction="#saveToFile"/>
+              </HBox>
+          </bottom>
       </BorderPane>
    </right>
     <stylesheets>

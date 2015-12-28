@@ -1,13 +1,19 @@
-package world.vehicles;
+package world.vehicles.movement;
 
 import world.Cross;
+import world.vehicles.Notifiable;
+import world.vehicles.SynchronizedUpdateNotifier;
+import world.vehicles.Vehicle;
 import world.vehicles.movement.MovingEngine;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
 
 /**
  * Template of moving engine for Cross.
  */
-public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiable{
-    private final Object monitor;
+public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiable {
+    private transient Object monitor;
     private boolean canMove;
     private Cross cross;
     private Vehicle c;
@@ -19,7 +25,7 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
     public MapPointEngine(Cross cross){
         monitor = new Object();
         this.cross = cross;
-        SynchronizedUpdateNotifier.getInstance().addToList(this);
+        SynchronizedUpdateNotifier.INSTANCE.addToList(this);
     }
 
     @Override
@@ -100,5 +106,16 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
     @Override
     public void tick(){
         setCanMove();
+    }
+    @Override
+    public void stop(){}
+    @Override
+    public boolean isRunning(){
+        return false;
+    }
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        monitor = new Object();
     }
 }
