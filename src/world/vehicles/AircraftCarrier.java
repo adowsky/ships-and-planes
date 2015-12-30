@@ -116,6 +116,17 @@ public class AircraftCarrier extends Ship implements Serializable {
     public Port getLastPort() {
         return lastVisitedPort;
     }
+
+    @Override
+    public List<String> getTravelRoute() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void editRoute(List<? extends Port> route) {
+
+    }
+
     private void releaseAircrafts(){
         final Map<Port,List<Cross>> map = flightRoutes.get(getNextPort());
         if(map == null)

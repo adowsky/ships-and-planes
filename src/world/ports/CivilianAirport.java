@@ -39,13 +39,14 @@ public class CivilianAirport extends AirPort implements CivilianPort{
         vehicle.arrivedToPort();
         Set<Passenger> pList = vehicle.getVehiclePassengers();
         Set<Port> possiblePorts = getLandConnectionPorts();
-        passengersService(pList,passengersSet,possiblePorts);
+        passengersService(pList, passengersSet, possiblePorts);
         vehicle.clearPassengersList();
         maintainVehicle(vehicle);
         vehicleDeparture(vehicle);
     }
     private void maintainVehicle(Airplane vehicle){
         vehicle.refuel();
+        System.out.println(vehicle.getNextPort());
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
         vehicle.maintenanceStart(timeToNextDeparture);
     }

@@ -5,6 +5,9 @@
     -fx-border-style: solid;
 
 }
+.white-color{
+    -fx-background-color: white;
+}
 #map-pane{
     -fx-background-color: white;
 }

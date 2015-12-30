@@ -1,7 +1,10 @@
 package world.vehicles;
 
 import javafx.geometry.Point2D;
+import world.ports.Port;
 import world.vehicles.movement.MovingEngineTypes;
+
+import java.util.List;
 
 /**
  * Represents plane.
@@ -76,5 +79,6 @@ public abstract class Airplane extends Vehicle {
     public void setMaxFuel(int maxFuel) {
         this.maxFuel = maxFuel;
     }
+
 
 }

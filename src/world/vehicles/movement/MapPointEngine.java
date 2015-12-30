@@ -110,6 +110,8 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
     @Override
     public void stop(){}
     @Override
+    public void destroy(){}
+    @Override
     public boolean isRunning(){
         return false;
     }

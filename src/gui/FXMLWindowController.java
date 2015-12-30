@@ -8,12 +8,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -88,6 +90,7 @@ public class FXMLWindowController implements Initializable,Serializable {
         civilianShipClicked = event -> {
             Platform.runLater(()-> {
                 vehicleDetails.setDetails((VehicleButton) event.getSource());
+                vehicleDetails.setEditableRoute(initializer.getSeaPorts());
                 controlPanel.setCenter(vehicleDetails);
                 allEnabled();
                 setChoosingState(false);
@@ -155,7 +158,7 @@ public class FXMLWindowController implements Initializable,Serializable {
         Harbour reykjavik = ports.get("Reykjavik");
         Harbour salvador = ports.get("Salvador");
         passengerGenerator.getPassengers(50);
-
+/*
         FerryBoat boat = new FerryBoat(reykjavik.getLocation(),0.01,Arrays.asList(reykjavik,salvador),50,"KOMODO");
         vhc.setModel(boat);
         vhc.getStyleClass().add("civilian-ship");
@@ -177,7 +180,7 @@ public class FXMLWindowController implements Initializable,Serializable {
         vhc.getStyleClass().add("civilian-ship");
         vhc.setOnAction(militaryShipClicked);
         carrier.setReadyToTravel();
-        mapPane.getChildren().add(vhc);
+        mapPane.getChildren().add(vhc);*/
     }
 
     /**
@@ -224,41 +227,7 @@ public class FXMLWindowController implements Initializable,Serializable {
         Platform.runLater(() -> controlPanel.setCenter(militaryAirForm));
     }
 
-    /**
-     * Panel with details of vehicle.
-     */
-    class VehicleDetails extends GridPane{
-     private   VehicleButton btn;
-     public void setDetails(VehicleButton btn){
-         Vehicle v = btn.getModel();
-         this.btn = btn;
-         this.getChildren().clear();
-         Map<String, String> map = v.getProperties();
-         int i =0;
-         for(String key : map.keySet()){
-             add(new Text(key),0,i);
-             add(new Label(map.get(key)),1,i);
-             i++;
-         }
-         if(v instanceof Airplane) {
-             Button landing = new Button("Emergency Landing");
-             landing.setOnAction((event) -> {
-                 //TODO
-                 System.out.println("Emergency Landing");
-             });
-             add(landing,0,i++);
-         }
-         Button destroy = new Button("Destroy Vehicle");
-         destroy.setOnAction((event) ->{
-             mapPane.getChildren().remove(btn);
-             btn.destroy();
-             System.out.println("Destroying vehicle");
 
-         });
-         add(destroy,0,i++);
-
-     }
-    }
 
     /**
      * Disables all ports excepts harbours.
@@ -430,6 +399,7 @@ public class FXMLWindowController implements Initializable,Serializable {
         }
         return  list;
     }
+
     private Set<VehicleButton> finishParsingVehicles(Set<VehicleButton> list){
         for(VehicleButton p : list){
             if(p.getModel().getClass().getSimpleName().equals("Airliner")){
@@ -456,6 +426,97 @@ public class FXMLWindowController implements Initializable,Serializable {
 
         }catch(IOException ex){
             ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Panel with details of vehicle.
+     */
+    class VehicleDetails extends GridPane implements ChoosingController{
+        private VehicleButton btn;
+        private Label field;
+        private Button editor;
+        StringJoiner joiner;
+        private Map<String , ? extends Port> portsSource;
+        public VehicleDetails() {
+            field = new Label();
+            joiner = new StringJoiner("-");
+            editor = new Button("Edit Route");
+            setHgap(10);
+            setVgap(6);
+            editor.setOnAction( event -> {
+                if (editor.getText().equals("Edit Route")) {
+                    setChoosingState(true);
+                    onlyCivilianShipsEnabled();
+                    setChoosingTarget(this);
+                    editor.setText("Accept");
+                    joiner = new StringJoiner("-");
+                    field.setText("");
+                } else{
+                    setChoosingState(false);
+                    allEnabled();
+                    btn.getModel().editRoute(parseRoute());
+                    editor.setText("Edit Route");
+                }
+                });
+
+        }
+        public List<? extends Port> parseRoute(){
+            List<Port> list = new ArrayList<>();
+            for (String s : field.getText().split("-")){
+                list.add(portsSource.get(s));
+            }
+            return list;
+        }
+        public void setDetails(VehicleButton btn) {
+            Vehicle v = btn.getModel();
+            this.btn = btn;
+            this.getChildren().clear();
+            Map<String, String> map = v.getProperties();
+            int i = 2;
+            for (String key : map.keySet()) {
+                add(new Text(key), 0, i);
+                add(new Label(map.get(key)), 1, i);
+                i++;
+            }
+            if (v instanceof Airliner) {
+                Button landing = new Button("Emergency Landing");
+                landing.setOnAction((event) -> {
+                    System.out.println("Emergency Landing");
+                    ((Airliner)btn.getModel()).emergencyLanding(initializer.getCAirports().values());
+                });
+                add(landing, 0, i++);
+            }
+            Button destroy = new Button("Destroy Vehicle");
+            destroy.setOnAction((event) -> {
+                mapPane.getChildren().remove(btn);
+                btn.destroy();
+                System.out.println("Destroying vehicle");
+
+            });
+            add(destroy, 0, i++);
+
+        }
+
+        public void setEditableRoute( Map<String , ? extends Port> portsSource) {
+            add(new Text("Route"), 0, 0);
+            List<String> list = btn.getModel().getTravelRoute();
+            joiner = new StringJoiner("-");
+            list.forEach(e -> joiner.add(e));
+            field.setText(joiner.toString());
+            add(field, 1, 0);
+            add(editor, 1, 1);
+            this.portsSource = portsSource;
+
+        }
+
+        @Override
+        public void ChoiceHasBeenMade(String item) {
+            String[] s = joiner.toString().split("-");
+            if(!s[s.length-1].equals(item)){
+                joiner.add(item);
+                field.setText(joiner.toString());
+            }
         }
     }
 }

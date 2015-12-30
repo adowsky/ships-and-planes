@@ -3,6 +3,7 @@ package world.vehicles;
 import javafx.geometry.Point2D;
 import world.ports.CivilianAirport;
 import world.Passenger;
+import world.ports.MilitaryAirport;
 import world.ports.Port;
 
 import java.util.*;
@@ -15,7 +16,11 @@ public class Airliner extends Airplane implements CivilianVehicle {
     private int maxPassengersAmount;
     private Set<Passenger> passengersList;
     private List<CivilianAirport> route;
+    private List<CivilianAirport> newRoute;
+    private boolean routeChanged;
+    private boolean modifyRoute;
     private int lastVisitedPortIndex;
+
 
     /**
      * Creates airliner
@@ -50,6 +55,10 @@ public class Airliner extends Airplane implements CivilianVehicle {
      */
     public CivilianAirport getNextPort(){
         if(lastVisitedPortIndex == route.size()-1){
+            if(modifyRoute){
+                route.remove(0);
+                modifyRoute = false;
+            }
             Collections.reverse(route);
             lastVisitedPortIndex = 0;
         }
@@ -58,7 +67,11 @@ public class Airliner extends Airplane implements CivilianVehicle {
     @Override
     public void arrivedToPort(){
         super.arrivedToPort();
-        lastVisitedPortIndex++;
+        if(!isForcedRouteChange()) {
+            lastVisitedPortIndex++;
+        }else{
+            clearForcedRouteChange();
+        }
     }
     @Override
     public void addPassengers(Collection<Passenger> collection) {
@@ -87,7 +100,11 @@ public class Airliner extends Airplane implements CivilianVehicle {
     @Override
     public void nextCrossing(){
         if(isOnRouteFinish()){
-            getNextPort().vehicleArrive(this);
+            if(!isForcedRouteChange())
+                getNextPort().vehicleArrive(this);
+            else{
+                ((CivilianAirport)getLastRotueStop()).vehicleArrive(this);
+            }
         }
         else{
             super.nextCrossing();
@@ -108,5 +125,52 @@ public class Airliner extends Airplane implements CivilianVehicle {
     @Override
     public Port getLastPort() {
         return route.get(lastVisitedPortIndex);
+    }
+
+    @Override
+    public List<String> getTravelRoute() {
+        List<String> list = new LinkedList<>();
+        route.forEach(e -> list.add(e.getName()));
+        return list;
+    }
+
+    @Override
+    public void editRoute(List<? extends Port> route) {
+        newRoute = (List<CivilianAirport>)route;
+        routeChanged = true;
+        if(newRoute.get(0) != getNextPort()) {
+            newRoute.add(0, getNextPort());
+            modifyRoute = true;
+        }
+    }
+    @Override
+    public void maintenanceStart(int sleepTime){
+        if(routeChanged){
+            route = newRoute;
+            newRoute = null;
+            routeChanged = false;
+            lastVisitedPortIndex = 0;
+
+        }
+        super.maintenanceStart(sleepTime);
+    }
+    public void emergencyLanding(Collection<CivilianAirport> db){
+        boolean found = false;
+        CivilianAirport target = null;
+        int r = 0;
+        while(!found){
+            r += 5;
+            Circle area = new Circle(getLocation().getX(),getLocation().getY(),r);
+            for(CivilianAirport o : db){
+                if(o.intersect(area.getBounds())|| area.getBounds().contains(o.getX(),o.getY())){
+                    found = true;
+                    target = o;
+                    break;
+                }
+            }
+        }
+        List<CivilianAirport> list = new ArrayList<>();
+        list.add(target);
+        changeRoute(list);
     }
 }

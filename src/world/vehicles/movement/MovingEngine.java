@@ -28,6 +28,7 @@ public interface MovingEngine<T> extends Runnable, Notifiable, Serializable {
 
     void runInThread();
     void stop();
+    void destroy();
     boolean isRunning();
 
     /**
@@ -43,9 +44,7 @@ public interface MovingEngine<T> extends Runnable, Notifiable, Serializable {
 
     @Override
     default void run() {
-        while(isRunning()) {
-            runInThread();
-        }
+        runInThread();
     }
 
     /**
@@ -56,7 +55,6 @@ public interface MovingEngine<T> extends Runnable, Notifiable, Serializable {
             Thread.sleep(1);
         } catch (InterruptedException ex) {
             ex.printStackTrace();
-            System.out.println("Vehicle destroyed.");
         }
     }
 

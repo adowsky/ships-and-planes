@@ -15,6 +15,9 @@ public class FerryBoat extends Ship implements CivilianVehicle {
     private Set<Passenger> passengersList;
     private List<Harbour> route;
     private String company;
+    private List<Harbour> newRoute;
+    private boolean routeChanged;
+    private boolean modifyRoute;
     private long arrivalTime;
     private boolean onMove;
     private int lastVisitedPortIndex;
@@ -86,6 +89,10 @@ public class FerryBoat extends Ship implements CivilianVehicle {
     @Override
     public Harbour getNextPort(){
         if(lastVisitedPortIndex == route.size()-1){
+            if(modifyRoute){
+                route.remove(0);
+                modifyRoute = false;
+            }
             Collections.reverse(route);
             lastVisitedPortIndex = 0;
         }
@@ -134,5 +141,31 @@ public class FerryBoat extends Ship implements CivilianVehicle {
         return route.get(lastVisitedPortIndex);
     }
 
+    @Override
+    public List<String> getTravelRoute() {
+        List<String> list = new LinkedList<>();
+        route.forEach(e -> list.add(e.getName()));
+        return list;
+    }
 
+    @Override
+    public void editRoute(List<? extends Port> route) {
+        routeChanged = true;
+        newRoute = (List<Harbour>)route;
+        if(newRoute.get(0) != getNextPort()) {
+            newRoute.add(0, getNextPort());
+            modifyRoute = true;
+        }
+    }
+    @Override
+    public void maintenanceStart(int sleepTime){
+        if(routeChanged){
+            route = newRoute;
+            newRoute = null;
+            routeChanged = false;
+            lastVisitedPortIndex = 0;
+
+        }
+        super.maintenanceStart(sleepTime);
+    }
 }
