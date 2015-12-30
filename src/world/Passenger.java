@@ -217,4 +217,8 @@ public class Passenger implements Serializable{
         }
         journey.setRoute(route);
     }
+    @Override
+    public String toString(){
+        return firstname+" "+lastname;
+    }
 }

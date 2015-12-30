@@ -123,6 +123,9 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
             }
             else{
                 if (current == null) {
+                    vehicle.getLastPort().goThrough(vehicle);
+                    setFrontVehicle();
+                    vehicle.moved();
                     for (Cross o : route) {
                         if(thread.isInterrupted())
                             break;

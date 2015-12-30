@@ -13,15 +13,14 @@ import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import world.Passenger;
 import world.PassengerGenerator;
 import world.vehicles.SerializationParser;
 import world.SerializeContainer;
@@ -158,7 +157,7 @@ public class FXMLWindowController implements Initializable,Serializable {
         Harbour reykjavik = ports.get("Reykjavik");
         Harbour salvador = ports.get("Salvador");
         passengerGenerator.getPassengers(50);
-/*
+
         FerryBoat boat = new FerryBoat(reykjavik.getLocation(),0.01,Arrays.asList(reykjavik,salvador),50,"KOMODO");
         vhc.setModel(boat);
         vhc.getStyleClass().add("civilian-ship");
@@ -177,10 +176,10 @@ public class FXMLWindowController implements Initializable,Serializable {
         vhc = new VehicleButton();
         AircraftCarrier carrier = new AircraftCarrier(reykjavik,0.02,ArmamentType.NUCLEAR_WEAPON);
         vhc.setModel(carrier);
-        vhc.getStyleClass().add("civilian-ship");
+        vhc.getStyleClass().add("military-ship");
         vhc.setOnAction(militaryShipClicked);
         carrier.setReadyToTravel();
-        mapPane.getChildren().add(vhc);*/
+        mapPane.getChildren().add(vhc);
     }
 
     /**
@@ -194,8 +193,9 @@ public class FXMLWindowController implements Initializable,Serializable {
             return;
         }
         FerryFormController.getInstance().setPortName(source.getModel().toString());
+        FerryFormController.getInstance().fillPassengers(source.getModel().getPassengers());
+        FerryFormController.getInstance().fillVehicles(source.getModel().getVehicles());
         Platform.runLater(()->controlPanel.setCenter(civilianPlane));
-
     }
 
     /**
@@ -209,6 +209,8 @@ public class FXMLWindowController implements Initializable,Serializable {
             return;
         }
         AirlinerFormController.getInstance().setPortName(source.getModel().toString());
+        AirlinerFormController.getInstance().fillPassengers(source.getModel().getPassengers());
+        AirlinerFormController.getInstance().fillVehicles(source.getModel().getVehicles());
         Platform.runLater(() -> controlPanel.setCenter(civilianAirForm));
     }
     /**
@@ -222,6 +224,7 @@ public class FXMLWindowController implements Initializable,Serializable {
             return;
         }
         AircraftFormController.getInstance().setPortName(source.getModel().toString());
+        AircraftFormController.getInstance().fillVehicles(source.getModel().getVehicles());
         AircraftFormController.getInstance().setFromSea(null);
         AircraftFormController.getInstance().unlockArmamentType();
         Platform.runLater(() -> controlPanel.setCenter(militaryAirForm));
@@ -436,7 +439,13 @@ public class FXMLWindowController implements Initializable,Serializable {
         private VehicleButton btn;
         private Label field;
         private Button editor;
-        StringJoiner joiner;
+        private ListView<Passenger> passengers;
+        private ListView<Vehicle> vehicles;
+        private Button dstr;
+        private Button show;
+        private VBox vBox;
+        private VBox pBox;
+        private StringJoiner joiner;
         private Map<String , ? extends Port> portsSource;
         public VehicleDetails() {
             field = new Label();
@@ -459,6 +468,34 @@ public class FXMLWindowController implements Initializable,Serializable {
                     editor.setText("Edit Route");
                 }
                 });
+                passengers = new ListView<>();
+                vehicles = new ListView<>();
+            show = new Button("Show Passenger");
+            show.setOnAction(event -> {
+                Passenger p = passengers.getSelectionModel().getSelectedItem();
+                if(p == null)
+                    return;
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Passenger details");
+                alert.setHeaderText(p.getFirstname()+" "+p.getLastname());
+                GridPane gp = new GridPane();
+                gp.add(new Label("PESEL: "+p.getPesel()),0,0);
+                gp.add(new Label("Age: "+p.getAge()),0 ,1);
+                alert.getDialogPane().setContent(gp);
+                alert.showAndWait();
+            });
+            dstr = new Button("Destroy Vehicle");
+            dstr.setOnAction(event -> {
+                if(vehicles.getSelectionModel().getSelectedItem() == null)
+                    return;
+                vehicles.getSelectionModel().getSelectedItem().destroy();
+            });
+                vBox = new VBox();
+            vBox.setPrefHeight(100);
+                pBox = new VBox();
+            pBox.setPrefHeight(100);
+                vBox.getChildren().add(new ScrollPane(vehicles));
+                pBox.getChildren().add(new ScrollPane(passengers));
 
         }
         public List<? extends Port> parseRoute(){
@@ -487,6 +524,7 @@ public class FXMLWindowController implements Initializable,Serializable {
                 });
                 add(landing, 0, i++);
             }
+
             Button destroy = new Button("Destroy Vehicle");
             destroy.setOnAction((event) -> {
                 mapPane.getChildren().remove(btn);
@@ -495,9 +533,16 @@ public class FXMLWindowController implements Initializable,Serializable {
 
             });
             add(destroy, 0, i++);
-
+            if(v instanceof CivilianVehicle)
+                addPassengerView(i);
         }
-
+        public void addPassengerView(int index){
+            passengers.getItems().clear();
+            passengers.getItems().addAll(((CivilianVehicle)btn.getModel()).getVehiclePassengers());
+            add(new Text("Passengers"), 0, index++);
+            add(pBox, 0, index++);
+            add(show,0 , index);
+        }
         public void setEditableRoute( Map<String , ? extends Port> portsSource) {
             add(new Text("Route"), 0, 0);
             List<String> list = btn.getModel().getTravelRoute();

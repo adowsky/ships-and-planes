@@ -64,6 +64,21 @@
 -fx-background-color: rgba(88, 104, 70, 0.6);
 
  }
+.military-ship{
+    -fx-min-width: 20px;
+    -fx-max-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-height: 20px;
+    -fx-background-color: transparent   ;
+    -fx-background-image: url("../resources/mship.png");
+    -fx-background-size: cover;
+    /*-fx-rotate: 90deg;*/
+
+}
+.military-ship:hover{
+    -fx-background-color: rgba(88, 104, 70, 0.6);
+
+}
 .civilian-plane{
       -fx-min-width: 20px;
       -fx-max-width: 20px;

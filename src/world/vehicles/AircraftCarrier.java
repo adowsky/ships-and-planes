@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * Class represents aircraft carrier.  It have ship's properties and it is a vehicle factory.
  */
-public class AircraftCarrier extends Ship implements Serializable {
+public class AircraftCarrier extends Ship implements Serializable, DestroyListener {
     private ArmamentType armament;
     private List<MilitaryAircraft> producedPlanes;
     private Port lastVisitedPort;
@@ -33,7 +33,6 @@ public class AircraftCarrier extends Ship implements Serializable {
         nextPort = location;
         Port newPort = randNewPort();
         setRoute(location.getRouteToPort(newPort));
-
         nextPort = newPort;
     }
     /**
@@ -65,8 +64,8 @@ public class AircraftCarrier extends Ship implements Serializable {
             releaseAircrafts();
             removeFromPreviousCrossingRegister();
             Port newPort = randNewPort();
-            setRoute(nextPort.getRouteToPort(newPort));
             lastVisitedPort = nextPort;
+            setRoute(nextPort.getRouteToPort(newPort));
             nextPort = newPort;
         }
         else{
@@ -145,5 +144,10 @@ public class AircraftCarrier extends Ship implements Serializable {
     }
     public void addProducedPlane(MilitaryAircraft plane){
         producedPlanes.add(plane);
+    }
+
+    @Override
+    public void objectDestroyed(Vehicle o) {
+        producedPlanes.remove(o);
     }
 }

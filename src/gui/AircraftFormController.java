@@ -5,10 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import world.WorldConstants;
 import world.vehicles.AircraftCarrier;
@@ -18,6 +15,7 @@ import world.vehicles.Vehicle;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -39,6 +37,7 @@ public class AircraftFormController implements ChoosingController, Initializable
     @FXML private TextField routeText;
     @FXML private Label portName;
     @FXML private ComboBox armType;
+    @FXML private ListView<Vehicle> vehicleView;
 
     /**
      * Returns instance of AircraftFormController
@@ -61,7 +60,9 @@ public class AircraftFormController implements ChoosingController, Initializable
 
     }
     @FXML public void removeDockedVehicle(){
-
+        if(vehicleView.getSelectionModel().getSelectedItem() == null)
+            return;
+        vehicleView.getSelectionModel().getSelectedItem().destroy();
     }
 
     /**
@@ -212,5 +213,9 @@ public class AircraftFormController implements ChoosingController, Initializable
         }
 
         armType.setItems(list);
+    }
+    public void fillVehicles(Collection<? extends Vehicle> col){
+        vehicleView.getItems().clear();
+        vehicleView.getItems().addAll(col);
     }
 }

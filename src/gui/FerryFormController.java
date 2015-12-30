@@ -1,17 +1,21 @@
 package gui;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.IndexedCell;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import world.Journey;
+import world.Passenger;
 import world.vehicles.FerryBoat;
+import world.vehicles.Vehicle;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -32,7 +36,8 @@ public class FerryFormController implements ChoosingController, Initializable, S
     @FXML private Label info;
     @FXML private TextField routeText;
     @FXML private Label portName;
-
+    @FXML private ListView<Passenger> passengerListView;
+    @FXML private ListView<Vehicle> vehicleView;
     public static FerryFormController getInstance(){
         return instance;
     }
@@ -46,6 +51,9 @@ public class FerryFormController implements ChoosingController, Initializable, S
 
     }
     @FXML public void removeDockedVehicle(){
+        if(vehicleView.getSelectionModel().getSelectedItem() == null)
+            return;
+        vehicleView.getSelectionModel().getSelectedItem().destroy();
 
     }
     public void setPortName(String name){
@@ -105,6 +113,19 @@ public class FerryFormController implements ChoosingController, Initializable, S
         shipDetails.put("Type", new String[]{"Ferry"});
         return shipDetails;
     }
+    public void showPassenger(){
+        Passenger p = passengerListView.getSelectionModel().getSelectedItem();
+        if(p == null)
+            return;
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Passenger details");
+        alert.setHeaderText(p.getFirstname()+" "+p.getLastname());
+        GridPane gp = new GridPane();
+        gp.add(new Label("PESEL: "+p.getPesel()),0,0);
+        gp.add(new Label("Age: "+p.getAge()),0 ,1);
+        alert.getDialogPane().setContent(gp);
+        alert.showAndWait();
+    }
 
     @Override
     public void ChoiceHasBeenMade(String item) {
@@ -117,5 +138,15 @@ public class FerryFormController implements ChoosingController, Initializable, S
             if(instance == null)
                 instance = this;
         }
+        passengerListView.setItems(FXCollections.observableArrayList());
+        vehicleView.setItems(FXCollections.observableArrayList());
+    }
+    public void fillPassengers(Collection<Passenger> col){
+        passengerListView.getItems().clear();
+        passengerListView.getItems().addAll(col);
+    }
+    public void fillVehicles(Collection<? extends Vehicle> col){
+        vehicleView.getItems().clear();
+        vehicleView.getItems().addAll(col);
     }
 }

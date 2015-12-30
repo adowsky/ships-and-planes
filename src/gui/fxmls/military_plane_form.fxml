@@ -28,6 +28,14 @@
             </children>
         </HBox>
         <Label id="information" fx:id="info" text="Information" GridPane.rowIndex="8" GridPane.columnSpan="2" />
+        <Label id="port-name" text="List of vehicles" GridPane.rowIndex="9" GridPane.columnSpan="2"/>
+        <VBox GridPane.rowIndex="10" GridPane.columnSpan="2" prefHeight="100" prefWidth="250" style="-fx-padding: 0 30 0 0;">
+            <ScrollPane >
+                <ListView fx:id="vehicleView" prefWidth="250"/>
+            </ScrollPane>
+        </VBox>
+        <Button fx:id="removeDockedVehicle" text="Remove Vehicle" onAction="#removeDockedVehicle" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+
     </children>
 
 

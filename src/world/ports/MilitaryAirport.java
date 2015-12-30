@@ -1,8 +1,13 @@
 package world.ports;
 
 import javafx.geometry.Point2D;
+import world.Passenger;
 import world.vehicles.MilitaryAircraft;
+import world.vehicles.Vehicle;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -62,10 +67,24 @@ public class MilitaryAirport extends AirPort {
        return (planesList.size()>=getMaxCapacity());
     }
 
+    @Override
+    public Collection<Passenger> getPassengers() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<? extends Vehicle> getVehicles() {
+        return planesList;
+    }
 
 
     @Override
     public void Draw() {
 
+    }
+
+    @Override
+    public void objectDestroyed(Vehicle o) {
+        planesList.remove(o);
     }
 }

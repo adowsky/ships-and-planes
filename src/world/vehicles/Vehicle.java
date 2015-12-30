@@ -34,6 +34,7 @@ public abstract class Vehicle implements Drawable, Serializable {
 
     private transient List<LocationChangedListener> locationChangedListeners;
     private transient List<MovementStateListerner> movementStateListerners;
+    private List<DestroyListener> destroyListeners;
 
     private transient Rotate transform;
 
@@ -111,6 +112,11 @@ public abstract class Vehicle implements Drawable, Serializable {
         locationChanged = true;
         locationChangedListeners.forEach((o) -> o.fire(new Point2D(location.getX(),location.getY()), rotation, transformCondition()));
     }
+    public void addDestroyListener(DestroyListener l){
+        if(destroyListeners == null)
+            destroyListeners = new LinkedList<>();
+        destroyListeners.add(l);
+    }
     private boolean transformCondition(){
         return speedX<0;
     }
@@ -169,8 +175,10 @@ public abstract class Vehicle implements Drawable, Serializable {
      */
     public void setReadyToTravel(){
         readyToTravel = true;
-        movementStateListerners.forEach((o) -> o.movementStateChanges(MovingState.MOVING));
         engine.hitTheRoad(route);
+    }
+    public void moved(){
+        movementStateListerners.forEach((o) -> o.movementStateChanges(MovingState.MOVING));
     }
     /**
      * Sets readyToTravel flag on false value.
@@ -415,11 +423,12 @@ public abstract class Vehicle implements Drawable, Serializable {
     public boolean isForcedRouteChange(){
         return forcedRouteChange;
     }
-    public void clearForcedRouteChange(){
+    public void clearForcedRouteChange() {
         forcedRouteChange = false;
     }
     public void destroy(){
         engine.destroy();
+        destroyListeners.forEach(e -> e.objectDestroyed(this));
     }
 
     /**
@@ -449,5 +458,9 @@ public abstract class Vehicle implements Drawable, Serializable {
     public abstract Port getLastPort();
     public abstract List<String> getTravelRoute();
     public abstract void editRoute(List<? extends Port> route);
+    @Override
+    public String toString(){
+        return String.valueOf(id)+": "+getClass().getSimpleName();
+    }
 
 }

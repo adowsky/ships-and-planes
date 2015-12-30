@@ -1,6 +1,7 @@
  package world.vehicles.movement;
 
 import world.ports.Port;
+import world.vehicles.Vehicle;
 
 
  /**
@@ -14,5 +15,12 @@ public class PortMovingEngine extends MapPointEngine {
     public PortMovingEngine(Port port){
         super(port);
     }
+     @Override
+     public synchronized void runInThread(){
+         if(getActiveVehicle().isOnRouteFinish())
+             super.runInThread();
+         else
+            moveOut();
+     }
 
 }

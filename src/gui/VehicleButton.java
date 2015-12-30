@@ -29,6 +29,8 @@ public class VehicleButton extends Button implements LocationChangedListener, Mo
         this.model = vehicle;
         model.addLocationChangedListener(this);
         model.addMovementStateChangesListener(this);
+        setLayoutX(model.getLocation().getX());
+        setLayoutY(model.getLocation().getY());
     }
 
     /**
@@ -69,12 +71,10 @@ public class VehicleButton extends Button implements LocationChangedListener, Mo
             while (needToTranslate && !Thread.interrupted()) {
                 double tmpRotation = rot;
                 if (translate) {
-                    if (model.getSpeedY()>0)
-                    tmpRotation += 90;
                         if (currentTranslation > (-TRANSLATION) ) {
                             synchronized (this) {
                                 if(tick) {
-                                    currentTranslation -= Math.abs(model.getSpeed());
+                                    currentTranslation -= 0.03;
                                     tick = false;
                                 }else
                                     trySleep();
@@ -85,13 +85,10 @@ public class VehicleButton extends Button implements LocationChangedListener, Mo
                         }
 
                 } else {
-                    if (model.getSpeedY()<=0)
-                        tmpRotation += 90;
-
                         if (currentTranslation < TRANSLATION) {
                             synchronized (this) {
                                 if (tick) {
-                                    currentTranslation += Math.abs(model.getSpeed());
+                                    currentTranslation += 0.03;
                                     tick = false;
                                 }
                                 else

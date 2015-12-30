@@ -49,7 +49,9 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
             return;
         toTheCenter();
         c.nextCrossing();
-
+    }
+    protected Vehicle getActiveVehicle(){
+        return c;
     }
     @Override
     public void clearCanMove(){

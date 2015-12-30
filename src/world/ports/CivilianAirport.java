@@ -1,9 +1,11 @@
 package world.ports;
 
 import javafx.geometry.Point2D;
+import world.vehicles.Airliner;
 import world.vehicles.CivilianVehicle;
 import world.Passenger;
 import world.vehicles.Airplane;
+import world.vehicles.Vehicle;
 
 import java.util.*;
 
@@ -72,6 +74,18 @@ public class CivilianAirport extends AirPort implements CivilianPort{
         return portListForPassenger;
     }
 
+    @Override
+    public Collection<Passenger> getPassengers() {
+        return passengersSet;
+    }
+
+    @Override
+    public Collection<? extends Vehicle> getVehicles() {
+        List<Airliner> l = new LinkedList<>();
+        planesList.forEach(e->l.add((Airliner)e));
+        return l;
+    }
+
     public boolean canLand() {
         while (planesList.size()>= getMaxCapacity()){
             try{
@@ -105,4 +119,8 @@ public class CivilianAirport extends AirPort implements CivilianPort{
     }
 
 
+    @Override
+    public void objectDestroyed(Vehicle o) {
+        planesList.remove(o);
+    }
 }

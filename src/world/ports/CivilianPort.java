@@ -50,4 +50,5 @@ public interface CivilianPort {
      * @return map of routes for all ports connected with this port.
      */
     List<CivilianPort> getAllConnections();
+    Collection<Passenger> getPassengers();
 }

@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.shape.Shape;
 import world.*;
 import world.vehicles.Circle;
+import world.vehicles.DestroyListener;
 import world.vehicles.movement.MovingEngine;
 import world.vehicles.movement.PortMovingEngine;
 import world.vehicles.Vehicle;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Represents port. Vehicle can stay there.
  */
-public abstract class Port implements Drawable, Cross, Serializable {
+public abstract class Port implements Drawable, Cross, Serializable, DestroyListener {
     private int maxCapacity;
     private Circle circle;
     private Point location;
@@ -154,4 +155,6 @@ public abstract class Port implements Drawable, Cross, Serializable {
     public Set<Port> getAllRoutes(){
         return ways.keySet();
     }
+    public abstract Collection<Passenger> getPassengers();
+    public abstract Collection<? extends Vehicle> getVehicles();
 }

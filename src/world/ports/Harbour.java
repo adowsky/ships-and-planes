@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import world.vehicles.CivilianVehicle;
 import world.Passenger;
 import world.vehicles.Ship;
+import world.vehicles.Vehicle;
 
 import java.util.*;
 
@@ -105,6 +106,18 @@ public class Harbour extends SeaPort implements CivilianPort {
 
     }
 
+    @Override
+    public Collection<Passenger> getPassengers() {
+        return passengersSet;
+    }
+
+    @Override
+    public Collection<? extends Vehicle> getVehicles() {
+        List<Vehicle> l = new LinkedList<>();
+        shipsList.forEach(e -> l.add((Vehicle)e));
+        return l;
+    }
+
     /**
      * Checks when vehicle can land.
      * @return if vehicle can land.
@@ -118,5 +131,10 @@ public class Harbour extends SeaPort implements CivilianPort {
             }
         }
         return true;
+    }
+
+    @Override
+    public void objectDestroyed(Vehicle o) {
+        shipsList.remove(o);
     }
 }
