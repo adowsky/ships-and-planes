@@ -35,7 +35,7 @@ import java.util.*;
  * FXML Controller for application's window.
  */
 
-public class FXMLWindowController implements Initializable,Serializable {
+public class FXMLWindowController implements Initializable {
     private static FXMLWindowController instance;
 
     private final String SAVE_FILE = "map.save";
@@ -43,7 +43,6 @@ public class FXMLWindowController implements Initializable,Serializable {
     @FXML private BorderPane controlPanel;
     @FXML private Pane mapPane;
 
-    private Object enablingProtector = new Object();
     private Parent civilianPlane = null;
     private Parent civilianAirForm = null;
     private Parent militaryAirForm = null;
@@ -156,25 +155,6 @@ public class FXMLWindowController implements Initializable,Serializable {
         }
         VehicleButton vhc = new VehicleButton();
         Harbour reykjavik = ports.get("Reykjavik");
-        Harbour salvador = ports.get("Salvador");
-        passengerGenerator.getPassengers(50);
-
-        FerryBoat boat = new FerryBoat(reykjavik.getLocation(),0.01,Arrays.asList(reykjavik,salvador),50,"KOMODO");
-        vhc.setModel(boat);
-        vhc.getStyleClass().add("civilian-ship");
-        vhc.setOnAction(civilianShipClicked);
-        boat.setRoute(reykjavik.getRouteToPort(salvador));
-        boat.setReadyToTravel();
-        mapPane.getChildren().add(vhc);
-        vhc = new VehicleButton();
-        boat = new FerryBoat(salvador.getLocation(),0.01,Arrays.asList(salvador,reykjavik),50,"KOMODO");
-        vhc.setModel(boat);
-        vhc.getStyleClass().add("civilian-ship");
-        vhc.setOnAction(civilianShipClicked);
-        boat.setRoute(salvador.getRouteToPort(reykjavik));
-        boat.setReadyToTravel();
-        mapPane.getChildren().add(vhc);
-        vhc = new VehicleButton();
         AircraftCarrier carrier = new AircraftCarrier(reykjavik,0.02,ArmamentType.NUCLEAR_WEAPON);
         vhc.setModel(carrier);
         vhc.getStyleClass().add("military-ship");
@@ -251,6 +231,10 @@ public class FXMLWindowController implements Initializable,Serializable {
         mapPane.getChildren().forEach(e -> e.setDisable(true));
         CAirportButtons.forEach(e -> e.setDisable(false));
     }
+
+    /**
+     * Disables everything excepts Military Airports.
+     */
     public void onlyMilitaryPlanesEnabled(){
         mapPane.getChildren().forEach(e -> e.setDisable(true));
         MAirportButtons.forEach(e -> e.setDisable(false));
@@ -288,6 +272,13 @@ public class FXMLWindowController implements Initializable,Serializable {
         mapPane.getChildren().add(btn);
         btn.getModel().setReadyToTravel();
     }
+
+    /**
+     * Adds new vehicle to the map
+     * @param details map of vehicle details.
+     * @param startTravel if tf vehicle is running after creation
+     * @return new VehicleButton
+     */
     public VehicleButton addVehicleButton(Map<String, Object[]> details,boolean startTravel){
         VehicleButton btn = parseDetails(details, startTravel);
         mapPane.getChildren().add(btn);
@@ -380,7 +371,6 @@ public class FXMLWindowController implements Initializable,Serializable {
             }
         }
         //end of factory
-
         return btn;
     }
     @FXML public void loadFromFile(){
@@ -459,6 +449,7 @@ public class FXMLWindowController implements Initializable,Serializable {
         private VBox pBox;
         private StringJoiner joiner;
         private Map<String , ? extends Port> portsSource;
+
         public VehicleDetails() {
             field = new Label();
             joiner = new StringJoiner("-");
@@ -513,6 +504,11 @@ public class FXMLWindowController implements Initializable,Serializable {
                 pBox.getChildren().add(new ScrollPane(passengers));
 
         }
+
+        /**
+         * Parses route of vehicle.
+         * @return List of ports.
+         */
         public List<? extends Port> parseRoute(){
             List<Port> list = new ArrayList<>();
             for (String s : field.getText().split("-")){
@@ -520,6 +516,11 @@ public class FXMLWindowController implements Initializable,Serializable {
             }
             return list;
         }
+
+        /**
+         * Sets details of vehicle in view
+         * @param btn button with vehicle
+         */
         public void setDetails(VehicleButton btn) {
             Vehicle v = btn.getModel();
             this.btn = btn;
@@ -528,7 +529,9 @@ public class FXMLWindowController implements Initializable,Serializable {
             int i = 2;
             for (String key : map.keySet()) {
                 add(new Text(key), 0, i);
-                add(new Label(map.get(key)), 1, i);
+                Label lab = new Label(map.get(key));
+                lab.setWrapText(true);
+                add(lab, 1, i);
                 i++;
             }
             if (v instanceof Airliner) {
@@ -536,10 +539,12 @@ public class FXMLWindowController implements Initializable,Serializable {
                 landing.setOnAction((event) -> {
                     System.out.println("Emergency Landing");
                     ((Airliner)btn.getModel()).emergencyLanding(initializer.getCAirports().values());
+                    landing.setDisable(true);
                 });
                 if(btn.getModel().isForcedRouteChange())
-                    btn.setDisable(true);
-                else btn.setDisable(false);
+                    landing.setDisable(true);
+                else
+                    landing.setDisable(false);
                 add(landing, 0, i++);
             }
 
@@ -554,6 +559,11 @@ public class FXMLWindowController implements Initializable,Serializable {
             if(v instanceof CivilianVehicle)
                 addPassengerView(i);
         }
+
+        /**
+         * Add list with passengers to view.
+         * @param index location in panel
+         */
         public void addPassengerView(int index){
             passengers.getItems().clear();
             passengers.getItems().addAll(((CivilianVehicle)btn.getModel()).getVehiclePassengers());
@@ -561,10 +571,15 @@ public class FXMLWindowController implements Initializable,Serializable {
             add(pBox, 0, index++,2,1);
             add(show,0 , index);
         }
+
+        /**
+         * Make possibility to edit route.
+         * @param portsSource
+         */
         public void setEditableRoute( Map<String , ? extends Port> portsSource) {
             add(new Text("Route"), 0, 0);
             List<String> list = btn.getModel().getTravelRoute();
-            joiner = new StringJoiner("-");
+            joiner = new StringJoiner("\n");
             list.forEach(e -> joiner.add(e));
             field.setText(joiner.toString());
             add(field, 1, 0);

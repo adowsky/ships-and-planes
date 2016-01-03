@@ -14,6 +14,7 @@ import java.util.*;
  * Class represents aircraft carrier.  It have ship's properties and it is a vehicle factory.
  */
 public class AircraftCarrier extends Ship implements Serializable, DestroyListener {
+    private static long serialVersionUID = 1L;
     private ArmamentType armament;
     private List<MilitaryAircraft> producedPlanes;
     private Port lastVisitedPort;
@@ -72,6 +73,7 @@ public class AircraftCarrier extends Ship implements Serializable, DestroyListen
             super.nextCrossing();
         }
     }
+
     private Port randNewPort(){
         Port next = getNextPort();
         if(next != null) {
@@ -142,6 +144,11 @@ public class AircraftCarrier extends Ship implements Serializable, DestroyListen
         });
         producedPlanes.removeAll(toRemove);
     }
+
+    /**
+     * Add produced plane to collection
+     * @param plane  produced plane
+     */
     public void addProducedPlane(MilitaryAircraft plane){
         producedPlanes.add(plane);
     }

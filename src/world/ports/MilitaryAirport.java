@@ -44,11 +44,21 @@ public class MilitaryAirport extends AirPort {
         plane.setRoute(getRouteToPort(plane.getNextPort()));
         vehicleDeparture(plane);
     }
+
+    /**
+     * Adds newly produced plane to the Port.
+     * @param vehicle  newly produced plane
+     */
     public void addNewlyProducedVehicle(MilitaryAircraft vehicle){
         canLand();
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
         vehicleDeparture(vehicle);
     }
+
+    /**
+     * Wait for possibility of landing and returns state of it.
+     * @return if vehicle can land.
+     */
     public synchronized boolean canLand() {
         while (planesList.size()>= getMaxCapacity()){
             try{

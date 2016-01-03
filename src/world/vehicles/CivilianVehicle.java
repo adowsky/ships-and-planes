@@ -38,6 +38,10 @@ public interface CivilianVehicle {
      * @return maximum value of Passengers that vehicle can contains.
      */
     int getMaxPassengersAmount();
+
+    /**
+     * Sets ready to travel flag as true.
+     */
     void setReadyToTravel();
 
 }

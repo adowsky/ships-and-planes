@@ -14,7 +14,6 @@ public class PortButton<T extends Port> extends Button implements Serializable{
     protected T model;
     private Point2D location;
     private String name;
-    private int time;
 
     /**
      * Creates new Port button.

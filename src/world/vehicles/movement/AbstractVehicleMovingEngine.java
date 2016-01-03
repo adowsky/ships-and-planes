@@ -72,10 +72,6 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
         stop();
     }
 
-    @Override
-    public boolean isRunning() {
-        return running;
-    }
 
     /**
      * Return state of flag can Move.
@@ -123,7 +119,8 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
             }
             else{
                 if (current == null) {
-                    vehicle.getLastPort().goThrough(vehicle);
+                    if(!vehicle.isForcedRouteChange())
+                        vehicle.getLastPort().goThrough(vehicle);
                     setFrontVehicle();
                     vehicle.moved();
                     for (Cross o : route) {
@@ -199,8 +196,18 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
             }
         }
     }
+
+    /**
+     * Sets current crossing.
+     * @param x current crossing.
+     */
     public synchronized void setCurrent(Cross x){
         current = x;
     }
+
+    /**
+     * Returns if vehicle is finishing cycle.
+     * @return  if vehicle is finishing cycle.
+     */
     public abstract boolean isFinish();
 }

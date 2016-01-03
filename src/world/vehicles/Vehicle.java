@@ -15,6 +15,7 @@ import java.util.*;
  * Represents vehicle
  */
 public abstract class Vehicle implements Drawable, Serializable {
+    private static long serialVersionUID = 1L;
     private  volatile Point location;
     private final int id;
     private static int nextId=0;
@@ -33,7 +34,7 @@ public abstract class Vehicle implements Drawable, Serializable {
     private int nextCrossing;
 
     private transient List<LocationChangedListener> locationChangedListeners;
-    private transient List<MovementStateListerner> movementStateListerners;
+    private transient List<MovementStateListener> movementStateListeners;
     private List<DestroyListener> destroyListeners;
 
     private transient Rotate transform;
@@ -165,10 +166,10 @@ public abstract class Vehicle implements Drawable, Serializable {
             System.out.println("Vehicle sleep issue.");
         }
     }
-    public synchronized void addMovementStateChangesListener(MovementStateListerner l){
-        if(movementStateListerners == null)
-            movementStateListerners = new LinkedList<>();
-        movementStateListerners.add(l);
+    public synchronized void addMovementStateChangesListener(MovementStateListener l){
+        if(movementStateListeners == null)
+            movementStateListeners = new LinkedList<>();
+        movementStateListeners.add(l);
     }
     /**
      * Sets readyToTravel flag on true value.
@@ -178,14 +179,14 @@ public abstract class Vehicle implements Drawable, Serializable {
         engine.hitTheRoad(route);
     }
     public void moved(){
-        movementStateListerners.forEach((o) -> o.movementStateChanges(MovingState.MOVING));
+        movementStateListeners.forEach((o) -> o.movementStateChanges(MovingState.MOVING));
     }
     /**
      * Sets readyToTravel flag on false value.
      */
     public void arrivedToPort(){
         readyToTravel = false;
-        movementStateListerners.forEach((o) -> o.movementStateChanges(MovingState.STAYING));
+        movementStateListeners.forEach((o) -> o.movementStateChanges(MovingState.STAYING));
     }
 
     /**
@@ -268,8 +269,9 @@ public abstract class Vehicle implements Drawable, Serializable {
         rotation = countRotation();
         transform = new Rotate(rotation);
         engine.hitTheRoad(l);
-        if(port != null)
+        if(port != null && !forcedRouteChange)
             getLastPort().registerNewTravellingTo(route.get(0),this);
+
     }
     public double getRotation(){
         return  rotation;
@@ -348,6 +350,8 @@ public abstract class Vehicle implements Drawable, Serializable {
      * @param portList list with ports.
      */
     public synchronized void changeRoute(List<? extends Port> portList){
+        if(getNextPort() == portList.get(0))
+            return;
         engine.stop();
         ((AbstractVehicleMovingEngine)engine).setCurrent(null);
         Port prev = getLastPort();
@@ -362,6 +366,7 @@ public abstract class Vehicle implements Drawable, Serializable {
                 index++;
                 if (c == getNextCrossing())
                     found = true;
+                ((AbstractVehicleMovingEngine) engine).setCurrent(c);
             }
             if(found){
                 List<Cross> rout = new ArrayList<>();
@@ -372,7 +377,6 @@ public abstract class Vehicle implements Drawable, Serializable {
                 setRoute(rt);
             }
         }
-
     }
     private void goBack(){
         List<Cross> rt = new ArrayList<>();
@@ -388,6 +392,11 @@ public abstract class Vehicle implements Drawable, Serializable {
         Collections.reverse(rt);
         setRoute(rt);
     }
+
+    /**
+     * Returns port when vehicle stops last time.
+     * @return port when vehicle stops last time.
+     */
     public Port getLastRotueStop(){
         return (Port)route.get(route.size()-1);
     }
@@ -405,6 +414,11 @@ public abstract class Vehicle implements Drawable, Serializable {
             return  true;
         return false;
     }
+
+    /**
+     * Returns ready to travel flag
+     * @return ready to travel flag
+     */
     public boolean isReadyToTravel(){
         return  readyToTravel;
     }
@@ -420,12 +434,25 @@ public abstract class Vehicle implements Drawable, Serializable {
                 last.removeFromTravellingTo(route.get(nextCrossing), this);
         }
     }
+
+    /**
+     * Returns forced route changed flag.
+     * @return  forced route changed flag.
+     */
     public boolean isForcedRouteChange(){
         return forcedRouteChange;
     }
+
+    /**
+     * Sets forced route changed flag as false.
+     */
     public void clearForcedRouteChange() {
         forcedRouteChange = false;
     }
+
+    /**
+     * Destroys vehicle and its components.
+     */
     public void destroy(){
         engine.destroy();
         destroyListeners.forEach(e -> e.objectDestroyed(this));
@@ -456,7 +483,17 @@ public abstract class Vehicle implements Drawable, Serializable {
      * @return last visited port.
      */
     public abstract Port getLastPort();
+
+    /**
+     * Get route as String list.
+     * @return string list of route.
+     */
     public abstract List<String> getTravelRoute();
+
+    /**
+     * Adds new route and apply it when is possibility.
+     * @param route
+     */
     public abstract void editRoute(List<? extends Port> route);
     @Override
     public String toString(){

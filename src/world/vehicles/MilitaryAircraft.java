@@ -46,20 +46,10 @@ public class MilitaryAircraft extends Airplane {
         return  armamentType;
     }
 
-    /**
-     * Sets armament type
-     * @param armamentType armament type
-     */
-    public void  setArmamentType(ArmamentType armamentType){
-        this.armamentType=armamentType;
-    }
     @Override
     public void arrivedToPort(){
         super.arrivedToPort();
         lastVisitedPortIndex++;
-    }
-    public void setFromSea(){
-        fromSea = true;
     }
     @Override
     public void Draw() {

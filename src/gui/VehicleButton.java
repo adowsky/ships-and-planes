@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * Represents vehicle, contains vehicle model inside.
  */
-public class VehicleButton extends Button implements LocationChangedListener, MovementStateListerner, Notifiable, Serializable{
+public class VehicleButton extends Button implements LocationChangedListener, MovementStateListener, Notifiable, Serializable{
     private Vehicle model;
     private volatile boolean tick = false;
     private double rotation;
@@ -130,6 +130,10 @@ public class VehicleButton extends Button implements LocationChangedListener, Mo
         }else if ( state == MovingState.STAYING)
             Platform.runLater(()->setVisible(false));
     }
+
+    /**
+     * Process destroy of object.
+     */
     public void destroy(){
         model.destroy();
         model = null;

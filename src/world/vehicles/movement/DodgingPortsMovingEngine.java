@@ -5,6 +5,7 @@ import world.vehicles.Vehicle;
  * Moving Engine which doesn't allow vehicle to go into Port.
  */
 public class DodgingPortsMovingEngine extends AbstractVehicleMovingEngine {
+    private static long serialVersionUID = 1L;
     private Vehicle vehicle;
         /**
          * Creates new DodgingPortsMovingEngine
@@ -15,10 +16,8 @@ public class DodgingPortsMovingEngine extends AbstractVehicleMovingEngine {
             this.vehicle = vehicle;
         }
 
-        /**
-         * Sets vehicle that is in front of current one.
-         */
 
+        @Override
         public boolean isFinish(){
             return vehicle.isOnRouteFinish();
         }

@@ -16,6 +16,7 @@ import java.util.Map;
  * Represents crossing.
  */
 public class Crossing implements Cross{
+    private static long serialVersionUID = 1L;
     private Circle circle;
     private volatile MovingEngine<Vehicle> engine;
     private String name;

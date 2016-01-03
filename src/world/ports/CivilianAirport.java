@@ -33,6 +33,11 @@ public class CivilianAirport extends AirPort implements CivilianPort{
 
     }
 
+    /**
+     * Process vehicle arrival.
+     * @param vehicle vehicle which is arriving
+     * @param <T> type of vehicle
+     */
     public synchronized <T extends Airplane & CivilianVehicle> void vehicleArrive(T vehicle) {
         canLand();
         vehicle.arrivedToPort();
@@ -52,12 +57,12 @@ public class CivilianAirport extends AirPort implements CivilianPort{
         canLand();
         vehicle.clearPassengersList();
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
+        vehicle.refuel();
         vehicleDeparture(vehicle);
     }
 
     private void maintainVehicle(Airplane vehicle){
         vehicle.refuel();
-        System.out.println(vehicle.getNextPort());
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
         vehicle.maintenanceStart(timeToNextDeparture);
     }
@@ -95,6 +100,10 @@ public class CivilianAirport extends AirPort implements CivilianPort{
         return l;
     }
 
+    /**
+     * Waits for opportunity to land and returns state of it.
+     * @return  if vehicle can land in PORT.
+     */
     public boolean canLand() {
         while (planesList.size()>= getMaxCapacity()){
             try{
@@ -106,8 +115,10 @@ public class CivilianAirport extends AirPort implements CivilianPort{
         return true;
     }
 
-
-
+    /**
+     * Process vehicle departure.
+     * @param vehicle
+     */
     public void vehicleDeparture(CivilianVehicle vehicle) {
         Collection<Passenger> passengers = generatePassengersCollectionForVehicle(vehicle);
         vehicle.addPassengers(passengers);
@@ -115,6 +126,7 @@ public class CivilianAirport extends AirPort implements CivilianPort{
         vehicle.setReadyToTravel();
         planesList.remove(vehicle);
     }
+
     private Collection<Passenger> generatePassengersCollectionForVehicle(CivilianVehicle vehicle){
         Iterator<Passenger> iter = passengersSet.iterator();
         Collection<Passenger> newPassengersList = new HashSet<>();

@@ -18,8 +18,6 @@ public class FerryBoat extends Ship implements CivilianVehicle {
     private List<Harbour> newRoute;
     private boolean routeChanged;
     private boolean modifyRoute;
-    private long arrivalTime;
-    private boolean onMove;
     private int lastVisitedPortIndex;
 
     /**
@@ -34,8 +32,6 @@ public class FerryBoat extends Ship implements CivilianVehicle {
         super(location,maxVelocity);
         this.maxPassengersAmount=maxPassengersAmount;
         this.company=company;
-        onMove=false;
-        arrivalTime=0;
         this.route = route;
         setRoute(route.get(0).getRouteToPort(route.get(1)));
         lastVisitedPortIndex = 0;
@@ -47,13 +43,6 @@ public class FerryBoat extends Ship implements CivilianVehicle {
         return maxPassengersAmount;
     }
 
-    /**
-     * Sets maximum amount of passengers.
-     * @param maxPassengersAmount maximum amount of passengers
-     */
-    public void setMaxPassengersAmount(int maxPassengersAmount) {
-        this.maxPassengersAmount = maxPassengersAmount;
-    }
 
     /**
      * Returns Company that owns the ship.

@@ -11,6 +11,7 @@ import java.util.*;
  * Generates Passengers.
  */
 public class PassengerGenerator implements Serializable{
+    private static long serialVersionUID = 1L;
     private static PassengerGenerator instance;
     private Random rand;
     private final List<FirstName> FIRST_NAMES;
@@ -22,6 +23,10 @@ public class PassengerGenerator implements Serializable{
         LAST_NAMES = Collections.unmodifiableList(Arrays.asList(LastName.values()));
     }
 
+    /**
+     * Returns instance of class
+     * @return instance of class.
+     */
     public synchronized static PassengerGenerator getInstance(){
         if (instance == null)
             instance = new PassengerGenerator();
@@ -74,6 +79,11 @@ public class PassengerGenerator implements Serializable{
         }
         return pesel.toString();
     }
+
+    /**
+     * Sets database of ports
+     * @param list port database
+     */
     public void setPortDataBase(List<CivilianPort> list){
         portList = list;
 

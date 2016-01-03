@@ -4,6 +4,7 @@ import world.ports.CivilianPort;
 import world.ports.Port;
 import world.vehicles.Vehicle;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -11,6 +12,7 @@ import java.util.*;
  * Represents passenger.
  */
 public class Passenger implements Serializable{
+    private static long serialVersionUID = 1L;
     private String firstname;
     private String lastname;
     private String pesel;
@@ -168,9 +170,19 @@ public class Passenger implements Serializable{
         }
 
     }
+
+    /**
+     * Sets waiting flag
+     * @param t flag
+     */
     public synchronized void setWaiting(boolean t){
         waiting = t;
     }
+
+    /**
+     * Returns waiting flag in port.
+     * @return waiting flag.
+     */
     public synchronized boolean isWaiting(){
         return waiting;
     }
@@ -207,6 +219,10 @@ public class Passenger implements Serializable{
         nextPortIsVisited();
     }
 
+    /**
+     * Makes new Journey for passenger.
+     * @param db ports database.
+     */
     public void newJourney(List<CivilianPort> db) {
         if(this.db == null)
             this.db = db;
@@ -224,19 +240,11 @@ public class Passenger implements Serializable{
         for(int i=0; i<size; i++){
             boolean found= false;
             while(!found) {
-                List<CivilianPort> set = null;
-                CivilianPort randed = null;
-                try {
-                    set = route.get(i).getAllConnections();
-
-                randed = set.get(rand.nextInt(set.size()));
-
-                    if (!route.contains(randed)) {
-                        route.add(randed);
-                        found = true;
-                    }
-                }catch(Exception ex){
-                    ex.printStackTrace();
+                List<CivilianPort> set = route.get(i).getAllConnections();
+                CivilianPort randed = set.get(rand.nextInt(set.size()));
+                if (!route.contains(randed)) {
+                    route.add(randed);
+                    found = true;
                 }
             }
         }
@@ -246,5 +254,23 @@ public class Passenger implements Serializable{
     public String toString(){
         return firstname+" "+lastname;
     }
-    //TODO wczytywanie
+
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        if(waiting){
+            Thread t = new Thread(()->{
+                try{
+                    Thread.sleep(journey.getDuration());
+                }catch(InterruptedException ex){
+                    ex.printStackTrace();
+                }finally {
+                    setWaiting(false);
+                }
+            });
+            t.setDaemon(true);
+            t.start();
+
+        }
+    }
 }

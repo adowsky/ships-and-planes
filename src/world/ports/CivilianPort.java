@@ -12,7 +12,6 @@ import java.util.Map;
  * Port which contains Passengers and can service them.
  */
 public interface CivilianPort {
-   // void vehicleArrive(CivilianVehicle vehicle);
 
     /**
      * Adds Passenger to the Port.
@@ -49,5 +48,10 @@ public interface CivilianPort {
      * @return map of routes for all ports connected with this port.
      */
     List<CivilianPort> getAllConnections();
+
+    /**
+     * Returns passengers in port.
+     * @return   passengers in port.
+     */
     Collection<Passenger> getPassengers();
 }

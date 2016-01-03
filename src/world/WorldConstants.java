@@ -9,4 +9,5 @@ public interface WorldConstants {
     int UPDATES_PER_SEC = 120;
     int PORT_RADIUS = 10;
     int  AIRPLANE_SPEED = 2;
+    double MAX_FUEL_VALUE = 1000;
 }

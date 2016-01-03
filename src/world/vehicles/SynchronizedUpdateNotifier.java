@@ -12,6 +12,7 @@ import java.util.List;
  */
 public enum SynchronizedUpdateNotifier implements Runnable, Serializable{
     INSTANCE;
+
     private volatile List<Notifiable> notificationList = new LinkedList<>();
     private final double UPDATES_PER_MILLIS = WorldConstants.UPDATES_PER_SEC / 1000.;
     SynchronizedUpdateNotifier(){
@@ -79,6 +80,11 @@ public enum SynchronizedUpdateNotifier implements Runnable, Serializable{
         });
         return output;
     }
+
+    /**
+     * Sets new Notification list.
+     * @param x new Notification list.
+     */
     public void addNewList(List<Notifiable> x){
         notificationList = x;
     }

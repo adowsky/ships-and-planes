@@ -94,7 +94,6 @@ public class Airliner extends Airplane implements CivilianVehicle {
 
     @Override
     public void Draw() {
-//TODO
     }
 
     @Override
@@ -125,6 +124,10 @@ public class Airliner extends Airplane implements CivilianVehicle {
                 Double.toString(getLocation().getX()).split("\\.")[0]+"x"+Double.toString(getLocation().getY()).split("\\.")[0]);
         map.put("ID: ",Integer.toString(getId()));
         map.put("Staff Amount: ",Integer.toString(getStaffAmount()));
+        String[] cFuel = Double.toString(getCurrentFuel()).split("\\.");
+        String fuel = cFuel[0]+"."+cFuel[1].substring(0,1);
+        String maxFuel = Double.toString(getMaxFuel()).split("\\.")[0];
+        map.put("Fuel: ",fuel+"/"+maxFuel);
         return map;
     }
 
@@ -160,6 +163,11 @@ public class Airliner extends Airplane implements CivilianVehicle {
         }
         super.maintenanceStart(sleepTime);
     }
+
+    /**
+     * Forces landing in nearest Port.
+     * @param db Database of ports to find the nearest.
+     */
     public void emergencyLanding(Collection<CivilianAirport> db){
         boolean found = false;
         CivilianAirport target = null;
@@ -168,7 +176,7 @@ public class Airliner extends Airplane implements CivilianVehicle {
             r += 5;
             Circle area = new Circle(getLocation().getX(),getLocation().getY(),r);
             for(CivilianAirport o : db){
-                if(o.intersect(area.getBounds())|| area.getBounds().contains(o.getX(),o.getY())){
+                if(area.getBounds().contains(o.getX(),o.getY())){
                     found = true;
                     target = o;
                     break;

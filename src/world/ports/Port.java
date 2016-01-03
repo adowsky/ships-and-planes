@@ -17,6 +17,7 @@ import java.util.List;
  * Represents port. Vehicle can stay there.
  */
 public abstract class Port implements Drawable, Cross, Serializable, DestroyListener {
+    private static long serialVersionUID = 1L;
     private int maxCapacity;
     private Circle circle;
     private Point location;
@@ -52,8 +53,8 @@ public abstract class Port implements Drawable, Cross, Serializable, DestroyList
 
     /**
      * Creates new Port
-     * @param maxCapacity
-     * @param location
+     * @param maxCapacity Maximum capacity
+     * @param location location point
      */
     public Port(int maxCapacity, Point2D location) {
         this.maxCapacity = maxCapacity;
@@ -90,6 +91,11 @@ public abstract class Port implements Drawable, Cross, Serializable, DestroyList
     public Set<Port> getLandConnectionPorts() {
         return landConnectionPorts;
     }
+
+    /**
+     * Sets land Connected Ports collection.
+     * @param lcp land Connected Ports collection.
+     */
     public void setLandConnectionPorts(Set<Port> lcp){
         landConnectionPorts = lcp;
     }
@@ -155,9 +161,23 @@ public abstract class Port implements Drawable, Cross, Serializable, DestroyList
         return getClass().getSimpleName()+": "+name;
     }
 
+    /**
+     * Returns routes to other ports.
+     * @return routes to other ports.
+     */
     public Set<Port> getAllRoutes(){
         return ways.keySet();
     }
+
+    /**
+     * Returns collection of passengers in port.
+     * @return collection of passengers in port.
+     */
     public abstract Collection<Passenger> getPassengers();
+
+    /**
+     * Returns collection fo vehicles in Port
+     * @return collection fo vehicles in Port
+     */
     public abstract Collection<? extends Vehicle> getVehicles();
 }

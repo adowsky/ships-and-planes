@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ *  Parser which process data from serialized collection and returns object used in application.
  */
 public class SerializationParser {
     private Set<Serializable> raw;
@@ -21,6 +21,10 @@ public class SerializationParser {
     public SerializationParser(Set<Serializable> set){
         raw = set;
     }
+
+    /**
+     * Parses the collection.
+     */
     public void parse(){
         parsedPortButtons = new HashSet<>();
         parsedVehicleButtons = new HashSet<>();
@@ -63,7 +67,7 @@ public class SerializationParser {
     private VehicleButton makeAircraftCarrier(AircraftCarrier o){
         VehicleButton btn = new VehicleButton();
         btn.setModel(o);
-        btn.getStyleClass().add("civilian-ship");
+        btn.getStyleClass().add("military-ship");
         btn.setLayoutX(o.getLocation().getX());
         btn.setLayoutY(o.getLocation().getY());
         return btn;
@@ -109,6 +113,11 @@ public class SerializationParser {
         btn.setModel(o);
         return btn;
     }
+
+    /**
+     * Returns Set of Vehicle buttons with model type in name field.
+     * @return Set of Vehicle buttons with model type in name field.
+     */
     public Set<VehicleButton> getVehicleButtonsWithName(){
         if(parsedVehicleButtons == null)
             parsedVehicleButtons = new HashSet<>();

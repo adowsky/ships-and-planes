@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
  * Template of moving engine for Cross.
  */
 public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiable {
+    private static long serialVersionUID = 1L;
     private transient Object monitor;
     private boolean canMove;
     private Cross cross;
@@ -113,10 +114,7 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
     public void stop(){}
     @Override
     public void destroy(){}
-    @Override
-    public boolean isRunning(){
-        return false;
-    }
+
     private void readObject(java.io.ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();

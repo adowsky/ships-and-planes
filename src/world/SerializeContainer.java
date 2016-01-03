@@ -18,9 +18,19 @@ public class SerializeContainer {
             instance = new SerializeContainer();
         return instance;
     }
+
+    /**
+     * Register object as object to serialize.
+     * @param obj object to serialize.
+     */
     public synchronized void addObjectToSerialize(Serializable obj){
         serializables.add(obj);
     }
+
+    /**
+     * Return objects registered to serialize
+     * @return  objects registered to serialize
+     */
     public Set<Serializable> getSerializables(){
         return serializables;
     }

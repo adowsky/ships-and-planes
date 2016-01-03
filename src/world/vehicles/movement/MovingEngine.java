@@ -27,10 +27,16 @@ public interface MovingEngine<T> extends Runnable, Notifiable, Serializable {
      */
 
     void runInThread();
-    void stop();
-    void destroy();
-    boolean isRunning();
 
+    /**
+     * Stops engine
+     */
+    void stop();
+
+    /**
+     * Process destroy of object.
+     */
+    void destroy();
     /**
      * returns canMove flag.
      * @return can move flag.

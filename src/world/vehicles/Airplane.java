@@ -1,6 +1,7 @@
 package world.vehicles;
 
 import javafx.geometry.Point2D;
+import world.WorldConstants;
 import world.ports.Port;
 import world.vehicles.movement.MovingEngineTypes;
 
@@ -11,8 +12,8 @@ import java.util.List;
  */
 public abstract class Airplane extends Vehicle {
     private int staffAmount;
-    private int currentFuel;
-    private int maxFuel;
+    private double currentFuel;
+    private double maxFuel;
 
 
     /**
@@ -21,16 +22,22 @@ public abstract class Airplane extends Vehicle {
      * @param staffAmount staff number
      * @param maxFuel maximum value of fuel
      */
-    public Airplane(Point2D location,  double speed, int staffAmount, int maxFuel){
+    public Airplane(Point2D location,  double speed, int staffAmount, double maxFuel){
         super(location, speed);
         this.staffAmount=staffAmount;
-        this.maxFuel=maxFuel;
+        if(maxFuel >= WorldConstants.MAX_FUEL_VALUE)
+            this.maxFuel=maxFuel;
+        else
+            this.maxFuel = WorldConstants.MAX_FUEL_VALUE;
         currentFuel=maxFuel;
     }
-    public Airplane(Point2D location, double speed, int staffAmount, int maxFuel, MovingEngineTypes type){
+    public Airplane(Point2D location, double speed, int staffAmount, double maxFuel, MovingEngineTypes type){
         super(location, speed, type);
         this.staffAmount=staffAmount;
-        this.maxFuel=maxFuel;
+        if(maxFuel >= WorldConstants.MAX_FUEL_VALUE)
+            this.maxFuel=maxFuel;
+        else
+            this.maxFuel = WorldConstants.MAX_FUEL_VALUE;
         currentFuel=maxFuel;
     }
     /**
@@ -53,7 +60,7 @@ public abstract class Airplane extends Vehicle {
      * Returns current fuel.
      * @return current fuel
      */
-    public int getCurrentFuel() {
+    public double getCurrentFuel() {
         return currentFuel;
     }
 
@@ -68,7 +75,7 @@ public abstract class Airplane extends Vehicle {
      * Returns maximum value of fuel.
      * @return Maximum value of fuel.
      */
-    public int getMaxFuel() {
+    public double getMaxFuel() {
         return maxFuel;
     }
 
@@ -76,7 +83,7 @@ public abstract class Airplane extends Vehicle {
      * Sets Maximum value of fuel
      * @param maxFuel Maximum value of fuel
      */
-    public void setMaxFuel(int maxFuel) {
+    public void setMaxFuel(double maxFuel) {
         this.maxFuel = maxFuel;
     }
 

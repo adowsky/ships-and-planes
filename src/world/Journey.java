@@ -9,6 +9,7 @@ import java.util.List;
  * Represents passenger's journey.
  */
 public class Journey implements Serializable{
+    private static long serialVersionUID = 1L;
     private boolean business;
     private int duration;
     private List<CivilianPort> route;
@@ -26,6 +27,10 @@ public class Journey implements Serializable{
         this.route=route;
         lastVisitedPortIndex=0;
     }
+
+    /**
+     * Empty constructor.
+     */
     public Journey(){
 
     }

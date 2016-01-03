@@ -248,7 +248,6 @@ public class MapInitializer implements Serializable{
         for(int i = 0; i<list.size();++i){
             Map<Port,List<Cross>> route = new HashMap<>();
             Map<String,String[]> stringRoutes = routes.get(i);
-            Set<Port> landSets = new HashSet<>();
             for(String s : stringRoutes.keySet()){
                 List<Cross> rt = new LinkedList<>();
                 String[] stringRoute = stringRoutes.get(s);
@@ -361,6 +360,12 @@ public class MapInitializer implements Serializable{
         mAirPorts.put(el.getAttribute("name"),c);
         return c;
     }
+
+    /**
+     * Returns Map to initialize aircraft carriers.
+     * @return Map to initialize aircraft carriers.
+     * @throws MapInitException
+     */
     public Map<Port, Map<Port,List<Cross>>> getConnectionForAircraftCarrier() throws MapInitException{
         Map<Port,Map<Port,List<Cross>>> result = new HashMap<>();
         if(mAirPorts.isEmpty())
@@ -415,14 +420,26 @@ public class MapInitializer implements Serializable{
      */
     public Map<String, MilitaryAirport> getMAirPorts() {return mAirPorts;}
 
+    /**
+     * Returns set of Harbour Buttons.
+     * @return set of Harbour Buttons.
+     */
     public Set<PortButton<Harbour>> getHarboursBtns() {
         return harboursBtns;
     }
 
+    /**
+     * Returns set of Civilian airport buttons.
+     * @return set of Civilian airport buttons.
+     */
     public Set<PortButton<CivilianAirport>> getcAirportBtns() {
         return cAirportBtns;
     }
 
+    /**
+     * Returns set of Military airports Button.
+     * @return set of Military airports Button.
+     */
     public Set<PortButton<MilitaryAirport>> getmAirportBtns() {
         return mAirportBtns;
     }
