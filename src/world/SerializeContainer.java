@@ -1,6 +1,7 @@
 package world;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,12 +27,18 @@ public class SerializeContainer {
     public synchronized void addObjectToSerialize(Serializable obj){
         serializables.add(obj);
     }
-
+    public synchronized void addObjectsToSerialize(Collection<Serializable> obj){
+        serializables.addAll(obj);
+    }
     /**
      * Return objects registered to serialize
      * @return  objects registered to serialize
      */
     public Set<Serializable> getSerializables(){
         return serializables;
+    }
+
+    public synchronized void clear(){
+            serializables.clear();
     }
 }

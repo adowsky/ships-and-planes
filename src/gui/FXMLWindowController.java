@@ -378,14 +378,19 @@ public class FXMLWindowController implements Initializable {
             Set<Serializable> serializables = (Set<Serializable>)in.readObject();
             List<Notifiable> list = (List<Notifiable>)in.readObject();
             SerializationParser parser = new SerializationParser(serializables);
+            SerializeContainer.getInstance().clear();
             parser.parse();
             mapPane.getChildren().clear();
             mapPane.getChildren().add(canvas);
             final GraphicsContext gc = canvas.getGraphicsContext2D();
             Image map = new Image(getClass().getResourceAsStream("resources/blank-world-map (1).jpg"));
             gc.drawImage(map,0,0);
-            mapPane.getChildren().addAll(finishParsingPorts(parser.getPortButtonsWithName()));
-            mapPane.getChildren().addAll(finishParsingVehicles(parser.getVehicleButtonsWithName()));
+            Set<PortButton> pButtons = finishParsingPorts(parser.getPortButtonsWithName());
+            mapPane.getChildren().addAll(pButtons);
+            pButtons.forEach(e -> SerializeContainer.getInstance().addObjectToSerialize(e.getModel()));
+            Set<VehicleButton> vBtns = finishParsingVehicles(parser.getVehicleButtonsWithName());
+            mapPane.getChildren().addAll(vBtns);
+            vBtns.forEach(e -> SerializeContainer.getInstance().addObjectToSerialize(e.getModel()));
             SynchronizedUpdateNotifier.INSTANCE.addNewList(list);
         }catch (IOException | ClassNotFoundException ex){
             ex.printStackTrace();
