@@ -99,6 +99,11 @@ public class MilitaryAircraft extends Airplane {
     @Override
     public Map<String, String > getProperties(){
         Map<String , String > map = new HashMap<>();
+        map.put("Armament Type: ", getArmamentType().toString());
+        map.put("Location: ",
+                Double.toString(getLocation().getX()).split("\\.")[0]+"x"+Double.toString(getLocation().getY()).split("\\.")[0]);
+        map.put("ID: ",Integer.toString(getId()));
+        map.put("Staff Amount: ",Integer.toString(getStaffAmount()));
         return map;
     }
 

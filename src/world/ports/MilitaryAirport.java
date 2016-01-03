@@ -2,7 +2,9 @@ package world.ports;
 
 import javafx.geometry.Point2D;
 import world.Passenger;
+import world.vehicles.CivilianVehicle;
 import world.vehicles.MilitaryAircraft;
+import world.vehicles.Ship;
 import world.vehicles.Vehicle;
 
 import java.util.ArrayList;
@@ -27,7 +29,6 @@ public class MilitaryAirport extends AirPort {
         super(capacity,location);
         this.timeToNextDeparture=timeToNextDeparture;
         planesList=new ArrayList<>();
-        MilitaryAirportContainer.getInstance().addToSet(this);
     }
 
     /**
@@ -43,7 +44,21 @@ public class MilitaryAirport extends AirPort {
         plane.setRoute(getRouteToPort(plane.getNextPort()));
         vehicleDeparture(plane);
     }
-
+    public void addNewlyProducedVehicle(MilitaryAircraft vehicle){
+        canLand();
+        vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
+        vehicleDeparture(vehicle);
+    }
+    public synchronized boolean canLand() {
+        while (planesList.size()>= getMaxCapacity()){
+            try{
+                Thread.sleep(1);
+            }catch (InterruptedException ex){
+                ex.printStackTrace();
+            }
+        }
+        return true;
+    }
     /**
      * Maintains aircraft
      * @param plane

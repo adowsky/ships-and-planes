@@ -1,11 +1,8 @@
 package world.ports;
 
 import javafx.geometry.Point2D;
-import world.vehicles.Airliner;
-import world.vehicles.CivilianVehicle;
+import world.vehicles.*;
 import world.Passenger;
-import world.vehicles.Airplane;
-import world.vehicles.Vehicle;
 
 import java.util.*;
 
@@ -46,6 +43,18 @@ public class CivilianAirport extends AirPort implements CivilianPort{
         maintainVehicle(vehicle);
         vehicleDeparture(vehicle);
     }
+    /**
+     * Adds newly produced vehicle to the port.
+     * @param vehicle new Vehicle.
+     * @param <T> type of Vehicle.
+     */
+    public <T extends Airplane & CivilianVehicle> void addNewlyProducedVehicle(T vehicle){
+        canLand();
+        vehicle.clearPassengersList();
+        vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
+        vehicleDeparture(vehicle);
+    }
+
     private void maintainVehicle(Airplane vehicle){
         vehicle.refuel();
         System.out.println(vehicle.getNextPort());
@@ -111,7 +120,7 @@ public class CivilianAirport extends AirPort implements CivilianPort{
         Collection<Passenger> newPassengersList = new HashSet<>();
         while(iter.hasNext()){
             Passenger passenger = iter.next();
-            if(passenger.getLastVisitedPort() == vehicle.getNextPort()){
+            if(!passenger.isWaiting() && passenger.getNextPortToVisit() == vehicle.getNextPort()){
                 newPassengersList.add(passenger);
             }
         }

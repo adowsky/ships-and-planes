@@ -17,7 +17,8 @@ public class Passenger implements Serializable{
     private int age;
     private Vehicle currentVehicle;
     private Journey journey;
-
+    private List<CivilianPort> db;
+    private boolean waiting;
     /**
      * Creates new Passenger
      * @param firstName first name
@@ -141,13 +142,6 @@ public class Passenger implements Serializable{
     public void randomNewRoute() {
     }
 
-    /**
-     * Changes last visited port to next.
-     */
-    public void visitNextCity(){
-        int nextPort = journey.getLastVisitedPortIndex()+1;
-        journey.setLastVisitedPortIndex(nextPort);
-    }
 
     /**
      * Notify passenger about visiting next port.
@@ -157,6 +151,28 @@ public class Passenger implements Serializable{
         int lastVisitedPortIndex = journey.getLastVisitedPortIndex();
         if((route.size() - 1) < lastVisitedPortIndex)
             journey.setLastVisitedPortIndex(lastVisitedPortIndex + 1);
+        else {
+            newJourney(db);
+            waiting = true;
+            Thread t = new Thread(()->{
+                try{
+                    Thread.sleep(journey.getDuration());
+                }catch(InterruptedException ex){
+                    ex.printStackTrace();
+                }finally {
+                    setWaiting(false);
+                }
+            });
+            t.setDaemon(true);
+            t.start();
+        }
+
+    }
+    public synchronized void setWaiting(boolean t){
+        waiting = t;
+    }
+    public synchronized boolean isWaiting(){
+        return waiting;
     }
 
     /**
@@ -164,10 +180,9 @@ public class Passenger implements Serializable{
      * @return last visited port by passenger.
      */
     public CivilianPort getLastVisitedPort(){
-        //TODO wprowadzić metody bezpieczeństwa, może nie być kolejnej trasy, np jeśli odwiedzona stacja jest ostatnią to nowa trasa.
         List<CivilianPort> route = journey.getRoute();
         int lastVisited = journey.getLastVisitedPortIndex();
-        return route.get(lastVisited + 1);
+        return (lastVisited >= journey.getNumberOfPortsInRoute()-1) ? route.get(lastVisited) : route.get(lastVisited + 1);
     }
 
     /**
@@ -192,7 +207,9 @@ public class Passenger implements Serializable{
         nextPortIsVisited();
     }
 
-    public void newJourney(List<CivilianPort> db) throws Exception{
+    public void newJourney(List<CivilianPort> db) {
+        if(this.db == null)
+            this.db = db;
         // non determined time because of condition using random function.
         List<CivilianPort> route= new ArrayList<>();
         Random rand = new Random();
@@ -207,11 +224,19 @@ public class Passenger implements Serializable{
         for(int i=0; i<size; i++){
             boolean found= false;
             while(!found) {
-                List<CivilianPort> set =  route.get(i).getAllConnections();
-                CivilianPort randed = set.get(rand.nextInt(set.size()));
-                if(!route.contains(randed)){
-                    route.add(randed);
-                    found = true;
+                List<CivilianPort> set = null;
+                CivilianPort randed = null;
+                try {
+                    set = route.get(i).getAllConnections();
+
+                randed = set.get(rand.nextInt(set.size()));
+
+                    if (!route.contains(randed)) {
+                        route.add(randed);
+                        found = true;
+                    }
+                }catch(Exception ex){
+                    ex.printStackTrace();
                 }
             }
         }
@@ -221,4 +246,5 @@ public class Passenger implements Serializable{
     public String toString(){
         return firstname+" "+lastname;
     }
+    //TODO wczytywanie
 }

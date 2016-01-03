@@ -261,8 +261,6 @@ public abstract class Vehicle implements Drawable, Serializable {
         removeFromPreviousCrossingRegister();
         route = l;
         Port port = getLastPort();
-        if(port != null)
-            getLastPort().registerNewTravellingTo(route.get(0),this);
         nextCrossing = 0;
         Point2D p = countSpeed();
         speedX = p.getX();
@@ -270,6 +268,8 @@ public abstract class Vehicle implements Drawable, Serializable {
         rotation = countRotation();
         transform = new Rotate(rotation);
         engine.hitTheRoad(l);
+        if(port != null)
+            getLastPort().registerNewTravellingTo(route.get(0),this);
     }
     public double getRotation(){
         return  rotation;

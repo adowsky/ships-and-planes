@@ -13,10 +13,7 @@ import world.vehicles.Vehicle;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Controller of form to create airliners.
@@ -102,7 +99,7 @@ public class AirlinerFormController implements ChoosingController, Initializable
             return false;
         if(maxCapacity.getText().equals(""))
             return false;
-        if(routeText.getText().equals(""))
+        if(routeText.getText().split("-").length <= 1)
             return false;
         return true;
     }
@@ -119,6 +116,8 @@ public class AirlinerFormController implements ChoosingController, Initializable
 
     @Override
     public void ChoiceHasBeenMade(String item) {
+        String[] arr = routeText.getText().split("-");
+        if(!arr[arr.length - 1].equals(item))
         routeText.appendText("-"+item);
     }
 
@@ -142,6 +141,9 @@ public class AirlinerFormController implements ChoosingController, Initializable
         GridPane gp = new GridPane();
         gp.add(new Label("PESEL: "+p.getPesel()),0,0);
         gp.add(new Label("Age: "+p.getAge()),0 ,1);
+        StringJoiner route = new StringJoiner("-");
+        p.getJourney().getRoute().forEach(e -> route.add(e.toString().split(":")[1].trim()));
+        gp.add(new Label("Route: "+route.toString()),0, 2);
         alert.getDialogPane().setContent(gp);
         alert.showAndWait();
     }
@@ -152,5 +154,8 @@ public class AirlinerFormController implements ChoosingController, Initializable
     public void fillVehicles(Collection<? extends Vehicle> col){
         vehicleView.getItems().clear();
         vehicleView.getItems().addAll(col);
+    }
+    public void clearInformationText(){
+        info.setText("");
     }
 }

@@ -99,6 +99,7 @@ public class FerryBoat extends Ship implements CivilianVehicle {
         return ((lastVisitedPortIndex+1) < route.size()) ? route.get(lastVisitedPortIndex + 1) : route.get(lastVisitedPortIndex);
     }
 
+
     @Override
     public Port getDestination() {
         return getNextPort();

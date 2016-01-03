@@ -119,6 +119,12 @@ public class Airliner extends Airplane implements CivilianVehicle {
     @Override
     public Map<String, String> getProperties() {
         Map<String , String > map = new HashMap<>();
+        map.put("Max Capacity: ",Integer.toString(maxPassengersAmount));
+        map.put("Passengers Amount: ", Integer.toString(passengersList.size()));
+        map.put("Location: ",
+                Double.toString(getLocation().getX()).split("\\.")[0]+"x"+Double.toString(getLocation().getY()).split("\\.")[0]);
+        map.put("ID: ",Integer.toString(getId()));
+        map.put("Staff Amount: ",Integer.toString(getStaffAmount()));
         return map;
     }
 

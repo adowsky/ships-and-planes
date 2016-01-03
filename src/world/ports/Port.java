@@ -90,6 +90,9 @@ public abstract class Port implements Drawable, Cross, Serializable, DestroyList
     public Set<Port> getLandConnectionPorts() {
         return landConnectionPorts;
     }
+    public void setLandConnectionPorts(Set<Port> lcp){
+        landConnectionPorts = lcp;
+    }
 
     @Override
     public double getX() {

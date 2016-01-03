@@ -16,18 +16,21 @@
         <connection name="Lisbon">seaBot seaTop</connection>
         <connection name="Reykjavik">seaBot seaTop</connection>
         <connection name="Luanda">seaBot</connection>
+        <land name="Brasilia"/>
     </harbour>
     <harbour name="Miami" x="203" y="198" >
         <connection name="Lisbon">seaTop</connection>
         <connection name="Reykjavik">seaTop</connection>
         <connection name="Luanda">seaBot</connection>
         <connection name="Salvador">seaBot</connection>
+        <land name="New York"/>
     </harbour>
     <harbour name="Lisbon" x="342" y="167" >
         <connection name="Miami">seaTop</connection>
         <connection name="Reykjavik">seaTop</connection>
         <connection name="Luanda">seaTop seaBot</connection>
         <connection name="Salvador">seaTop seaBot</connection>
+        <land name="Rome"/>
     </harbour>
     <harbour name="Reykjavik" x="317" y="90" >
         <connection name="Salvador">seaTop seaBot</connection>
@@ -46,6 +49,7 @@
         <connection name="Sydney">africa IndianOcean australia</connection>
         <connection name="Kuala Lumpur">africa IndianOcean</connection>
         <connection name="Antananariva">africa</connection>
+        <land name="Salvador"/>
     </c-airport>
     <c-airport name="New York" x="205" y="148">
         <connection name="Brasilia"></connection>
@@ -57,13 +61,14 @@
         <connection name="Sydney">africa IndianOcean australia</connection>
         <connection name="Kuala Lumpur">africa IndianOcean</connection>
         <connection name="Antananariva">africa</connection>
+        <land name="Miami"/>
     </c-airport>
     <c-airport name="Stockholm" x="384" y="93">
         <connection name="New York">germany</connection>
         <connection name="Brasilia">germany africa</connection>
         <connection name="Rome">germany</connection>
         <connection name="Omsk">russia</connection>
-        <connection name="Tokyo">russia georgia pakistan middleAsia china</connection>
+        <connection name="Tokyo">russia georgia pakistan bengal china</connection>
         <connection name="New Delhi">russia georgia pakistan</connection>
         <connection name="Sydney">africa IndianOcean australia</connection>
         <connection name="Kuala Lumpur">africa IndianOcean</connection>
@@ -74,11 +79,12 @@
         <connection name="Stockholm">germany</connection>
         <connection name="Brasilia">africa</connection>
         <connection name="Omsk">georgia</connection>
-        <connection name="Tokyo">georgia pakistan middleAsia china</connection>
+        <connection name="Tokyo">georgia pakistan bengal china</connection>
         <connection name="New Delhi">georgia pakistan</connection>
         <connection name="Sydney">africa IndianOcean australia</connection>
         <connection name="Kuala Lumpur">africa IndianOcean</connection>
         <connection name="Antananariva">africa</connection>
+        <land name="Lisbon"/>
     </c-airport>
     <c-airport name="Omsk" x="492" y="103">
         <connection name="New York">georgia africa</connection>
@@ -93,8 +99,8 @@
     </c-airport>
     <c-airport name="Tokyo" x="619" y="165">
         <connection name="New York">china middleAsia pakistan africa</connection>
-        <connection name="Stockholm">china middleAsia pakistan georgia russia</connection>
-        <connection name="Rome">china middleAsia pakistan georgia</connection>
+        <connection name="Stockholm">china bengal pakistan georgia russia</connection>
+        <connection name="Rome">china bengal pakistan georgia</connection>
         <connection name="Omsk">china</connection>
         <connection name="Brasilia">china middleAsia pakistan africa</connection>
         <connection name="New Delhi">china</connection>

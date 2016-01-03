@@ -25,7 +25,6 @@ public interface CivilianPort {
      * @param passenger Passenger to remove.
      */
     void passengerWentAway(Passenger passenger);
-    //boolean canLand();
 
     /**
      * Manages Passengers after vehicle's arrival to Port.

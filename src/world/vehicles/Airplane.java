@@ -80,5 +80,10 @@ public abstract class Airplane extends Vehicle {
         this.maxFuel = maxFuel;
     }
 
+    @Override
+    public synchronized void move(){
+        super.move();
+        currentFuel -= getSpeed();
+    }
 
 }

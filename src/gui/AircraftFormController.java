@@ -84,10 +84,10 @@ public class AircraftFormController implements ChoosingController, Initializable
     }
     public void lockArmamentType(ArmamentType arm){
         armType.getSelectionModel().select(arm);
-        armType.setEditable(false);
+        armType.setDisable(true);
     }
     public void unlockArmamentType(){
-        armType.setEditable(true);
+        armType.setDisable(false);
     }
 
     /**
@@ -95,7 +95,7 @@ public class AircraftFormController implements ChoosingController, Initializable
      */
     public void enableChoosing(){
         choosing = true;
-        FXMLWindowController.getInstance().onlyCivilianPlanesEnabled();
+        FXMLWindowController.getInstance().onlyMilitaryPlanesEnabled();
         FXMLWindowController.getInstance().setChoosingState(true);
         FXMLWindowController.getInstance().setChoosingTarget(this);
         routeButton.setText("Stop");
@@ -168,7 +168,7 @@ public class AircraftFormController implements ChoosingController, Initializable
             return false;
         if(armType.getSelectionModel().isEmpty())
             return false;
-        if(routeText.getText().equals(""))
+        if(routeText.getText().split("-").length <= 1)
             return false;
         return true;
     }
@@ -195,6 +195,8 @@ public class AircraftFormController implements ChoosingController, Initializable
 
     @Override
     public void ChoiceHasBeenMade(String item) {
+        String[] arr = routeText.getText().split("-");
+        if(!arr[arr.length - 1].equals(item))
         if(routeText.getText().isEmpty())
             routeText.appendText(item);
         else
@@ -217,5 +219,8 @@ public class AircraftFormController implements ChoosingController, Initializable
     public void fillVehicles(Collection<? extends Vehicle> col){
         vehicleView.getItems().clear();
         vehicleView.getItems().addAll(col);
+    }
+    public void clearInformationText(){
+        info.setText("");
     }
 }

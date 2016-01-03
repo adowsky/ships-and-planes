@@ -19,9 +19,9 @@ public class Harbour extends SeaPort implements CivilianPort {
 
     /**
      * Creates Harbour
-     * @param timeToNextDeparture
-     * @param capacity
-     * @param location
+     * @param timeToNextDeparture time to next departure
+     * @param capacity Maximum capacity of port
+     * @param location Location of the Port.
      */
     public Harbour(int timeToNextDeparture, int capacity, Point2D location){
         super(capacity, location);
@@ -30,10 +30,6 @@ public class Harbour extends SeaPort implements CivilianPort {
         this.timeToNextDeparture=timeToNextDeparture;
     }
 
-    @Override
-    public boolean isFull() {
-        return false;
-    }
 
 
     @Override
@@ -46,17 +42,30 @@ public class Harbour extends SeaPort implements CivilianPort {
      * @param vehicle
      * @param <T> type of vehicle.
      */
-    public synchronized  <T extends Ship & CivilianVehicle> void vehicleArrive(T vehicle) {
+    public <T extends Ship & CivilianVehicle> void vehicleArrive(T vehicle) {
         canLand();
         vehicle.arrivedToPort();
         Set<Passenger> pList = vehicle.getVehiclePassengers();
-        passengersService(pList,passengersSet,getLandConnectionPorts());
+        synchronized (this) {
+            passengersService(pList, passengersSet, getLandConnectionPorts());
+        }
         vehicle.clearPassengersList();
         maintainVehicle(vehicle);
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
         vehicleDeparture(vehicle);
     }
 
+    /**
+     * Adds newly produced vehicle to the port.
+     * @param vehicle new Vehicle.
+     * @param <T> type of Vehicle.
+     */
+    public <T extends Ship & CivilianVehicle> void addNewlyProducedVehicle(T vehicle){
+        canLand();
+        vehicle.clearPassengersList();
+        vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
+        vehicleDeparture(vehicle);
+    }
     /**
      * Start maintenance of vehicle
      * @param vehicle vehicle to maintain.
@@ -73,11 +82,13 @@ public class Harbour extends SeaPort implements CivilianPort {
         Port nextPort = vehicle.getNextPort();
         Collection<Passenger> newPassengersList = new HashSet<>();
         for (Passenger p : passengersSet){
-            if(p.getNextPortToVisit() == nextPort){
+            if(!p.isWaiting() && p.getNextPortToVisit() == nextPort){
                 newPassengersList.add(p);
             }
         }
-        passengersSet.removeAll(newPassengersList);
+        synchronized (this) {
+            passengersSet.removeAll(newPassengersList);
+        }
         vehicle.addPassengers(newPassengersList);
         vehicle.setReadyToTravel();
         shipsList.remove(vehicle);
@@ -131,6 +142,10 @@ public class Harbour extends SeaPort implements CivilianPort {
             }
         }
         return true;
+    }
+    @Override
+    public boolean isFull(){
+        return shipsList.size()>= getMaxCapacity();
     }
 
     @Override

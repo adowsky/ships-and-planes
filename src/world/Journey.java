@@ -90,6 +90,7 @@ public class Journey implements Serializable{
      */
     public void setRoute(List<CivilianPort> route) {
         this.route = route;
+        lastVisitedPortIndex = 0;
     }
 
     /**

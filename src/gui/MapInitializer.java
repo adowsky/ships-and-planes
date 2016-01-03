@@ -35,6 +35,10 @@ public class MapInitializer implements Serializable{
     private Map<String, Harbour> seaPorts;
     private Map<String, CivilianAirport> airPorts;
     private Map<String, MilitaryAirport> mAirPorts;
+    private Map<String, Set<String>> landConnections;
+    private Set<PortButton<Harbour>> harboursBtns;
+    private Set<PortButton<CivilianAirport>> cAirportBtns;
+    private Set<PortButton<MilitaryAirport>> mAirportBtns;
 
     /**
      * Creates new MapInitializer with source specified in parm.
@@ -53,18 +57,44 @@ public class MapInitializer implements Serializable{
         seaPorts = new HashMap<>();
         airPorts = new HashMap<>();
         mAirPorts = new HashMap<>();
+        landConnections = new HashMap<>();
     }
-
+    public void init(){
+        getHarbours();
+        getCivilianAirports();
+        getMilitaryAirports();
+        setLandConnections();
+    }
+    public void setLandConnections(){
+        for(CivilianAirport a : airPorts.values()){
+            String name = a.getName();
+            Set<String> set = landConnections.get(name);
+            Set<Port> conn = new HashSet<>();
+            for(String s : set){
+                conn.add(seaPorts.get(s));
+            }
+            a.setLandConnectionPorts(conn);
+        }
+        for(Harbour a : seaPorts.values()){
+            String name = a.getName();
+            Set<String> set = landConnections.get(name);
+            Set<Port> conn = new HashSet<>();
+            for(String s : set){
+                conn.add(airPorts.get(s));
+            }
+            a.setLandConnectionPorts(conn);
+        }
+    }
     /**
      * Gathers harbours from xml file.
      * @return set of harbour from source file.
      */
-    public Set<PortButton<Harbour>> getHarbours(){
+    public void getHarbours(){
         Set<PortButton<Harbour>> set = new HashSet<>();
         List<PortButton> list = new ArrayList<>();
         List<Map<String,String[]>> routes= new ArrayList<>();
         if(doc == null)
-            return set;
+            return;
         if(seaCrossings == null)
             gatherCrossings(MoveType.SEA);
         NodeList buttons = doc.getElementsByTagName("harbour");
@@ -75,12 +105,13 @@ public class MapInitializer implements Serializable{
             setLayouts(btn);
             btn.setModel(gatherHarbour(new Point2D(btn.getLayoutX(),btn.getLayoutY())));
             list.add(btn);
+            landConnections.put(el.getAttribute("name"),getLandConnections());
             routes.add(getMapOfRoutesAsStrings());
             set.add(btn);
             seaPorts.put(el.getAttribute("name"),btn.getModel());
         }
         setWays(MoveType.SEA, AvailabilityType.CIVILIAN, list, routes);
-        return set;
+        harboursBtns = set;
     }
 
     /**
@@ -157,20 +188,30 @@ public class MapInitializer implements Serializable{
             map.put(target,route);
         }
         return map;
-
+    }
+    private Set<String> getLandConnections(){
+        NodeList nodes = el.getElementsByTagName("land");
+        Set<String> list = new HashSet<>();
+        for (int i = 0; i<nodes.getLength();++i){
+            Node n = nodes.item(i);
+            Element e = (Element)n;
+            String target = e.getAttribute("name");
+            list.add(target);
+        }
+        return list;
     }
 
     /**
      * Gathers civilian airports from source file.
      * @return civilian airports.
      */
-    public synchronized Set<PortButton<CivilianAirport>> getCivilianAirports(){
+    public synchronized void getCivilianAirports(){
 
         Set<PortButton<CivilianAirport>> set = new HashSet<>();
         List<PortButton> list = new ArrayList<>();
         List<Map<String,String[]>> routes= new ArrayList<>();
         if(doc == null)
-            return set;
+            return;
         if(airCrossings == null)
             gatherCrossings(MoveType.AIR);
         NodeList buttons = doc.getElementsByTagName("c-airport");
@@ -181,12 +222,14 @@ public class MapInitializer implements Serializable{
             setLayouts(btn);
             btn.setModel(gatherCivilianAirport(new Point2D(btn.getLayoutX(),btn.getLayoutY())));
             list.add(btn);
+
+            landConnections.put(el.getAttribute("name"),getLandConnections());
             routes.add(getMapOfRoutesAsStrings());
             airPorts.put(el.getAttribute("name"),btn.getModel());
             set.add(btn);
         }
         setWays(MoveType.AIR, AvailabilityType.CIVILIAN, list, routes);
-        return set;
+        cAirportBtns = set;
     }
 
     /**
@@ -205,6 +248,7 @@ public class MapInitializer implements Serializable{
         for(int i = 0; i<list.size();++i){
             Map<Port,List<Cross>> route = new HashMap<>();
             Map<String,String[]> stringRoutes = routes.get(i);
+            Set<Port> landSets = new HashSet<>();
             for(String s : stringRoutes.keySet()){
                 List<Cross> rt = new LinkedList<>();
                 String[] stringRoute = stringRoutes.get(s);
@@ -216,15 +260,18 @@ public class MapInitializer implements Serializable{
                 if(type == MoveType.SEA && atype == AvailabilityType.CIVILIAN) {
                     rt.add(seaPorts.get(s));
                     route.put(seaPorts.get(s), rt);
+
                 }else if(type == MoveType.AIR && atype == AvailabilityType.CIVILIAN){
                     rt.add(airPorts.get(s));
                     route.put(airPorts.get(s), rt);
+
                 }else if(type == MoveType.AIR && atype == AvailabilityType.MILITARY){
                     rt.add(mAirPorts.get(s));
                     route.put(mAirPorts.get(s), rt);
                 }
             }
             (list.get(i)).getModel().setWays(route);
+
         }
     }
 
@@ -256,13 +303,13 @@ public class MapInitializer implements Serializable{
      * Gathers military airports from source file.
      * @return set of military airports.
      */
-    public synchronized Set<PortButton<MilitaryAirport>> getMilitaryAirports(){
+    public synchronized void getMilitaryAirports(){
 
         Set<PortButton<MilitaryAirport>> set = new HashSet<>();
         List<PortButton> list = new ArrayList<>();
         List<Map<String,String[]>> routes= new ArrayList<>();
         if(doc == null)
-            return set;
+            return;
         if(airCrossings == null)
             gatherCrossings(MoveType.AIR);
         NodeList buttons = doc.getElementsByTagName("m-airport");
@@ -278,7 +325,7 @@ public class MapInitializer implements Serializable{
             set.add(btn);
         }
         setWays(MoveType.AIR, AvailabilityType.MILITARY, list, routes);
-        return set;
+        mAirportBtns = set;
     }
 
     /**
@@ -367,5 +414,17 @@ public class MapInitializer implements Serializable{
      * @return map of miliatry airports
      */
     public Map<String, MilitaryAirport> getMAirPorts() {return mAirPorts;}
+
+    public Set<PortButton<Harbour>> getHarboursBtns() {
+        return harboursBtns;
+    }
+
+    public Set<PortButton<CivilianAirport>> getcAirportBtns() {
+        return cAirportBtns;
+    }
+
+    public Set<PortButton<MilitaryAirport>> getmAirportBtns() {
+        return mAirportBtns;
+    }
 }
 
