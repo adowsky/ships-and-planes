@@ -39,7 +39,7 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
      * moves object out of the cross
      */
     public void moveOut(){
-        while(cross.intersect(c.getBounds())){
+        while(cross.intersect(c.getBounds()) && !Thread.currentThread().isInterrupted()){
             move(c);
         }
     }
@@ -75,7 +75,7 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
      * Moves object to the center of the cross.
      */
     public void toTheCenter(){
-        while(!checkStopCondition(c)){
+        while(!checkStopCondition(c) && Thread.currentThread().isInterrupted()){
             move(c);
         }
     }

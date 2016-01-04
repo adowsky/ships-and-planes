@@ -231,6 +231,10 @@ public abstract class Vehicle implements Drawable, Serializable {
     public Cross getNextCrossing(){
         return (!route.isEmpty()) ? route.get(nextCrossing) : getDestination();
     }
+    public void decreaseCrossingIndex(){
+        if(nextCrossing > 0)
+            nextCrossing--;
+    }
 
     /**
      * Returns if it's end of route
@@ -466,6 +470,7 @@ public abstract class Vehicle implements Drawable, Serializable {
     public void destroy(){
 
         engine.destroy();
+        removeFromPreviousCrossingRegister();
         destroyListeners.forEach(e -> e.objectDestroyed(this));
     }
 

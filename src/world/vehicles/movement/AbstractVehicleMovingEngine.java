@@ -21,7 +21,7 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
     private transient Object routKeeper;
     private transient Object movingGate;
     private transient boolean running;
-
+    private boolean onCrossing;
     private Vehicle vehicleInFront;
     private Cross current;
     private transient Thread thread;
@@ -32,8 +32,8 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
         this.movingGate = new Object();
         routKeeper = new Object();
         SynchronizedUpdateNotifier.INSTANCE.addToList(this);
-        System.out.println("Dodałę");
         running = false;
+        onCrossing = false;
     }
 
     @Override
@@ -123,8 +123,9 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
             }
             else{
                 if (current == null) {
-                    if(!vehicle.isForcedRouteChange() && vehicle.getLastPort()!= null)
+                    if(!vehicle.isForcedRouteChange() && vehicle.getLastPort()!= null) {
                         vehicle.getLastPort().goThrough(vehicle);
+                    }
                     setFrontVehicle();
                     vehicle.moved();
                     for (Cross o : route) {
@@ -134,8 +135,11 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
                             current = o;
                         }
                         moveOnTheLine();
-                        if (!isFinish())
+                        if (!isFinish()) {
+                            onCrossing = true;
                             o.goThrough(vehicle);
+                            onCrossing = false;
+                        }
                         else {
                             vehicle.nextCrossing();
                         }
@@ -147,9 +151,16 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
                 }else{
                     ListIterator<Cross> iter = route.listIterator();
                     Cross item = null;
+                    if(vehicle.getNextCrossing() != current)
+                        vehicle.decreaseCrossingIndex();
                     while(iter.hasNext() && item!= current)
                         item = iter.next();
-                    iter.previous();
+                    if(onCrossing) {
+                        current.goThrough(vehicle);
+                        onCrossing = false;
+                    }
+                    else
+                        iter.previous();
                     while (iter.hasNext()){
                         if(thread.isInterrupted())
                             break;
@@ -157,8 +168,11 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
                             current = iter.next();
                         }
                         moveOnTheLine();
-                        if (!vehicle.isOnRouteFinish())
+                        if (!vehicle.isOnRouteFinish()) {
+                            onCrossing = true;
                             current.goThrough(vehicle);
+                            onCrossing = false;
+                        }
                         else {
                             vehicle.nextCrossing();
                         }
