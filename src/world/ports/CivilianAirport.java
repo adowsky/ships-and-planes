@@ -41,6 +41,8 @@ public class CivilianAirport extends AirPort implements CivilianPort{
     public synchronized <T extends Airplane & CivilianVehicle> void vehicleArrive(T vehicle) {
         canLand();
         vehicle.arrivedToPort();
+        planesList.add(vehicle);
+        vehicle.addDestroyListener(this);
         Set<Passenger> pList = vehicle.getVehiclePassengers();
         Set<Port> possiblePorts = getLandConnectionPorts();
         passengersService(pList, passengersSet, possiblePorts);
@@ -55,6 +57,8 @@ public class CivilianAirport extends AirPort implements CivilianPort{
      */
     public <T extends Airplane & CivilianVehicle> void addNewlyProducedVehicle(T vehicle){
         canLand();
+        planesList.add(vehicle);
+        vehicle.addDestroyListener(this);
         vehicle.clearPassengersList();
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
         vehicle.refuel();
@@ -119,12 +123,13 @@ public class CivilianAirport extends AirPort implements CivilianPort{
      * Process vehicle departure.
      * @param vehicle
      */
-    public void vehicleDeparture(CivilianVehicle vehicle) {
+    public  <T extends Airplane & CivilianVehicle> void vehicleDeparture(T vehicle) {
         Collection<Passenger> passengers = generatePassengersCollectionForVehicle(vehicle);
         vehicle.addPassengers(passengers);
         passengersSet.removeAll(passengers);
         vehicle.setReadyToTravel();
         planesList.remove(vehicle);
+        vehicle.removeDestroyListener(this);
     }
 
     private Collection<Passenger> generatePassengersCollectionForVehicle(CivilianVehicle vehicle){

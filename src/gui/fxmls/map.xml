@@ -177,5 +177,6 @@
     <air-crossing name="bengal" x="531" y="228" radius="10" />
     <!--harbour - military airport connections-->
     <carrier-connection from="Salvador" to="Etiopia">africa</carrier-connection>
+    <carrier-connection from="Lisbon" to="Siberia">africa bengal china</carrier-connection>
 </map>
 

@@ -9,6 +9,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import world.Passenger;
 import world.WorldConstants;
+import world.ports.CivilianAirport;
+import world.ports.MilitaryAirport;
 import world.vehicles.Vehicle;
 
 import java.io.Serializable;
@@ -22,7 +24,7 @@ public class AirlinerFormController implements ChoosingController, Initializable
     private static AirlinerFormController instance;
     private final String ERROR_MSG = "Error occurred! Check all form fields and try again!";
     private final String SUCCESS_MSG = "Airliner has been created!";
-
+    private Random rand;
     private boolean choosing = false;
     @FXML
     private TextField maxFuel;
@@ -129,6 +131,7 @@ public class AirlinerFormController implements ChoosingController, Initializable
         }
         vehicleView.setItems(FXCollections.observableArrayList());
         passengerListView.setItems(FXCollections.observableArrayList());
+        rand = new Random();
     }
     @FXML
     public void showPassenger(){
@@ -157,5 +160,32 @@ public class AirlinerFormController implements ChoosingController, Initializable
     }
     public void clearInformationText(){
         info.setText("");
+    }
+    public void randomFill(List<CivilianAirport> list, CivilianAirport mair){
+        staffAmount.setText(String.valueOf(rand.nextInt(51)));
+        maxFuel.setText(String.valueOf(rand.nextInt(((int)WorldConstants.MAX_FUEL_VALUE)*4+1000)));
+        maxCapacity.setText(String.valueOf(rand.nextInt(100)));
+        List<CivilianAirport> ports = new ArrayList<>();
+        if(list.size()<4)
+            list.forEach(e ->{
+                if(e != mair)
+                    ports.add(e);
+            });
+        else{
+            for(int i=0;i<2;i++){
+                boolean found = false;
+                while(!found){
+                    int index = rand.nextInt(list.size());
+                    if(!ports.contains(list.get(index))){
+                        found = true;
+                        ports.add(list.get(index));
+                    }
+
+                }
+            }
+        }
+        ports.forEach(e -> {
+            ChoiceHasBeenMade(e.getName());
+        });
     }
 }

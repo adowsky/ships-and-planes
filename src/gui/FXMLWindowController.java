@@ -49,8 +49,7 @@ public class FXMLWindowController implements Initializable {
     private VehicleDetails vehicleDetails;
     private EventHandler<ActionEvent> civilianShipClicked;
     private EventHandler<ActionEvent> militaryShipClicked;
-    private EventHandler<ActionEvent> militaryPlaneClicked;
-    private EventHandler<ActionEvent> civilianPlaneClicked;
+
     private ChoosingController choosingTarget;
     private boolean choosingState = false;
     private VehicleButton fromSea = null;
@@ -58,6 +57,9 @@ public class FXMLWindowController implements Initializable {
     private Set<PortButton<Harbour>> harbourButtons;
     private Set<PortButton<CivilianAirport>> CAirportButtons;
     private Set<PortButton<MilitaryAirport>> MAirportButtons;
+    private List<MilitaryAirport> militaryAirports;
+    private List<CivilianAirport> civilianAirports;
+    private List<Harbour> harbours;
     private PassengerGenerator passengerGenerator;
 
     /**
@@ -103,6 +105,8 @@ public class FXMLWindowController implements Initializable {
                 AircraftFormController.getInstance().setPortName(source.getModel().getClass());
                 AircraftFormController.getInstance().setFromSea((AircraftCarrier)source.getModel());
                 AircraftFormController.getInstance().lockArmamentType(((AircraftCarrier)source.getModel()).getArmament());
+                AircraftFormController.getInstance().fillVehicles(((AircraftCarrier)source.getModel()).getProducedPlanes());
+                AircraftFormController.getInstance().randomFill(militaryAirports, null);
                 list.clear();
                 Map<String, String> propertiesMap = source.getModel().getProperties();
                 int i =propertiesMap.size()-1;
@@ -122,6 +126,13 @@ public class FXMLWindowController implements Initializable {
             harbourButtons = initializer.getHarboursBtns();
             CAirportButtons = initializer.getcAirportBtns();
             MAirportButtons = initializer.getmAirportBtns();
+
+            harbours = new LinkedList<>();
+            harbourButtons.forEach(e -> harbours.add(e.getModel()));
+            civilianAirports = new LinkedList<>();
+            CAirportButtons.forEach(e -> civilianAirports.add(e.getModel()));
+            militaryAirports = new LinkedList<>();
+            MAirportButtons.forEach(e -> militaryAirports.add(e.getModel()));
 
             harbourButtons.forEach((btn) ->{btn.getStyleClass().add("seaport-button");
             btn.setOnAction(event -> seaPortClick(btn));});
@@ -177,6 +188,7 @@ public class FXMLWindowController implements Initializable {
         FerryFormController.getInstance().fillPassengers(source.getModel().getPassengers());
         FerryFormController.getInstance().fillVehicles(source.getModel().getVehicles());
         FerryFormController.getInstance().clearInformationText();
+        FerryFormController.getInstance().randomFill(harbours, (Harbour)source.getModel());
         Platform.runLater(()->controlPanel.setCenter(civilianPlane));
     }
 
@@ -194,6 +206,7 @@ public class FXMLWindowController implements Initializable {
         AirlinerFormController.getInstance().fillPassengers(source.getModel().getPassengers());
         AirlinerFormController.getInstance().fillVehicles(source.getModel().getVehicles());
         AirlinerFormController.getInstance().clearInformationText();
+        AirlinerFormController.getInstance().randomFill(civilianAirports, (CivilianAirport)source.getModel());
         Platform.runLater(() -> controlPanel.setCenter(civilianAirForm));
     }
     /**
@@ -211,6 +224,7 @@ public class FXMLWindowController implements Initializable {
         AircraftFormController.getInstance().setFromSea(null);
         AircraftFormController.getInstance().unlockArmamentType();
         AircraftFormController.getInstance().clearInformationText();
+        AircraftFormController.getInstance().randomFill(militaryAirports, (MilitaryAirport)source.getModel());
         Platform.runLater(() -> controlPanel.setCenter(militaryAirForm));
     }
 
@@ -375,6 +389,7 @@ public class FXMLWindowController implements Initializable {
     }
     @FXML public void loadFromFile(){
         try(ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(SAVE_FILE)))){
+            SynchronizedUpdateNotifier.INSTANCE.clear();
             Set<Serializable> serializables = (Set<Serializable>)in.readObject();
             List<Notifiable> list = (List<Notifiable>)in.readObject();
             SerializationParser parser = new SerializationParser(serializables);
@@ -391,7 +406,7 @@ public class FXMLWindowController implements Initializable {
             Set<VehicleButton> vBtns = finishParsingVehicles(parser.getVehicleButtonsWithName());
             mapPane.getChildren().addAll(vBtns);
             vBtns.forEach(e -> SerializeContainer.getInstance().addObjectToSerialize(e.getModel()));
-            SynchronizedUpdateNotifier.INSTANCE.addNewList(list);
+
         }catch (IOException | ClassNotFoundException ex){
             ex.printStackTrace();
         }
@@ -582,6 +597,7 @@ public class FXMLWindowController implements Initializable {
          * @param portsSource
          */
         public void setEditableRoute( Map<String , ? extends Port> portsSource) {
+
             add(new Text("Route"), 0, 0);
             List<String> list = btn.getModel().getTravelRoute();
             joiner = new StringJoiner("\n");

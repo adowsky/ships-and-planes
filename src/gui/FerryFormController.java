@@ -10,6 +10,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import world.Journey;
 import world.Passenger;
+import world.WorldConstants;
+import world.ports.CivilianAirport;
+import world.ports.Harbour;
 import world.vehicles.FerryBoat;
 import world.vehicles.Vehicle;
 
@@ -24,7 +27,7 @@ public class FerryFormController implements ChoosingController, Initializable, S
     private static FerryFormController instance;
     private final String ERROR_MSG = "Error occurred! Check all form fields and try again!";
     private final String SUCCESS_MSG = "Ferryboat has been created!";
-
+    private Random rand;
     private boolean choosing = false;
     @FXML private TextField company;
     @FXML private TextField maxCapacity;
@@ -142,6 +145,7 @@ public class FerryFormController implements ChoosingController, Initializable, S
         }
         passengerListView.setItems(FXCollections.observableArrayList());
         vehicleView.setItems(FXCollections.observableArrayList());
+        rand = new Random();
     }
     public void fillPassengers(Collection<Passenger> col){
         passengerListView.getItems().clear();
@@ -153,5 +157,37 @@ public class FerryFormController implements ChoosingController, Initializable, S
     }
     public void clearInformationText(){
         info.setText("");
+    }
+    public void randomFill(List<Harbour> list, Harbour mair){
+        CompanyExamples[] cmpy = CompanyExamples.values();
+        company.setText(cmpy[rand.nextInt(cmpy.length)].toString());
+        maxCapacity.setText(String.valueOf(rand.nextInt(100)));
+        speed.setText(String.valueOf(rand.nextInt(5)+1));
+        List<Harbour> ports = new ArrayList<>();
+        if(list.size()<4)
+            list.forEach(e ->{
+                if(e != mair)
+                    ports.add(e);
+            });
+        else{
+            for(int i=0;i<2;i++){
+                boolean found = false;
+                while(!found){
+                    int index = rand.nextInt(list.size());
+                    if(!ports.contains(list.get(index))){
+                        found = true;
+                        ports.add(list.get(index));
+                    }
+
+                }
+            }
+        }
+        ports.forEach(e -> {
+            ChoiceHasBeenMade(e.getName());
+        });
+        info.setText("");
+    }
+    private enum CompanyExamples{
+        Riot, Comodo, AirLines, WoodoLines, TerroLines, KillerLines
     }
 }

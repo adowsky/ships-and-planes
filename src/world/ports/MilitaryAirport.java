@@ -40,6 +40,7 @@ public class MilitaryAirport extends AirPort {
             return;
         plane.arrivedToPort();
         planesList.add(plane);
+        plane.addDestroyListener(this);
         maintainAircraft(plane);
         plane.setRoute(getRouteToPort(plane.getNextPort()));
         vehicleDeparture(plane);
@@ -51,6 +52,8 @@ public class MilitaryAirport extends AirPort {
      */
     public void addNewlyProducedVehicle(MilitaryAircraft vehicle){
         canLand();
+        vehicle.addDestroyListener(this);
+        planesList.add(vehicle);
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
         vehicleDeparture(vehicle);
     }
@@ -85,6 +88,7 @@ public class MilitaryAirport extends AirPort {
     private void vehicleDeparture(MilitaryAircraft vehicle){
         vehicle.setReadyToTravel();
         planesList.remove(vehicle);
+        vehicle.removeDestroyListener(this);
     }
 
     @Override

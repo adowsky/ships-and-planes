@@ -30,8 +30,9 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
         this.vehicle = vehicle;
         vehicleInFront = null;
         this.movingGate = new Object();
-        SynchronizedUpdateNotifier.INSTANCE.addToList(this);
         routKeeper = new Object();
+        SynchronizedUpdateNotifier.INSTANCE.addToList(this);
+        System.out.println("Dodałę");
         running = false;
     }
 
@@ -48,6 +49,7 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
         }
         synchronized (this) {
             if (!running) {
+                SynchronizedUpdateNotifier.INSTANCE.addToList(this);
                 running = true;
                 if(thread != null)
                     thread.stop();
@@ -62,6 +64,8 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
     @Override
     public synchronized void stop() {
         running = false;
+        if(thread == null)
+            return;
         thread.interrupt();
         if(thread.isAlive())
             thread.stop();
@@ -119,7 +123,7 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
             }
             else{
                 if (current == null) {
-                    if(!vehicle.isForcedRouteChange())
+                    if(!vehicle.isForcedRouteChange() && vehicle.getLastPort()!= null)
                         vehicle.getLastPort().goThrough(vehicle);
                     setFrontVehicle();
                     vehicle.moved();

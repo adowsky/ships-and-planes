@@ -1,6 +1,7 @@
 package world.vehicles;
 
 import javafx.geometry.Point2D;
+import world.RegisteringPortAdapter;
 import world.ports.MilitaryAirport;
 import world.ports.Port;
 
@@ -9,11 +10,13 @@ import java.util.*;
 /**
  * Represents military aircraft.
  */
-public class MilitaryAircraft extends Airplane {
+public class
+MilitaryAircraft extends Airplane {
     private ArmamentType armamentType;
     private List<MilitaryAirport> route;
     private List<MilitaryAirport> newRoute;
     private int lastVisitedPortIndex;
+    private Port portAdapter;
     private boolean fromSea;
     private boolean routeChanged;
     private boolean modifyRoute;
@@ -50,6 +53,7 @@ public class MilitaryAircraft extends Airplane {
     public void arrivedToPort(){
         super.arrivedToPort();
         lastVisitedPortIndex++;
+        fromSea = false;
     }
     @Override
     public void Draw() {
@@ -58,10 +62,6 @@ public class MilitaryAircraft extends Airplane {
     @Override
     public MilitaryAirport getNextPort() {
         if(lastVisitedPortIndex == route.size()-1){
-            if(fromSea) {
-                route.remove(route.size() - 1);
-                fromSea = false;
-            }
             if(modifyRoute){
                 route.remove(0);
                 modifyRoute = false;
@@ -100,7 +100,7 @@ public class MilitaryAircraft extends Airplane {
     @Override
     public Port getLastPort() {
         if(lastVisitedPortIndex<0)
-            return null;
+            return portAdapter;
         return route.get(lastVisitedPortIndex);
     }
 
@@ -130,6 +130,10 @@ public class MilitaryAircraft extends Airplane {
 
         }
         super.maintenanceStart(sleepTime);
+    }
+    public void setAbstractStartRoute(RegisteringPortAdapter adapter){
+        portAdapter = adapter;
+        setLocation(adapter.getX(),adapter.getY());
     }
 
 }

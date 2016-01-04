@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import world.WorldConstants;
+import world.ports.MilitaryAirport;
 import world.vehicles.AircraftCarrier;
 import world.vehicles.ArmamentType;
 import world.vehicles.MilitaryAircraft;
@@ -15,10 +16,7 @@ import world.vehicles.Vehicle;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Controller of form to create new Aircraft.
@@ -30,6 +28,7 @@ public class AircraftFormController implements ChoosingController, Initializable
     private final String SUCCESS_MSG = "Aircraft has been created!";
     private AircraftCarrier fromSea = null;
     private boolean choosing = false;
+    private Random rand;
     @FXML private TextField maxFuel;
     @FXML private TextField staffAmount;
     @FXML private Button routeButton;
@@ -63,6 +62,7 @@ public class AircraftFormController implements ChoosingController, Initializable
         if(vehicleView.getSelectionModel().getSelectedItem() == null)
             return;
         vehicleView.getSelectionModel().getSelectedItem().destroy();
+
     }
 
     /**
@@ -215,6 +215,7 @@ public class AircraftFormController implements ChoosingController, Initializable
         }
 
         armType.setItems(list);
+        rand = new Random();
     }
     public void fillVehicles(Collection<? extends Vehicle> col){
         vehicleView.getItems().clear();
@@ -222,5 +223,32 @@ public class AircraftFormController implements ChoosingController, Initializable
     }
     public void clearInformationText(){
         info.setText("");
+    }
+    public void randomFill(List<MilitaryAirport> list, MilitaryAirport mair){
+        staffAmount.setText(String.valueOf(rand.nextInt(51)));
+        maxFuel.setText(String.valueOf(rand.nextInt(((int)WorldConstants.MAX_FUEL_VALUE)*4+1000)));
+        armType.getSelectionModel().select(rand.nextInt(armType.getItems().size()));
+        List<MilitaryAirport> ports = new ArrayList<>();
+        if(list.size()<4)
+            list.forEach(e ->{
+                if(e != mair)
+                    ports.add(e);
+            });
+        else{
+            for(int i=0;i<2;i++){
+                boolean found = false;
+                while(!found){
+                    int index = rand.nextInt(list.size());
+                    if(!ports.contains(list.get(index))){
+                        found = true;
+                        ports.add(list.get(index));
+                    }
+
+                }
+            }
+        }
+        ports.forEach(e -> {
+            ChoiceHasBeenMade(e.getName());
+        });
     }
 }

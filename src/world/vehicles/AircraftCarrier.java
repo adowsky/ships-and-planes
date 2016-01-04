@@ -2,6 +2,7 @@ package world.vehicles;
 
 import javafx.geometry.Point2D;
 import world.Cross;
+import world.RegisteringPortAdapter;
 import world.ports.Harbour;
 import world.ports.MilitaryAirport;
 import world.ports.Port;
@@ -20,6 +21,7 @@ public class AircraftCarrier extends Ship implements Serializable, DestroyListen
     private Port lastVisitedPort;
     private Port nextPort;
     private static Map<Port, Map<Port, List<Cross>>> flightRoutes;
+    private static Map<Port, RegisteringPortAdapter> adapters;
     /**
      * Creates airport.
      * @param location
@@ -45,6 +47,15 @@ public class AircraftCarrier extends Ship implements Serializable, DestroyListen
     }
     public static void setFlightRoutes(Map<Port, Map<Port, List<Cross>>> map ){
         flightRoutes = map;
+        map.keySet().forEach((e)->
+            addAdapter(e, new RegisteringPortAdapter(e.getLocation()))
+        );
+    }
+    public static void addAdapter(Port port, RegisteringPortAdapter adapter){
+        if(adapters == null)
+            adapters = new HashMap<>();
+        adapters.put(port, adapter);
+
     }
     /**
      * Sets armament type.
@@ -136,7 +147,8 @@ public class AircraftCarrier extends Ship implements Serializable, DestroyListen
         producedPlanes.forEach((o) ->{
             List<Cross> route = map.get(o.getNextPort());
             if(route != null){
-                o.setLocation(getLocation().getX(),getLocation().getY());
+                o.removeDestroyListener(this);
+                o.setAbstractStartRoute(adapters.get(getNextPort()));
                 o.setRoute(route);
                 o.setReadyToTravel();
                 toRemove.add(o);
@@ -151,6 +163,11 @@ public class AircraftCarrier extends Ship implements Serializable, DestroyListen
      */
     public void addProducedPlane(MilitaryAircraft plane){
         producedPlanes.add(plane);
+        plane.addDestroyListener(this);
+    }
+
+    public List<MilitaryAircraft> getProducedPlanes() {
+        return producedPlanes;
     }
 
     @Override

@@ -119,5 +119,6 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         monitor = new Object();
+        SynchronizedUpdateNotifier.INSTANCE.addToList(this);
     }
 }

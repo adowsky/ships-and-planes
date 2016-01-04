@@ -118,6 +118,11 @@ public abstract class Vehicle implements Drawable, Serializable {
             destroyListeners = new LinkedList<>();
         destroyListeners.add(l);
     }
+    public void removeDestroyListener(DestroyListener l){
+        if(destroyListeners == null)
+            return;
+        destroyListeners.remove(l);
+    }
     private boolean transformCondition(){
         return speedX<0;
     }
@@ -269,8 +274,13 @@ public abstract class Vehicle implements Drawable, Serializable {
         rotation = countRotation();
         transform = new Rotate(rotation);
         engine.hitTheRoad(l);
-        if(port != null && !forcedRouteChange)
-            getLastPort().registerNewTravellingTo(route.get(0),this);
+        if(!forcedRouteChange) {
+            if (port != null)
+                getLastPort().registerNewTravellingTo(route.get(0), this);
+            else{
+
+            }
+        }
 
     }
     public double getRotation(){
@@ -454,6 +464,7 @@ public abstract class Vehicle implements Drawable, Serializable {
      * Destroys vehicle and its components.
      */
     public void destroy(){
+
         engine.destroy();
         destroyListeners.forEach(e -> e.objectDestroyed(this));
     }

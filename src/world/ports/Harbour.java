@@ -30,8 +30,6 @@ public class Harbour extends SeaPort implements CivilianPort {
         this.timeToNextDeparture=timeToNextDeparture;
     }
 
-
-
     @Override
     public void Draw() {
 
@@ -44,7 +42,9 @@ public class Harbour extends SeaPort implements CivilianPort {
      */
     public <T extends Ship & CivilianVehicle> void vehicleArrive(T vehicle) {
         canLand();
+        shipsList.add(vehicle);
         vehicle.arrivedToPort();
+        vehicle.addDestroyListener(this);
         Set<Passenger> pList = vehicle.getVehiclePassengers();
         synchronized (this) {
             passengersService(pList, passengersSet, getLandConnectionPorts());
@@ -62,6 +62,7 @@ public class Harbour extends SeaPort implements CivilianPort {
      */
     public <T extends Ship & CivilianVehicle> void addNewlyProducedVehicle(T vehicle){
         canLand();
+        shipsList.add(vehicle);
         vehicle.clearPassengersList();
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
         vehicleDeparture(vehicle);
@@ -78,7 +79,7 @@ public class Harbour extends SeaPort implements CivilianPort {
      * Services departure of vehicle.
      * @param vehicle vehicle that is going to departure.
      */
-    private void vehicleDeparture(CivilianVehicle vehicle){
+    private <T extends Ship & CivilianVehicle> void vehicleDeparture(T vehicle){
         Port nextPort = vehicle.getNextPort();
         Collection<Passenger> newPassengersList = new HashSet<>();
         for (Passenger p : passengersSet){
@@ -92,6 +93,7 @@ public class Harbour extends SeaPort implements CivilianPort {
         vehicle.addPassengers(newPassengersList);
         vehicle.setReadyToTravel();
         shipsList.remove(vehicle);
+        vehicle.removeDestroyListener(this);
     }
 
     @Override

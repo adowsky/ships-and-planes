@@ -4,8 +4,10 @@ import gui.VehicleButton;
 import world.WorldConstants;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Managing and synchronizing updates of Moving Engines.
@@ -13,7 +15,7 @@ import java.util.List;
 public enum SynchronizedUpdateNotifier implements Runnable, Serializable{
     INSTANCE;
 
-    private volatile List<Notifiable> notificationList = new LinkedList<>();
+    private Set<Notifiable> notificationList = new HashSet<>();
     private final double UPDATES_PER_MILLIS = WorldConstants.UPDATES_PER_SEC / 1000.;
     SynchronizedUpdateNotifier(){
         Thread t= new Thread(this);
@@ -29,6 +31,7 @@ public enum SynchronizedUpdateNotifier implements Runnable, Serializable{
     public synchronized void addToList(Notifiable e){
         notificationList.add(e);
     }
+    public synchronized void clear(){ notificationList.clear();}
 
     /**
      * Remove object from notification list.
@@ -85,7 +88,7 @@ public enum SynchronizedUpdateNotifier implements Runnable, Serializable{
      * Sets new Notification list.
      * @param x new Notification list.
      */
-    public void addNewList(List<Notifiable> x){
+    public void addNewList(Set<Notifiable> x){
         notificationList = x;
     }
 }

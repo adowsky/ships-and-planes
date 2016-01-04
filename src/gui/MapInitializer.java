@@ -6,10 +6,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import world.AvailabilityType;
-import world.Cross;
-import world.Crossing;
-import world.MoveType;
+import world.*;
 import world.ports.CivilianAirport;
 import world.ports.Harbour;
 import world.ports.MilitaryAirport;
@@ -28,7 +25,7 @@ public class MapInitializer implements Serializable{
     private DocumentBuilder builder;
     private Document doc;
     private volatile Element el;
-    private final int DEFAULT_SLEEP_TIME = 500;
+    private final int DEFAULT_SLEEP_TIME = 1000;
     private final int DEFAULT_CAPACITY = 10;
     private Map<String, Cross> seaCrossings;
     private Map<String, Cross> airCrossings;
@@ -386,6 +383,7 @@ public class MapInitializer implements Serializable{
             if(portTo == null)
                 throw new MapInitException("Specific Military airport does not exist!", MapInitException.ErrorType.FILE_NOT_COHERENT);
             Map<Port,List<Cross>> map = result.get(portFrom);
+
             if(map == null) {
                 map = new HashMap<>();
                 result.put(portFrom, map);
