@@ -1,9 +1,9 @@
 package world.vehicles;
 
 import javafx.geometry.Point2D;
-import world.RegisteringPortAdapter;
 import world.ports.MilitaryAirport;
 import world.ports.Port;
+import world.vehicles.movement.RegisteringPortAdapter;
 
 import java.util.*;
 

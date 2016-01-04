@@ -5,13 +5,13 @@ import javafx.scene.shape.Shape;
 import world.*;
 import world.vehicles.Circle;
 import world.vehicles.DestroyListener;
+import world.vehicles.Vehicle;
+import world.vehicles.movement.Cross;
 import world.vehicles.movement.MovingEngine;
 import world.vehicles.movement.PortMovingEngine;
-import world.vehicles.Vehicle;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.List;
 
 /**
  * Represents port. Vehicle can stay there.

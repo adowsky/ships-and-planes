@@ -1,9 +1,7 @@
-package world;
+package world.vehicles.movement;
 
 import javafx.scene.shape.Shape;
 import world.vehicles.Circle;
-import world.vehicles.movement.CrossingMovingEngine;
-import world.vehicles.movement.MovingEngine;
 import world.vehicles.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
 

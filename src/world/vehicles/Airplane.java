@@ -2,10 +2,7 @@ package world.vehicles;
 
 import javafx.geometry.Point2D;
 import world.WorldConstants;
-import world.ports.Port;
 import world.vehicles.movement.MovingEngineTypes;
-
-import java.util.List;
 
 /**
  * Represents plane.

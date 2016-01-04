@@ -1,12 +1,13 @@
 package world;
 
 import world.ports.CivilianPort;
-import world.ports.Port;
 import world.vehicles.Vehicle;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Represents passenger.

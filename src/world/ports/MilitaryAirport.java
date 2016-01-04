@@ -2,21 +2,19 @@ package world.ports;
 
 import javafx.geometry.Point2D;
 import world.Passenger;
-import world.vehicles.CivilianVehicle;
 import world.vehicles.MilitaryAircraft;
-import world.vehicles.Ship;
 import world.vehicles.Vehicle;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents military airport. It is a port.
  */
 public class MilitaryAirport extends AirPort {
-    private List<MilitaryAircraft> planesList;
+    private Set<MilitaryAircraft> planesList;
     private int timeToNextDeparture;
 
     /**
@@ -28,7 +26,7 @@ public class MilitaryAirport extends AirPort {
     public MilitaryAirport(int timeToNextDeparture, int capacity, Point2D location){
         super(capacity,location);
         this.timeToNextDeparture=timeToNextDeparture;
-        planesList=new ArrayList<>();
+        planesList=new HashSet<>();
     }
 
     /**
@@ -116,4 +114,5 @@ public class MilitaryAirport extends AirPort {
     public void objectDestroyed(Vehicle o) {
         planesList.remove(o);
     }
+
 }

@@ -1,8 +1,8 @@
 package world.ports;
 
 import javafx.geometry.Point2D;
-import world.vehicles.CivilianVehicle;
 import world.Passenger;
+import world.vehicles.CivilianVehicle;
 import world.vehicles.Ship;
 import world.vehicles.Vehicle;
 

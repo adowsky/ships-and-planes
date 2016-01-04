@@ -6,11 +6,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import world.*;
+import world.AvailabilityType;
+import world.MoveType;
 import world.ports.CivilianAirport;
 import world.ports.Harbour;
 import world.ports.MilitaryAirport;
 import world.ports.Port;
+import world.vehicles.movement.Cross;
+import world.vehicles.movement.Crossing;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

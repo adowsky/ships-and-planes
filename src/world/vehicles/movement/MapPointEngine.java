@@ -1,13 +1,10 @@
 package world.vehicles.movement;
 
-import world.Cross;
 import world.vehicles.Notifiable;
 import world.vehicles.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
-import world.vehicles.movement.MovingEngine;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 /**
  * Template of moving engine for Cross.

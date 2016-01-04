@@ -1,13 +1,11 @@
 package world.vehicles;
 
 import javafx.geometry.Point2D;
-import world.ports.CivilianAirport;
 import world.Passenger;
-import world.ports.MilitaryAirport;
+import world.ports.CivilianAirport;
 import world.ports.Port;
 
 import java.util.*;
-import java.util.List;
 
 /**
  * Represents airliner. Contains airplane's properties and can exchange passengers.

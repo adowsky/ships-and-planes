@@ -2,7 +2,6 @@ package world;
 
 import exceptions.world.PassengerCreationException;
 import world.ports.CivilianPort;
-import world.ports.Port;
 
 import java.io.Serializable;
 import java.util.*;
@@ -12,26 +11,16 @@ import java.util.*;
  */
 public class PassengerGenerator implements Serializable{
     private static long serialVersionUID = 1L;
-    private static PassengerGenerator instance;
     private Random rand;
     private final List<FirstName> FIRST_NAMES;
     private final List<LastName> LAST_NAMES;
     private List<CivilianPort> portList;
-    private PassengerGenerator(){
+    public PassengerGenerator(){
         rand = new Random();
         FIRST_NAMES = Collections.unmodifiableList(Arrays.asList(FirstName.values()));
         LAST_NAMES = Collections.unmodifiableList(Arrays.asList(LastName.values()));
     }
 
-    /**
-     * Returns instance of class
-     * @return instance of class.
-     */
-    public synchronized static PassengerGenerator getInstance(){
-        if (instance == null)
-            instance = new PassengerGenerator();
-        return instance;
-    }
 
     /**
      * Returns set of newly created passengers.

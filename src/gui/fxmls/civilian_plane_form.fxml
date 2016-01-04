@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import gui.NumericTextField?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.NumericTextField?>
-
 <GridPane alignment="TOP_CENTER" vgap="5" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/" fx:controller="gui.AirlinerFormController" >
    <children>
       <Label fx:id="portName" text="NAME" GridPane.rowIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" id="port-name"/>

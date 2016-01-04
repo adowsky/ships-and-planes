@@ -1,10 +1,6 @@
 package world.ports;
 
 import javafx.geometry.Point2D;
-import world.Cross;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Represent airport.

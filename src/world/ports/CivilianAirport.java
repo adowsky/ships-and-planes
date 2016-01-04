@@ -1,8 +1,11 @@
 package world.ports;
 
 import javafx.geometry.Point2D;
-import world.vehicles.*;
 import world.Passenger;
+import world.vehicles.Airliner;
+import world.vehicles.Airplane;
+import world.vehicles.CivilianVehicle;
+import world.vehicles.Vehicle;
 
 import java.util.*;
 

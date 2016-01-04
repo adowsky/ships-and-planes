@@ -1,7 +1,5 @@
 package world.vehicles.movement;
 
-import world.Crossing;
-
 /**
  * Moving engine to move vehicle through crossing.
  */

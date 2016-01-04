@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.canvas.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
+<?import gui.NumericTextField?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.collections.* ?>
-<?import gui.NumericTextField?>
-
 <GridPane alignment="TOP_CENTER" hgap="2" vgap="2" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/" fx:controller="gui.AircraftFormController" >
     <children>
         <Label fx:id="portName" text="NAME" GridPane.rowIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" id="port-name"/>

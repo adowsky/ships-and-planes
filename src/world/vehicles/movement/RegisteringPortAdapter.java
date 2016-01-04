@@ -1,10 +1,11 @@
-package world;
+package world.vehicles.movement;
 
 import javafx.geometry.Point2D;
+import world.Passenger;
 import world.ports.Port;
 import world.vehicles.Vehicle;
 
-import java.util.*;
+import java.util.Collection;
 
 /**
  * Adapter imitating cross to register vehicles.

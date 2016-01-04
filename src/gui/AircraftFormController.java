@@ -11,7 +11,6 @@ import world.WorldConstants;
 import world.ports.MilitaryAirport;
 import world.vehicles.AircraftCarrier;
 import world.vehicles.ArmamentType;
-import world.vehicles.MilitaryAircraft;
 import world.vehicles.Vehicle;
 
 import java.io.Serializable;
@@ -229,11 +228,13 @@ public class AircraftFormController implements ChoosingController, Initializable
         maxFuel.setText(String.valueOf(rand.nextInt(((int)WorldConstants.MAX_FUEL_VALUE)*4+1000)));
         armType.getSelectionModel().select(rand.nextInt(armType.getItems().size()));
         List<MilitaryAirport> ports = new ArrayList<>();
-        if(list.size()<4)
-            list.forEach(e ->{
-                if(e != mair)
+        if(list.size()<4) {
+            list.forEach(e -> {
+                if (e != mair)
                     ports.add(e);
             });
+            Collections.shuffle(ports);
+        }
         else{
             for(int i=0;i<2;i++){
                 boolean found = false;
@@ -247,6 +248,7 @@ public class AircraftFormController implements ChoosingController, Initializable
                 }
             }
         }
+
         ports.forEach(e -> {
             ChoiceHasBeenMade(e.getName());
         });

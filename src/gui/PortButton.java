@@ -1,7 +1,6 @@
 package gui;
 
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import world.ports.Port;
 

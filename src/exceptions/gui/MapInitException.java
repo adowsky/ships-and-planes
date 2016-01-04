@@ -1,7 +1,5 @@
 package exceptions.gui;
 
-import java.util.Map;
-
 /**
  * Exception that is threw by MapInitializer class during parsing XML map file.
  */

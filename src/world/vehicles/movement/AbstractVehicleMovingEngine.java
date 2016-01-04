@@ -1,7 +1,6 @@
 package world.vehicles.movement;
 
 import javafx.scene.shape.Shape;
-import world.Cross;
 import world.vehicles.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
 
@@ -108,13 +107,7 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
             canMove = true;
         }
     }
-    private void readObject(java.io.ObjectInputStream in)
-            throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        routKeeper = new Object();
-        movingGate = new Object();
-        running = false;
-    }
+
     @Override
     public void runInThread(){
         while(!thread.isInterrupted()) {
@@ -228,4 +221,12 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
      * @return  if vehicle is finishing cycle.
      */
     public abstract boolean isFinish();
+
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        routKeeper = new Object();
+        movingGate = new Object();
+        running = false;
+    }
 }

@@ -1,19 +1,14 @@
 package gui;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import world.Journey;
 import world.Passenger;
-import world.WorldConstants;
-import world.ports.CivilianAirport;
 import world.ports.Harbour;
-import world.vehicles.FerryBoat;
 import world.vehicles.Vehicle;
 
 import java.io.Serializable;
@@ -161,7 +156,7 @@ public class FerryFormController implements ChoosingController, Initializable, S
     public void randomFill(List<Harbour> list, Harbour mair){
         CompanyExamples[] cmpy = CompanyExamples.values();
         company.setText(cmpy[rand.nextInt(cmpy.length)].toString());
-        maxCapacity.setText(String.valueOf(rand.nextInt(100)));
+        maxCapacity.setText(String.valueOf(rand.nextInt(50)+50));
         speed.setText(String.valueOf(rand.nextInt(5)+1));
         List<Harbour> ports = new ArrayList<>();
         if(list.size()<4)

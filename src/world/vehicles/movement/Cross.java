@@ -1,6 +1,5 @@
-package world;
+package world.vehicles.movement;
 
-import javafx.geometry.Bounds;
 import javafx.scene.shape.Shape;
 import world.vehicles.Vehicle;
 

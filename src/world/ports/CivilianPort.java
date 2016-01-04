@@ -1,12 +1,10 @@
 package world.ports;
 
 
-import world.Cross;
 import world.Passenger;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Port which contains Passengers and can service them.

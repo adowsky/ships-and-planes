@@ -5,7 +5,6 @@ import gui.VehicleButton;
 import world.ports.CivilianAirport;
 import world.ports.Harbour;
 import world.ports.MilitaryAirport;
-import world.vehicles.*;
 
 import java.io.Serializable;
 import java.util.HashSet;

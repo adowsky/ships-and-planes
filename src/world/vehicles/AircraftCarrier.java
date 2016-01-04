@@ -1,12 +1,9 @@
 package world.vehicles;
 
-import javafx.geometry.Point2D;
-import world.Cross;
-import world.RegisteringPortAdapter;
-import world.ports.Harbour;
-import world.ports.MilitaryAirport;
 import world.ports.Port;
+import world.vehicles.movement.Cross;
 import world.vehicles.movement.MovingEngineTypes;
+import world.vehicles.movement.RegisteringPortAdapter;
 
 import java.io.Serializable;
 import java.util.*;
@@ -55,7 +52,16 @@ public class AircraftCarrier extends Ship implements Serializable, DestroyListen
         if(adapters == null)
             adapters = new HashMap<>();
         adapters.put(port, adapter);
+    }
 
+    public static Map<Port, Map<Port, List<Cross>>> getFlightRoutes(){
+        return flightRoutes;
+    }
+    public static Map<Port, RegisteringPortAdapter> getAdapters(){
+        return adapters;
+    }
+    public static void setAdapters(Map<Port, RegisteringPortAdapter> adap){
+        adapters = adap;
     }
     /**
      * Sets armament type.

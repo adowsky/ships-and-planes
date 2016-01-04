@@ -1,6 +1,5 @@
 package world.vehicles.movement;
 
-import world.Cross;
 import world.vehicles.Vehicle;
 
 import java.util.List;

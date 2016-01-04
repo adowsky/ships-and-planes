@@ -4,7 +4,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
-import world.*;
+import world.Drawable;
+import world.Point;
+import world.SerializeContainer;
+import world.WorldConstants;
 import world.ports.Port;
 import world.vehicles.movement.*;
 
@@ -471,7 +474,8 @@ public abstract class Vehicle implements Drawable, Serializable {
 
         engine.destroy();
         removeFromPreviousCrossingRegister();
-        destroyListeners.forEach(e -> e.objectDestroyed(this));
+        if(destroyListeners != null)
+            destroyListeners.forEach(e -> e.objectDestroyed(this));
     }
 
     /**

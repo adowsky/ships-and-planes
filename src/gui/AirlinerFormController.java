@@ -10,7 +10,6 @@ import javafx.scene.paint.Color;
 import world.Passenger;
 import world.WorldConstants;
 import world.ports.CivilianAirport;
-import world.ports.MilitaryAirport;
 import world.vehicles.Vehicle;
 
 import java.io.Serializable;
@@ -164,7 +163,7 @@ public class AirlinerFormController implements ChoosingController, Initializable
     public void randomFill(List<CivilianAirport> list, CivilianAirport mair){
         staffAmount.setText(String.valueOf(rand.nextInt(51)));
         maxFuel.setText(String.valueOf(rand.nextInt(((int)WorldConstants.MAX_FUEL_VALUE)*4+1000)));
-        maxCapacity.setText(String.valueOf(rand.nextInt(100)));
+        maxCapacity.setText(String.valueOf(rand.nextInt(50)+50));
         List<CivilianAirport> ports = new ArrayList<>();
         if(list.size()<4)
             list.forEach(e ->{
