@@ -49,7 +49,10 @@ public abstract class Vehicle implements Drawable, Serializable {
 
      */
     public Vehicle(Point2D location, double speed, MovingEngineTypes types){
-        id=nextId++;
+        synchronized (Vehicle.class) {
+            id = nextId++;
+            SerializeContainer.getInstance().addObjectToSerialize(this);
+        }
         this.location=new Point(location.getX(),location.getY());
         readyToTravel = false;
         running = false;
@@ -61,7 +64,6 @@ public abstract class Vehicle implements Drawable, Serializable {
         speedX = 0;
         speedY = 0;
         rotation = 0;
-        SerializeContainer.getInstance().addObjectToSerialize(this);
     }
     public Vehicle(Point2D location, double speed){
         this(location,speed,MovingEngineTypes.STANDARD);
