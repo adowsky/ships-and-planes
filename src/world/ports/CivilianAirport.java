@@ -13,7 +13,7 @@ import java.util.*;
  * Class represents civilian airport that can interact with civilian planes.
  */
 public class CivilianAirport extends AirPort implements CivilianPort{
-    private List<CivilianVehicle> planesList;
+    private Set<CivilianVehicle> planesList;
     private Set<Passenger> passengersSet;
 
     private int timeToNextDeparture;
@@ -22,7 +22,7 @@ public class CivilianAirport extends AirPort implements CivilianPort{
      */
     public CivilianAirport(int timeToNextDeparture, int capacity, Point2D location){
         super(capacity,location);
-        planesList = new ArrayList<>();
+        planesList = new HashSet<>();
         passengersSet = new HashSet<>();
         this.timeToNextDeparture = timeToNextDeparture;
     }
@@ -46,10 +46,12 @@ public class CivilianAirport extends AirPort implements CivilianPort{
         vehicle.arrivedToPort();
         planesList.add(vehicle);
         vehicle.addDestroyListener(this);
-        Set<Passenger> pList = vehicle.getVehiclePassengers();
-        Set<Port> possiblePorts = getLandConnectionPorts();
-        passengersService(pList, passengersSet, possiblePorts);
-        vehicle.clearPassengersList();
+        if(!vehicle.isDecreased()) {
+            Set<Passenger> pList = vehicle.getVehiclePassengers();
+            Set<Port> possiblePorts = getLandConnectionPorts();
+            passengersService(pList, passengersSet, possiblePorts);
+            vehicle.clearPassengersList();
+        }
         maintainVehicle(vehicle);
         vehicleDeparture(vehicle);
     }
@@ -127,9 +129,12 @@ public class CivilianAirport extends AirPort implements CivilianPort{
      * @param vehicle
      */
     public  <T extends Airplane & CivilianVehicle> void vehicleDeparture(T vehicle) {
-        Collection<Passenger> passengers = generatePassengersCollectionForVehicle(vehicle);
-        vehicle.addPassengers(passengers);
-        passengersSet.removeAll(passengers);
+        if(!vehicle.isDecreased()) {
+            Collection<Passenger> passengers = generatePassengersCollectionForVehicle(vehicle);
+            vehicle.addPassengers(passengers);
+            passengersSet.removeAll(passengers);
+        }else
+        vehicle.setDecreased(false);
         vehicle.setReadyToTravel();
         planesList.remove(vehicle);
         vehicle.removeDestroyListener(this);

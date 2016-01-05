@@ -1,6 +1,7 @@
 package world.vehicles.movement;
 
 import javafx.scene.shape.Shape;
+import world.vehicles.DestroyListener;
 import world.vehicles.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
 
@@ -12,7 +13,7 @@ import java.util.ListIterator;
 /**
  *
  */
-public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<Cross>>, Serializable{
+public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<Cross>>, Serializable, DestroyListener{
     private static long serialVersionUID = 1L;
     private Vehicle vehicle;
     private boolean canMove;
@@ -51,7 +52,7 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
                 SynchronizedUpdateNotifier.INSTANCE.addToList(this);
                 running = true;
                 if(thread != null)
-                    thread.stop();
+                    thread.interrupt();
                 thread = new Thread(this);
                 thread.setDaemon(true);
                 thread.start();
@@ -66,8 +67,7 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
         if(thread == null)
             return;
         thread.interrupt();
-        if(thread.isAlive())
-            thread.stop();
+
     }
     @Override
     public synchronized void destroy(){
@@ -149,6 +149,10 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
                     while(iter.hasNext() && item!= current)
                         item = iter.next();
                     if(onCrossing) {
+                        if(current == vehicle.getLastPort()){
+                            vehicle.decreasePortIndex();
+                            vehicle.setDecreased(true);
+                        }
                         current.goThrough(vehicle);
                         onCrossing = false;
                     }
@@ -192,6 +196,8 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
         }
     }
     private void setFrontVehicle(){
+        if(vehicleInFront != null)
+            vehicleInFront.removeDestroyListener(this);
         List<Vehicle> list =vehicle.getCurrentCrossing().getVehiclesTravellingTo(vehicle.getNextCrossing());
         if(list == null) {
             vehicleInFront = null;
@@ -206,6 +212,8 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
                 previous = o;
             }
         }
+        if(vehicleInFront != null)
+            vehicleInFront.addDestroyListener(this);
     }
 
     /**
@@ -228,5 +236,10 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
         routKeeper = new Object();
         movingGate = new Object();
         running = false;
+    }
+    @Override
+    public void objectDestroyed(Vehicle o) {
+        vehicleInFront = null;
+
     }
 }

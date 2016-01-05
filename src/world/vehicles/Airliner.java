@@ -135,6 +135,16 @@ public class Airliner extends Airplane implements CivilianVehicle {
     }
 
     @Override
+    public void decreasePortIndex() {
+        if(lastVisitedPortIndex == 0){
+            Collections.reverse(route);
+            lastVisitedPortIndex = route.size()-2;
+        }else{
+            lastVisitedPortIndex--;
+        }
+    }
+
+    @Override
     public List<String> getTravelRoute() {
         List<String> list = new LinkedList<>();
         route.forEach(e -> list.add(e.getName()));

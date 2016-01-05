@@ -35,6 +35,7 @@ public abstract class Vehicle implements Drawable, Serializable {
     private double rotation;
     private volatile List<Cross> route;
     private int nextCrossing;
+    private boolean decreased;
 
     private transient List<LocationChangedListener> locationChangedListeners;
     private transient List<MovementStateListener> movementStateListeners;
@@ -505,6 +506,11 @@ public abstract class Vehicle implements Drawable, Serializable {
     public abstract Port getLastPort();
 
     /**
+     * Changes index of port route.
+     */
+    public abstract void decreasePortIndex();
+
+    /**
      * Get route as String list.
      * @return string list of route.
      */
@@ -520,4 +526,11 @@ public abstract class Vehicle implements Drawable, Serializable {
         return String.valueOf(id)+": "+getClass().getSimpleName();
     }
 
+    public boolean isDecreased() {
+        return decreased;
+    }
+
+    public void setDecreased(boolean decreased) {
+        this.decreased = decreased;
+    }
 }

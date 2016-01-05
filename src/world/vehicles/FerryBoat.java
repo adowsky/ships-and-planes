@@ -82,6 +82,7 @@ public class FerryBoat extends Ship implements CivilianVehicle {
                 route.remove(0);
                 modifyRoute = false;
             }
+
             Collections.reverse(route);
             lastVisitedPortIndex = 0;
         }
@@ -129,6 +130,16 @@ public class FerryBoat extends Ship implements CivilianVehicle {
     @Override
     public Port getLastPort() {
         return route.get(lastVisitedPortIndex);
+    }
+
+    @Override
+    public void decreasePortIndex() {
+        if(lastVisitedPortIndex == 0){
+            Collections.reverse(route);
+            lastVisitedPortIndex = route.size()-2;
+        }else{
+            lastVisitedPortIndex--;
+        }
     }
 
     @Override

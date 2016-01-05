@@ -10,8 +10,7 @@ import java.util.*;
 /**
  * Represents military aircraft.
  */
-public class
-MilitaryAircraft extends Airplane {
+public class MilitaryAircraft extends Airplane {
     private ArmamentType armamentType;
     private List<MilitaryAirport> route;
     private List<MilitaryAirport> newRoute;
@@ -102,6 +101,16 @@ MilitaryAircraft extends Airplane {
         if(lastVisitedPortIndex<0)
             return portAdapter;
         return route.get(lastVisitedPortIndex);
+    }
+
+    @Override
+    public void decreasePortIndex() {
+        if(lastVisitedPortIndex == 0){
+            Collections.reverse(route);
+            lastVisitedPortIndex = route.size()-2;
+        }else{
+            lastVisitedPortIndex--;
+        }
     }
 
     @Override

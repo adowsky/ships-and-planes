@@ -16,7 +16,7 @@ public class VehicleButton extends Button implements LocationChangedListener, Mo
     private volatile boolean tick = false;
     private double rotation;
     private double currentTranslation;
-    private final double TRANSLATION = 6.0;
+    private final double TRANSLATION = 9.0;
 
     /**
      * Sets model of the button
@@ -24,7 +24,7 @@ public class VehicleButton extends Button implements LocationChangedListener, Mo
      */
     public void setModel(Vehicle vehicle){
         rotation = 0;
-        currentTranslation = 6;
+        currentTranslation = TRANSLATION;
         setRotate(0);
         this.model = vehicle;
         model.addLocationChangedListener(this);

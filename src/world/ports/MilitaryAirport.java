@@ -84,6 +84,7 @@ public class MilitaryAirport extends AirPort {
      * @param vehicle
      */
     private void vehicleDeparture(MilitaryAircraft vehicle){
+        vehicle.setDecreased(false);
         vehicle.setReadyToTravel();
         planesList.remove(vehicle);
         vehicle.removeDestroyListener(this);

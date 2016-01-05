@@ -160,8 +160,8 @@
         <connection name="Siberia">bengal china</connection>
     </m-airport>
     <!--Sea Crossings-->
-    <sea-crossing name="seaTop" x="274" y="158" radius="10"/>
-    <sea-crossing name="seaBot" x="330" y="270" radius="10"/>
+    <sea-crossing name="seaTop" x="274" y="158" radius="8"/>
+    <sea-crossing name="seaBot" x="325" y="265" radius="8"/>
     <!--Air Crossings-->
     <air-crossing name="africa" x="346" y="192" radius="10" />
     <air-crossing name="germany" x="403" y="119" radius="10" />

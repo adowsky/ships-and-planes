@@ -125,7 +125,7 @@ public class FXMLWindowController implements Initializable {
         };
         Map<String, Harbour> ports= null;
         try{
-            initializer = new MapInitializer(getClass().getResource("fxmls/map.xml").getPath());
+            initializer = new MapInitializer(getClass().getResourceAsStream("fxmls/map.xml"));
             initializer.init();
             harbourButtons = initializer.getHarboursBtns();
             CAirportButtons = initializer.getcAirportBtns();
@@ -415,6 +415,10 @@ public class FXMLWindowController implements Initializable {
             SerializationParser parser = new SerializationParser(serializables);
             SerializeContainer.getInstance().clear();
             parser.parse();
+            mapPane.getChildren().forEach(e ->{
+                if(e instanceof VehicleButton)
+                    ((VehicleButton)e).getModel().destroy();
+            });
             mapPane.getChildren().clear();
             mapPane.getChildren().add(canvas);
             final GraphicsContext gc = canvas.getGraphicsContext2D();

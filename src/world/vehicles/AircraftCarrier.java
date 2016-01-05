@@ -14,7 +14,7 @@ import java.util.*;
 public class AircraftCarrier extends Ship implements Serializable, DestroyListener {
     private static long serialVersionUID = 1L;
     private ArmamentType armament;
-    private List<MilitaryAircraft> producedPlanes;
+    private Set<MilitaryAircraft> producedPlanes;
     private Port lastVisitedPort;
     private Port nextPort;
     private static Map<Port, Map<Port, List<Cross>>> flightRoutes;
@@ -28,7 +28,7 @@ public class AircraftCarrier extends Ship implements Serializable, DestroyListen
     public AircraftCarrier(Port location, double maxVelocity, ArmamentType armament){
         super(location.getLocation(),maxVelocity, MovingEngineTypes.DODGING_PORTS);
         this.armament=armament;
-        producedPlanes = new ArrayList<>();
+        producedPlanes = new HashSet<>();
         lastVisitedPort = location;
         nextPort = location;
         Port newPort = randNewPort();
@@ -136,6 +136,11 @@ public class AircraftCarrier extends Ship implements Serializable, DestroyListen
     }
 
     @Override
+    public void decreasePortIndex() {
+
+    }
+
+    @Override
     public List<String> getTravelRoute() {
         return Collections.emptyList();
     }
@@ -172,7 +177,7 @@ public class AircraftCarrier extends Ship implements Serializable, DestroyListen
         plane.addDestroyListener(this);
     }
 
-    public List<MilitaryAircraft> getProducedPlanes() {
+    public Set<MilitaryAircraft> getProducedPlanes() {
         return producedPlanes;
     }
 

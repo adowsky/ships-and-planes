@@ -18,6 +18,7 @@ import world.vehicles.movement.Crossing;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
 
@@ -45,10 +46,10 @@ public class MapInitializer implements Serializable{
      * @param path path of source
      * @throws MapInitException Problem with source.
      */
-    public MapInitializer(String path) throws MapInitException {
+    public MapInitializer(InputStream path) throws MapInitException {
         try {
             builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            doc = builder.parse(new File(path));
+            doc = builder.parse(path);
             doc.getDocumentElement().normalize();
         }catch(Exception ex){
             ex.printStackTrace();

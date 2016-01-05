@@ -12,7 +12,7 @@ import java.util.*;
  * Represents civilian sea port.
  */
 public class Harbour extends SeaPort implements CivilianPort {
-    private List<CivilianVehicle> shipsList;
+    private Set<CivilianVehicle> shipsList;
     private Set<Passenger> passengersSet;
     private List<CivilianPort> portListForPassenger;
     private int timeToNextDeparture;
@@ -25,7 +25,7 @@ public class Harbour extends SeaPort implements CivilianPort {
      */
     public Harbour(int timeToNextDeparture, int capacity, Point2D location){
         super(capacity, location);
-        shipsList = new ArrayList<>();
+        shipsList = new HashSet<>();
         passengersSet= new HashSet<>();
         this.timeToNextDeparture=timeToNextDeparture;
     }
@@ -45,11 +45,13 @@ public class Harbour extends SeaPort implements CivilianPort {
         shipsList.add(vehicle);
         vehicle.arrivedToPort();
         vehicle.addDestroyListener(this);
-        Set<Passenger> pList = vehicle.getVehiclePassengers();
-        synchronized (this) {
-            passengersService(pList, passengersSet, getLandConnectionPorts());
+        if(!vehicle.isDecreased()) {
+            Set<Passenger> pList = vehicle.getVehiclePassengers();
+            synchronized (this) {
+                passengersService(pList, passengersSet, getLandConnectionPorts());
+            }
+            vehicle.clearPassengersList();
         }
-        vehicle.clearPassengersList();
         maintainVehicle(vehicle);
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
         vehicleDeparture(vehicle);
@@ -81,16 +83,19 @@ public class Harbour extends SeaPort implements CivilianPort {
      */
     private <T extends Ship & CivilianVehicle> void vehicleDeparture(T vehicle){
         Port nextPort = vehicle.getNextPort();
-        Collection<Passenger> newPassengersList = new HashSet<>();
-        for (Passenger p : passengersSet){
-            if(!p.isWaiting() && p.getNextPortToVisit() == nextPort){
-                newPassengersList.add(p);
+        if(!vehicle.isDecreased()) {
+            Collection<Passenger> newPassengersList = new HashSet<>();
+            for (Passenger p : passengersSet) {
+                if (!p.isWaiting() && p.getNextPortToVisit() == nextPort) {
+                    newPassengersList.add(p);
+                }
             }
-        }
-        synchronized (this) {
-            passengersSet.removeAll(newPassengersList);
-        }
-        vehicle.addPassengers(newPassengersList);
+            synchronized (this) {
+                passengersSet.removeAll(newPassengersList);
+            }
+            vehicle.addPassengers(newPassengersList);
+        }else
+        vehicle.setDecreased(false);
         vehicle.setReadyToTravel();
         shipsList.remove(vehicle);
         vehicle.removeDestroyListener(this);
