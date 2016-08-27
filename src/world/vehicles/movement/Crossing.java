@@ -1,9 +1,11 @@
 package world.vehicles.movement;
 
 import javafx.scene.shape.Shape;
-import world.vehicles.Circle;
-import world.vehicles.SynchronizedUpdateNotifier;
+import world.Circle;
+import world.vehicles.commons.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
+import world.vehicles.movement.engine.CrossingMovingEngine;
+import world.vehicles.movement.engine.MovingEngine;
 
 import java.util.ArrayList;
 import java.util.HashMap;

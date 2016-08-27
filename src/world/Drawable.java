@@ -7,5 +7,5 @@ public interface Drawable {
     /**
      * Renders the object.
      */
-    void Draw();
+    void draw();
 }

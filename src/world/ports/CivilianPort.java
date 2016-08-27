@@ -1,7 +1,7 @@
 package world.ports;
 
 
-import world.Passenger;
+import world.passenger.Passenger;
 
 import java.util.Collection;
 import java.util.List;

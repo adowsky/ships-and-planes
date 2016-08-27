@@ -1,23 +1,23 @@
 package gui;
 
 import exceptions.gui.MapInitException;
+import gui.component.PortButton;
 import javafx.geometry.Point2D;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import world.AvailabilityType;
-import world.MoveType;
-import world.ports.CivilianAirport;
-import world.ports.Harbour;
-import world.ports.MilitaryAirport;
+import world.vehicles.AvailabilityType;
+import world.vehicles.MoveType;
+import world.ports.air.CivilianAirport;
+import world.ports.water.Harbour;
+import world.ports.air.MilitaryAirport;
 import world.ports.Port;
 import world.vehicles.movement.Cross;
 import world.vehicles.movement.Crossing;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;

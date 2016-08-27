@@ -1,7 +1,7 @@
 package world.vehicles.movement;
 
 import javafx.geometry.Point2D;
-import world.Passenger;
+import world.passenger.Passenger;
 import world.ports.Port;
 import world.vehicles.Vehicle;
 
@@ -35,7 +35,7 @@ public class RegisteringPortAdapter extends Port {
     }
 
     @Override
-    public void Draw() {
+    public void draw() {
 
     }
 }

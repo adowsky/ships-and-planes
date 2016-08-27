@@ -3,12 +3,14 @@ package world.ports;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Shape;
 import world.*;
-import world.vehicles.Circle;
-import world.vehicles.DestroyListener;
+import world.passenger.Passenger;
+import world.tools.SerializeContainer;
+import world.Circle;
+import world.vehicles.commons.DestroyListener;
 import world.vehicles.Vehicle;
 import world.vehicles.movement.Cross;
-import world.vehicles.movement.MovingEngine;
-import world.vehicles.movement.PortMovingEngine;
+import world.vehicles.movement.engine.MovingEngine;
+import world.vehicles.movement.engine.PortMovingEngine;
 
 import java.io.Serializable;
 import java.util.*;
@@ -63,7 +65,7 @@ public abstract class Port implements Drawable, Cross, Serializable, DestroyList
         circle = new Circle(location.getX(), location.getY(), WorldConstants.PORT_RADIUS);
         engine = new PortMovingEngine(this);
         travellingMap = new HashMap<>();
-        SerializeContainer.getInstance().addObjectToSerialize(this);
+        SerializeContainer.INSTANCE.addToSerialization(this);
 
     }
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import gui.component.NumericTextField?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane alignment="TOP_CENTER" hgap="2" vgap="2" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/" fx:controller="gui.controller.AircraftFormController" >
+    <children>
+        <Label fx:id="portName" text="NAME" GridPane.rowIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" id="port-name"/>
+        <Label text="Staff Amount:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <NumericTextField fx:id="staffAmount" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label text="Maximum Fuel:" GridPane.rowIndex="2" />
+        <NumericTextField fx:id="maxFuel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label text="Armament Type:" GridPane.rowIndex="3" />
+        <ComboBox fx:id="armType" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label text="Route:" GridPane.rowIndex="5" />
+        <TextField fx:id="routeText" GridPane.columnIndex="1" GridPane.rowIndex="5" editable="false" />
+        <Button fx:id="routeButton" onAction="#chooseRoute" mnemonicParsing="false" text="Choose route" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+        <HBox alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <children>
+                <Button mnemonicParsing="false" text="Create New Aircraft" onAction="#addNewVehicle" />
+            </children>
+        </HBox>
+        <Label id="information" fx:id="info" text="" GridPane.rowIndex="8" GridPane.columnSpan="2" />
+        <Label id="port-name" text="List of vehicles" GridPane.rowIndex="9" GridPane.columnSpan="2"/>
+        <VBox GridPane.rowIndex="10" GridPane.columnSpan="2" prefHeight="100" prefWidth="250" style="-fx-padding: 0 30 0 0;">
+            <ScrollPane prefWidth="250" >
+                <ListView fx:id="vehicleView"/>
+            </ScrollPane>
+        </VBox>
+        <Button fx:id="removeDockedVehicle" text="Remove Vehicle" onAction="#removeDockedVehicle" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+
+    </children>
+
+
+</GridPane>
