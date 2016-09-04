@@ -1,7 +1,8 @@
-package world.vehicles.commons;
+package world.tools;
 
 import gui.component.VehicleButton;
 import world.WorldConstants;
+import world.vehicles.commons.Notifiable;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -15,11 +16,12 @@ import java.util.Set;
 public enum SynchronizedUpdateNotifier implements Runnable, Serializable {
     INSTANCE;
 
+    private static final String THREAD_NAME = "SynchronizedUpdateNotifier";
     private final Set<Notifiable> notificationList = new HashSet<>();
     private final double UPDATES_PER_MILLIS = WorldConstants.UPDATES_PER_SEC / 1000.0;
 
     SynchronizedUpdateNotifier() {
-        Thread t = new Thread(this);
+        Thread t = new Thread(this, THREAD_NAME);
         t.setDaemon(true);
         t.start();
     }

@@ -1,10 +1,10 @@
 package world.vehicles.movement.engine;
 
 import javafx.scene.shape.Shape;
+import world.tools.SynchronizedUpdateNotifier;
+import world.vehicles.Vehicle;
 import world.vehicles.commons.DestroyListener;
 import world.vehicles.commons.SerializableObject;
-import world.vehicles.commons.SynchronizedUpdateNotifier;
-import world.vehicles.Vehicle;
 import world.vehicles.movement.Cross;
 
 import java.io.IOException;
@@ -51,6 +51,7 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
         synchronized (routKeeper) {
             this.route = route;
         }
+
         synchronized (this) {
             if (!running) {
                 SynchronizedUpdateNotifier.INSTANCE.addToList(this);
@@ -98,6 +99,7 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
     private boolean shipIntersects() {
         if (vehicleInFront == null)
             return false;
+
         Shape s = Shape.intersect(vehicleInFront.getBounds(), vehicle.getBounds());
         return s.getBoundsInLocal().getWidth() >= 0;
     }
@@ -189,8 +191,8 @@ public abstract class AbstractVehicleMovingEngine implements MovingEngine<List<C
     private void moveOnTheLine() {
         while (!current.intersect(vehicle.getBounds())) {
             if (canMove() && !shipIntersects()) {
+                vehicle.move();
                 synchronized (this) {
-                    vehicle.move();
                     canMove = false;
                 }
             } else {

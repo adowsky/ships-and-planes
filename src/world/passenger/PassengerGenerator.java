@@ -9,13 +9,14 @@ import java.util.*;
 /**
  * Generates Passengers.
  */
-public class PassengerGenerator implements Serializable{
+public class PassengerGenerator implements Serializable {
     private static long serialVersionUID = 1L;
     private Random rand;
     private final List<FirstName> FIRST_NAMES;
     private final List<LastName> LAST_NAMES;
     private List<CivilianPort> portList;
-    public PassengerGenerator(){
+
+    public PassengerGenerator() {
         rand = new Random();
         FIRST_NAMES = Collections.unmodifiableList(Arrays.asList(FirstName.values()));
         LAST_NAMES = Collections.unmodifiableList(Arrays.asList(LastName.values()));
@@ -24,12 +25,13 @@ public class PassengerGenerator implements Serializable{
 
     /**
      * Returns set of newly created passengers.
+     *
      * @param amount number of passengers to create
      * @return set of newly created passengers.
      */
-    public Set<Passenger> getPassengers(int amount){
+    public Set<Passenger> getPassengers(int amount) {
         Set<Passenger> set = new HashSet<>();
-        for(int i=0; i<amount; i++){
+        for (int i = 0; i < amount; i++) {
             set.add(getPassenger());
         }
         return set;
@@ -37,33 +39,37 @@ public class PassengerGenerator implements Serializable{
 
     /**
      * Returns new random generated Passenger.
+     *
      * @return random generated Passenger.
      */
-    public Passenger getPassenger(){
+    public Passenger getPassenger() {
         Passenger passenger = new Passenger();
         passenger.setFirstname(getRandomFirstName().toString());
         passenger.setLastname(getRandomLastName().toString());
-        passenger.setAge(rand.nextInt(60)+1);
+        passenger.setAge(rand.nextInt(60) + 1);
         try {
             passenger.newJourney(portList);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new PassengerCreationException(ex);
         }
         passenger.setPesel(randPesel());
         return passenger;
     }
-    private FirstName getRandomFirstName(){
+
+    private FirstName getRandomFirstName() {
         int index = rand.nextInt(FIRST_NAMES.size());
         return FIRST_NAMES.get(index);
 
     }
-    private LastName getRandomLastName(){
+
+    private LastName getRandomLastName() {
         int index = rand.nextInt(LAST_NAMES.size());
         return LAST_NAMES.get(index);
     }
-    private String randPesel(){
-        StringBuilder pesel  = new StringBuilder();
-        for(int i=0; i<11; i++){
+
+    private String randPesel() {
+        StringBuilder pesel = new StringBuilder();
+        for (int i = 0; i < 11; i++) {
             pesel.append(rand.nextInt(10));
         }
         return pesel.toString();
@@ -71,17 +77,20 @@ public class PassengerGenerator implements Serializable{
 
     /**
      * Sets database of ports
+     *
      * @param list port database
      */
-    public void setPortDataBase(List<CivilianPort> list){
+    public void setPortDataBase(List<CivilianPort> list) {
         portList = list;
 
     }
+
     private enum FirstName {
         Jack, Timothy, George, Peter, Ahmed, John, Thomas, Richard,
         Ann, Penelope, Jessica, Sara, Jane, Marry, Kate, Natalie
     }
-    private enum LastName{
+
+    private enum LastName {
         Dickson, Seward, Jackson, Johnson, Smith, Doe, Black, White, Bond, Dickinson, Portman, Potter, Granger,
         Williams
     }

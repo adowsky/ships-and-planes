@@ -64,7 +64,7 @@ public abstract class Vehicle implements Drawable, Serializable {
         readyToTravel = false;
         running = false;
         this.speed = speed;
-        engine = VehicleMovingEngineFactory.INSATANCE.getMovingEngine(engineType, this);
+        engine = VehicleMovingEngineFactory.INSTANCE.getMovingEngine(engineType, this);
         bounds = new Rectangle(location.getX(), location.getY(),
                 WorldConstants.VEHICLE_WIDTH, WorldConstants.VEHICLE_HEIGHT);
         locationChanged = false;

@@ -27,8 +27,8 @@ public class Window extends Application implements Serializable{
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
+
     public static void main(String[] args){
         launch(args);
     }

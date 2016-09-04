@@ -12,15 +12,12 @@ public class CrossingMovingEngine extends MapPointEngine {
      */
     public CrossingMovingEngine(Crossing cross){
         super(cross);
-
     }
 
     @Override
-    public synchronized void runInThread() {
+    public void runInThread() {
         super.runInThread();
         moveOut();
-
-
     }
 
 

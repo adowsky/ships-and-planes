@@ -33,7 +33,7 @@ import world.tools.SerializeContainer;
 import world.vehicles.ArmamentType;
 import world.vehicles.Vehicle;
 import world.vehicles.commons.SerializationParser;
-import world.vehicles.commons.SynchronizedUpdateNotifier;
+import world.tools.SynchronizedUpdateNotifier;
 import world.vehicles.movement.Cross;
 import world.vehicles.movement.RegisteringPortAdapter;
 import world.vehicles.types.CivilianVehicle;

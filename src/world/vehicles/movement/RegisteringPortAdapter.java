@@ -11,9 +11,10 @@ import java.util.Collection;
  * Adapter imitating cross to register vehicles.
  */
 public class RegisteringPortAdapter extends Port {
-    public RegisteringPortAdapter(Point2D loc){
+    public RegisteringPortAdapter(Point2D loc) {
         super(1, loc);
     }
+
     @Override
     public boolean isFull() {
         return false;
@@ -31,11 +32,9 @@ public class RegisteringPortAdapter extends Port {
 
     @Override
     public void objectDestroyed(Vehicle o) {
-
     }
 
     @Override
     public void draw() {
-
     }
 }

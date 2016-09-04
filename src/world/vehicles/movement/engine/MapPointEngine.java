@@ -1,8 +1,9 @@
 package world.vehicles.movement.engine;
 
 import world.vehicles.commons.Notifiable;
-import world.vehicles.commons.SynchronizedUpdateNotifier;
+import world.tools.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
+import world.vehicles.commons.SerializableObject;
 import world.vehicles.movement.Cross;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.io.IOException;
  */
 public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiable {
     private static long serialVersionUID = 1L;
-    private transient Object monitor;
+    private final SerializableObject monitor;
     private boolean canMove;
     private Cross cross;
     private Vehicle c;
@@ -22,7 +23,7 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
      * @param cross
      */
     MapPointEngine(Cross cross){
-        monitor = new Object();
+        monitor = new SerializableObject();
         this.cross = cross;
         SynchronizedUpdateNotifier.INSTANCE.addToList(this);
     }
@@ -49,9 +50,11 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
         toTheCenter();
         c.nextCrossing();
     }
+
     protected Vehicle getActiveVehicle(){
         return c;
     }
+
     @Override
     public void clearCanMove(){
         synchronized (monitor){
@@ -85,21 +88,25 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
      */
     public boolean checkStopCondition(Vehicle c){
         boolean vertical;
+        boolean horizontal;
+
         if(c.getSpeedY()<0){
             vertical = c.getLocation().getY() < cross.getY();
         }else{
             vertical = c.getLocation().getY() > cross.getY();
         }
-        boolean horizontal;
+
         if(c.getSpeedX()<0){
             horizontal = c.getLocation().getX() < cross.getX();
         }else{
             horizontal = c.getLocation().getX() > cross.getX();
         }
+
         return horizontal || vertical;
     }
+
     @Override
-    public  void setCanMove() {
+    public void setCanMove() {
         synchronized (monitor) {
             canMove = true;
         }
@@ -108,15 +115,16 @@ public abstract class MapPointEngine implements MovingEngine<Vehicle>, Notifiabl
     public void tick(){
         setCanMove();
     }
+
     @Override
     public void stop(){}
+
     @Override
     public void destroy(){}
 
     private void readObject(java.io.ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        monitor = new Object();
         SynchronizedUpdateNotifier.INSTANCE.addToList(this);
     }
 }

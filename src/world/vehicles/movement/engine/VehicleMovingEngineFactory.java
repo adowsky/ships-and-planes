@@ -9,7 +9,7 @@ import java.util.List;
  * Class that creates VehicleMovingEngines depends on type.
  */
 public enum VehicleMovingEngineFactory {
-        INSATANCE;
+    INSTANCE;
 
     /**
      * Returns new Instance of specified moving engine.
@@ -18,15 +18,17 @@ public enum VehicleMovingEngineFactory {
      * @return  new Instance of specified moving engine.
      */
     public MovingEngine<List<Cross>> getMovingEngine(MovingEngineType type, Vehicle v){
-        MovingEngine<List<Cross>> me = null;
+        MovingEngine<List<Cross>> engine = null;
         switch (type){
             case STANDARD:
                 return new VehicleMovingEngine(v);
+
             case DODGING_PORTS:
                 return new DodgingPortsMovingEngine(v);
+
             default:
                 break;
         }
-        return me;
+        return engine;
     }
 }

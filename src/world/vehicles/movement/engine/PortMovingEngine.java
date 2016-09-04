@@ -17,10 +17,12 @@ public class PortMovingEngine extends MapPointEngine {
     }
      @Override
      public synchronized void runInThread(){
-         if(getActiveVehicle().isOnRouteFinish())
+         if(getActiveVehicle().isOnRouteFinish()) {
              super.runInThread();
-         else
-            moveOut();
+         }
+         else {
+             moveOut();
+         }
      }
 
 }

@@ -2,7 +2,7 @@ package world.vehicles.movement;
 
 import javafx.scene.shape.Shape;
 import world.Circle;
-import world.vehicles.commons.SynchronizedUpdateNotifier;
+import world.tools.SynchronizedUpdateNotifier;
 import world.vehicles.Vehicle;
 import world.vehicles.movement.engine.CrossingMovingEngine;
 import world.vehicles.movement.engine.MovingEngine;
