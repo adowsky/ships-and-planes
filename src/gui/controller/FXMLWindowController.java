@@ -30,10 +30,10 @@ import world.ports.air.CivilianAirport;
 import world.ports.air.MilitaryAirport;
 import world.ports.water.Harbour;
 import world.tools.SerializeContainer;
+import world.tools.SynchronizedUpdateNotifier;
 import world.vehicles.ArmamentType;
 import world.vehicles.Vehicle;
 import world.vehicles.commons.SerializationParser;
-import world.tools.SynchronizedUpdateNotifier;
 import world.vehicles.movement.Cross;
 import world.vehicles.movement.RegisteringPortAdapter;
 import world.vehicles.types.CivilianVehicle;
@@ -102,12 +102,12 @@ public class FXMLWindowController implements Initializable {
         synchronized (FXMLWindowController.class) {
             instance = this;
         }
+
         passengerGenerator = new PassengerGenerator();
         final GraphicsContext gc = canvas.getGraphicsContext2D();
         Image map = new Image(getClass().getResourceAsStream("../resources/blank-world-map1.jpg"));
         System.out.println("Initialization");
         gc.drawImage(map, 0, 0);
-
 
         vehicleDetails = new VehicleDetails();
         civilianShipClicked = event -> {
@@ -121,7 +121,7 @@ public class FXMLWindowController implements Initializable {
 
         };
         militaryShipClicked = event -> {
-            ObservableList list = vehicleDetails.getChildren();
+            ObservableList<javafx.scene.Node> list = vehicleDetails.getChildren();
             VehicleButton source = (VehicleButton) event.getSource();
             fromSea = source;
             Platform.runLater(() -> {
@@ -147,9 +147,9 @@ public class FXMLWindowController implements Initializable {
         try {
             initializer = new MapInitializer(getClass().getResourceAsStream("../fxml/map.xml"));
             initializer.init();
-            harbourButtons = initializer.getHarboursBtns();
-            CAirportButtons = initializer.getcAirportBtns();
-            MAirportButtons = initializer.getmAirportBtns();
+            harbourButtons = initializer.getHarboursButtons();
+            CAirportButtons = initializer.getcAirportButtons();
+            MAirportButtons = initializer.getmAirportButtons();
 
             harbourMap = initializer.getSeaPorts();
             civilianAirportMap = initializer.getCAirports();
@@ -209,7 +209,7 @@ public class FXMLWindowController implements Initializable {
     public synchronized void seaPortClick(PortButton source) {
         if (choosingState) {
             String name = source.getModel().getName();
-            choosingTarget.ChoiceHasBeenMade(name);
+            choosingTarget.choiceHasBeenMade(name);
             return;
         }
         FerryFormController.getInstance().setPortName(source.getModel().toString());
@@ -229,7 +229,7 @@ public class FXMLWindowController implements Initializable {
     public synchronized void airPortClicked(PortButton source) {
         if (choosingState) {
             String name = source.getModel().getName();
-            choosingTarget.ChoiceHasBeenMade(name);
+            choosingTarget.choiceHasBeenMade(name);
             return;
         }
         AirlinerFormController.getInstance().setPortName(source.getModel().toString());
@@ -249,7 +249,7 @@ public class FXMLWindowController implements Initializable {
     public synchronized void mAirPortClicked(PortButton source) {
         if (choosingState) {
             String name = source.getModel().getName();
-            choosingTarget.ChoiceHasBeenMade(name);
+            choosingTarget.choiceHasBeenMade(name);
             return;
         }
         AircraftFormController.getInstance().setPortName(source.getModel().toString());
@@ -426,6 +426,7 @@ public class FXMLWindowController implements Initializable {
     }
 
     @FXML
+    @SuppressWarnings("unchecked")
     public void loadFromFile() {
         try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(SAVE_FILE)))) {
             SynchronizedUpdateNotifier.INSTANCE.clear();
@@ -689,7 +690,7 @@ public class FXMLWindowController implements Initializable {
         }
 
         @Override
-        public void ChoiceHasBeenMade(String item) {
+        public void choiceHasBeenMade(String item) {
             String[] s = joiner.toString().split("-");
             if (!s[s.length - 1].equals(item)) {
                 joiner.add(item);

@@ -9,8 +9,8 @@ import world.ports.Port;
 public abstract class SeaPort extends Port {
     /**
      * Creates Seaport.
-     * @param capacity
-     * @param location
+     * @param capacity capacity
+     * @param location location
      */
     public SeaPort(int capacity, Point2D location){
         super(capacity,location);

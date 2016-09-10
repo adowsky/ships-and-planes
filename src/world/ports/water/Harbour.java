@@ -4,9 +4,9 @@ import javafx.geometry.Point2D;
 import world.passenger.Passenger;
 import world.ports.CivilianPort;
 import world.ports.Port;
+import world.vehicles.Vehicle;
 import world.vehicles.types.CivilianVehicle;
 import world.vehicles.types.water.Ship;
-import world.vehicles.Vehicle;
 
 import java.util.*;
 
@@ -21,15 +21,16 @@ public class Harbour extends SeaPort implements CivilianPort {
 
     /**
      * Creates Harbour
+     *
      * @param timeToNextDeparture time to next departure
-     * @param capacity Maximum capacity of port
-     * @param location Location of the Port.
+     * @param capacity            Maximum capacity of port
+     * @param location            Location of the Port.
      */
-    public Harbour(int timeToNextDeparture, int capacity, Point2D location){
+    public Harbour(int timeToNextDeparture, int capacity, Point2D location) {
         super(capacity, location);
         shipsList = new HashSet<>();
-        passengersSet= new HashSet<>();
-        this.timeToNextDeparture=timeToNextDeparture;
+        passengersSet = new HashSet<>();
+        this.timeToNextDeparture = timeToNextDeparture;
     }
 
     @Override
@@ -39,15 +40,16 @@ public class Harbour extends SeaPort implements CivilianPort {
 
     /**
      * Services arrival of vehicle.
-     * @param vehicle
-     * @param <T> type of vehicle.
+     *
+     * @param vehicle vehicle
+     * @param <T>     type of vehicle.
      */
     public <T extends Ship & CivilianVehicle> void vehicleArrive(T vehicle) {
         canLand();
         shipsList.add(vehicle);
         vehicle.arrivedToPort();
         vehicle.addDestroyListener(this);
-        if(!vehicle.isDecreased()) {
+        if (!vehicle.isDecreased()) {
             Set<Passenger> pList = vehicle.getVehiclePassengers();
             synchronized (this) {
                 passengersService(pList, passengersSet, getLandConnectionPorts());
@@ -61,31 +63,35 @@ public class Harbour extends SeaPort implements CivilianPort {
 
     /**
      * Adds newly produced vehicle to the port.
+     *
      * @param vehicle new Vehicle.
-     * @param <T> type of Vehicle.
+     * @param <T>     type of Vehicle.
      */
-    public <T extends Ship & CivilianVehicle> void addNewlyProducedVehicle(T vehicle){
+    public <T extends Ship & CivilianVehicle> void addNewlyProducedVehicle(T vehicle) {
         canLand();
         shipsList.add(vehicle);
         vehicle.clearPassengersList();
         vehicle.setRoute(getRouteToPort(vehicle.getNextPort()));
         vehicleDeparture(vehicle);
     }
+
     /**
      * Start maintenance of vehicle
+     *
      * @param vehicle vehicle to maintain.
      */
-    private void maintainVehicle(Ship vehicle){
+    private void maintainVehicle(Ship vehicle) {
         vehicle.maintenanceStart(timeToNextDeparture);
     }
 
     /**
      * Services departure of vehicle.
+     *
      * @param vehicle vehicle that is going to departure.
      */
-    private <T extends Ship & CivilianVehicle> void vehicleDeparture(T vehicle){
+    private <T extends Ship & CivilianVehicle> void vehicleDeparture(T vehicle) {
         Port nextPort = vehicle.getNextPort();
-        if(!vehicle.isDecreased()) {
+        if (!vehicle.isDecreased()) {
             Collection<Passenger> newPassengersList = new HashSet<>();
             for (Passenger p : passengersSet) {
                 if (!p.isWaiting() && p.getNextPortToVisit() == nextPort) {
@@ -96,8 +102,9 @@ public class Harbour extends SeaPort implements CivilianPort {
                 passengersSet.removeAll(newPassengersList);
             }
             vehicle.addPassengers(newPassengersList);
-        }else
-        vehicle.setDecreased(false);
+        } else {
+            vehicle.setDecreased(false);
+        }
         vehicle.setReadyToTravel();
         shipsList.remove(vehicle);
         vehicle.removeDestroyListener(this);
@@ -115,14 +122,14 @@ public class Harbour extends SeaPort implements CivilianPort {
 
     @Override
     public List<CivilianPort> getAllConnections() {
-        if(portListForPassenger == null) {
+        if (portListForPassenger == null) {
             portListForPassenger = new ArrayList<>();
-            for(Port p : getAllRoutes()){
-                portListForPassenger.add((CivilianPort)p);
+            for (Port p : getAllRoutes()) {
+                portListForPassenger.add((CivilianPort) p);
             }
-            getLandConnectionPorts().forEach((p)-> portListForPassenger.add((CivilianPort)p));
+            getLandConnectionPorts().forEach((p) -> portListForPassenger.add((CivilianPort) p));
         }
-        return  portListForPassenger;
+        return portListForPassenger;
 
     }
 
@@ -134,27 +141,29 @@ public class Harbour extends SeaPort implements CivilianPort {
     @Override
     public Collection<? extends Vehicle> getVehicles() {
         List<Vehicle> l = new LinkedList<>();
-        shipsList.forEach(e -> l.add((Vehicle)e));
+        shipsList.forEach(e -> l.add((Vehicle) e));
         return l;
     }
 
     /**
      * Checks when vehicle can land.
+     *
      * @return if vehicle can land.
      */
     public synchronized boolean canLand() {
-        while (shipsList.size()>= getMaxCapacity()){
-            try{
+        while (shipsList.size() >= getMaxCapacity()) {
+            try {
                 Thread.sleep(1);
-            }catch (InterruptedException ex){
+            } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
         }
         return true;
     }
+
     @Override
-    public boolean isFull(){
-        return shipsList.size()>= getMaxCapacity();
+    public boolean isFull() {
+        return shipsList.size() >= getMaxCapacity();
     }
 
     @Override

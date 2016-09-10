@@ -6,28 +6,30 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
-<BorderPane id="main-container" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/" fx:controller="gui.controller.FXMLWindowController">
-   <left>
-       <Pane fx:id="mapPane" id="map-pane">
-           <Canvas fx:id="canvas" mouseTransparent="true" height="400.0" width="788.0" BorderPane.alignment="CENTER" />
-       </Pane>
-   </left>
-   <right>
-       <ScrollPane styleClass="white-color">
-      <BorderPane fx:id="controlPanel" id="control-panel-container" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <top>
-            <Text id="panel-name" text="Control Panel" BorderPane.alignment="CENTER" />
-         </top>
-          <bottom>
-              <HBox alignment="TOP_CENTER" spacing="35">
-              <Button text="Load from File" onAction="#loadFromFile"/>
-              <Button text="Save to File" onAction="#saveToFile"/>
-              </HBox>
-          </bottom>
-      </BorderPane>
-       </ScrollPane>
-   </right>
+<BorderPane id="main-container" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/"
+            fx:controller="gui.controller.FXMLWindowController">
+    <left>
+        <Pane fx:id="mapPane" id="map-pane">
+            <Canvas fx:id="canvas" mouseTransparent="true" height="400.0" width="788.0" BorderPane.alignment="CENTER"/>
+        </Pane>
+    </left>
+    <right>
+        <ScrollPane styleClass="white-color">
+            <BorderPane fx:id="controlPanel" id="control-panel-container" prefWidth="200.0"
+                        BorderPane.alignment="CENTER">
+                <top>
+                    <Text id="panel-name" text="Control Panel" BorderPane.alignment="CENTER"/>
+                </top>
+                <bottom>
+                    <HBox alignment="TOP_CENTER" spacing="35">
+                        <Button text="Load from File" onAction="#loadFromFile"/>
+                        <Button text="Save to File" onAction="#saveToFile"/>
+                    </HBox>
+                </bottom>
+            </BorderPane>
+        </ScrollPane>
+    </right>
     <stylesheets>
-        <URL value="@../css/style.css" />
+        <URL value="@../css/style.css"/>
     </stylesheets>
 </BorderPane>

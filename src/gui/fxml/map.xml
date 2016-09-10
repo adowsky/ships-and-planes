@@ -5,34 +5,34 @@
         <url>map.png</url>
     </map-model>
     <!--Harbours-->
-    <harbour name="Luanda" x="379" y="268" sleep-time="500" capacity="10" >
+    <harbour name="Luanda" x="379" y="268" sleep-time="500" capacity="10">
         <connection name="Miami">seaBot</connection>
         <connection name="Lisbon">seaBot seaTop</connection>
         <connection name="Reykjavik">seaBot seaTop</connection>
         <connection name="Salvador">seaBot</connection>
     </harbour>
-    <harbour name="Salvador" x="286" y="288" >
+    <harbour name="Salvador" x="286" y="288">
         <connection name="Miami">seaBot</connection>
         <connection name="Lisbon">seaBot seaTop</connection>
         <connection name="Reykjavik">seaBot seaTop</connection>
         <connection name="Luanda">seaBot</connection>
         <land name="Brasilia"/>
     </harbour>
-    <harbour name="Miami" x="203" y="198" >
+    <harbour name="Miami" x="203" y="198">
         <connection name="Lisbon">seaTop</connection>
         <connection name="Reykjavik">seaTop</connection>
         <connection name="Luanda">seaBot</connection>
         <connection name="Salvador">seaBot</connection>
         <land name="New York"/>
     </harbour>
-    <harbour name="Lisbon" x="342" y="167" >
+    <harbour name="Lisbon" x="342" y="167">
         <connection name="Miami">seaTop</connection>
         <connection name="Reykjavik">seaTop</connection>
         <connection name="Luanda">seaTop seaBot</connection>
         <connection name="Salvador">seaTop seaBot</connection>
         <land name="Rome"/>
     </harbour>
-    <harbour name="Reykjavik" x="317" y="90" >
+    <harbour name="Reykjavik" x="317" y="90">
         <connection name="Salvador">seaTop seaBot</connection>
         <connection name="Luanda">seaTop seaBot</connection>
         <connection name="Lisbon">seaTop</connection>
@@ -163,18 +163,18 @@
     <sea-crossing name="seaTop" x="274" y="158" radius="8"/>
     <sea-crossing name="seaBot" x="325" y="265" radius="8"/>
     <!--Air Crossings-->
-    <air-crossing name="africa" x="346" y="192" radius="10" />
-    <air-crossing name="germany" x="403" y="119" radius="10" />
-    <air-crossing name="england" x="352" y="116" radius="10" />
-    <air-crossing name="russia" x="490" y="109" radius="10" />
-    <air-crossing name="georgia" x="436" y="151" radius="10" />
-    <air-crossing name="pakistan" x="492" y="194" radius="10" />
-    <air-crossing name="middleAsia" x="530" y="159" radius="10" />
-    <air-crossing name="china" x="553" y="175" radius="10" />
-    <air-crossing name="southChina" x="585" y="206" radius="10" />
-    <air-crossing name="IndianOcean" x="489" y="259" radius="10" />
-    <air-crossing name="australia" x="568" y="301" radius="10" />
-    <air-crossing name="bengal" x="531" y="228" radius="10" />
+    <air-crossing name="africa" x="346" y="192" radius="10"/>
+    <air-crossing name="germany" x="403" y="119" radius="10"/>
+    <air-crossing name="england" x="352" y="116" radius="10"/>
+    <air-crossing name="russia" x="490" y="109" radius="10"/>
+    <air-crossing name="georgia" x="436" y="151" radius="10"/>
+    <air-crossing name="pakistan" x="492" y="194" radius="10"/>
+    <air-crossing name="middleAsia" x="530" y="159" radius="10"/>
+    <air-crossing name="china" x="553" y="175" radius="10"/>
+    <air-crossing name="southChina" x="585" y="206" radius="10"/>
+    <air-crossing name="IndianOcean" x="489" y="259" radius="10"/>
+    <air-crossing name="australia" x="568" y="301" radius="10"/>
+    <air-crossing name="bengal" x="531" y="228" radius="10"/>
     <!--harbour - military airport connections-->
     <carrier-connection from="Salvador" to="Etiopia">africa</carrier-connection>
     <carrier-connection from="Lisbon" to="Siberia">africa bengal china</carrier-connection>

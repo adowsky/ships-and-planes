@@ -71,7 +71,7 @@ public abstract class Port implements Drawable, Cross, Serializable, DestroyList
 
     /**
      * Returns route(List of Crosses) to specific port.
-     * @param port
+     * @param port port
      * @return  route(List of Crosses) to specific port.
      */
     public List<Cross> getRouteToPort(Port port){
@@ -88,7 +88,7 @@ public abstract class Port implements Drawable, Cross, Serializable, DestroyList
 
     /**
      * Returns set of ports that connected with current port by land.
-     * @return
+     * @return set of ports that connected with current port by land.
      */
     public Set<Port> getLandConnectionPorts() {
         return landConnectionPorts;

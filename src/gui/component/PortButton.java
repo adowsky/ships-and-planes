@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Port Button containing Port model. Model does backend logic of app.
  */
 public class PortButton<T extends Port> extends Button implements Serializable{
-    protected T model;
+    private T model;
     private Point2D location;
     private String name;
 
